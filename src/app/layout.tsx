@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import { RecoilRoot } from "recoil";
+import "@mantine/core/styles.css";
+import Header from "@/components/header";
 import App from "./App";
+import { ColorSchemeScript } from "@mantine/core";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <ColorSchemeScript />
+      </head>
       <body className={inter.className}>
         <App>
-          <Header></Header>
-          {children}
+          <div className="h-screen">
+            <Header></Header>
+            <div>{children}</div>
+          </div>
         </App>
       </body>
     </html>

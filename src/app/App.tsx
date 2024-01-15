@@ -2,6 +2,7 @@
 import { EAuthStorageKey } from "@/constans/constans";
 import { useGetAuthStorageValue } from "@/hooks/useGetAuthStorageValue";
 import { isRequestInterceptorSetup, setUpRequestInterceptor } from "@/utils";
+import { MantineProvider } from "@mantine/core";
 import React, { useCallback, useEffect } from "react";
 import { RecoilRoot } from "recoil";
 
@@ -27,5 +28,9 @@ export default function App({ children }: { children: React.ReactNode }) {
       setupAxiosRequest();
     }
   }, [getAuthStorageValue, setupAxiosRequest]);
-  return <RecoilRoot>{children}</RecoilRoot>;
+  return (
+    <RecoilRoot>
+      <MantineProvider>{children} </MantineProvider>
+    </RecoilRoot>
+  );
 }
