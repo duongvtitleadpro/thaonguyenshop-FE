@@ -48,7 +48,8 @@ const data = [
 export default function Home() {
   return (
     <>
-      <div className="w-full max-w-6xl mx-auto">
+      <div className="w-full h-10 bg-slate-300"></div>
+      <div className="w-full max-w-6xl mx-auto mt-12">
         <WidgetWrapper headTitle="Hàng order ">
           {data.map((item, index) => (
             <WidgetCard key={index} {...item} />

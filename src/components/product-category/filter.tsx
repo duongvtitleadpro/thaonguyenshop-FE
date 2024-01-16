@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -31,29 +32,84 @@ const SIZE_FILTER = [
   },
 ];
 
+const ORDER_PRODUCT = [
+  {
+    name: "Giày Dép Người Lớn",
+    id: "giay-dep-nguoi-lon",
+  },
+  {
+    name: "Giày Dép Trẻ Em",
+    id: "giay-dep-tre-em",
+  },
+  {
+    name: "Phụ Kiện Người Lớn",
+    id: "phu-kien-nguoi-lon",
+  },
+  {
+    name: "Phụ Kiện Trẻ Em",
+    id: "phu-kien-tre-em",
+  },
+  {
+    name: "Quần Áo Bé Gái",
+    id: "quan-ao-be-gai",
+  },
+  {
+    name: "Quần Áo Bé Trai",
+    id: "quan-ao-be-trai",
+  },
+  {
+    name: "Sản Phẩm Khác",
+    id: "san-pham-khac",
+  },
+];
+
 const FilterProduct = () => {
-  const [opened, { toggle }] = useDisclosure(false);
+  const [openedSize, { toggle: toggleSize }] = useDisclosure(false);
+  const [openedOrderProduct, { toggle: toggleOrderProduct }] =
+    useDisclosure(false);
   return (
-    <div className="w-64">
+    <div className="w-72 p-4">
       <div>
         <Input
           type="text"
           placeholder="Tìm kiếm sản phẩm"
           className="rounded-none focus-visible:ring-0"
         />
-        <Separator />
+        <Separator className="my-3" />
         <div>
           <div
             className="flex justify-between items-center cursor-pointer"
-            onClick={toggle}
+            onClick={toggleSize}
           >
             <h2 className="text-base uppercase">size</h2>
-            {opened ? <Minus /> : <Plus />}
+            {openedSize ? <Minus /> : <Plus />}
           </div>
-          <Collapse in={opened}>
+          <Collapse in={openedSize}>
             <div className="flex flex-col gap-2 p-4">
               {SIZE_FILTER.map((item, index) => (
                 <Checkbox key={index} label={item.title} className="text-sm" />
+              ))}
+            </div>
+          </Collapse>
+        </div>
+        <Separator className="my-3" />
+        <div>
+          <div
+            className="flex justify-between items-center cursor-pointer"
+            onClick={toggleOrderProduct}
+          >
+            <h2 className="text-base uppercase">Hàng Order</h2>
+            {openedOrderProduct ? <Minus /> : <Plus />}
+          </div>
+          <Collapse in={openedOrderProduct}>
+            <div className="flex flex-col gap-2 p-4">
+              {ORDER_PRODUCT.map((item, index) => (
+                <Link
+                  key={index}
+                  href={`/product-category/hang-order/${item.id}`}
+                >
+                  {item.name}
+                </Link>
               ))}
             </div>
           </Collapse>
