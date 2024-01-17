@@ -4,13 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import DataTableColumnHeader from "@components/table/data-table-column-header";
 import DataTableRowActions from "@components/table/data-table-row-actions";
-import { Image } from "@mantine/core";
 import { Data } from "./schema";
 import { format } from "date-fns";
-const currency = new Intl.NumberFormat("vi-VN", {
-  style: "currency",
-  currency: "VND",
-});
+import { currency } from "@/utils/currency";
 
 export const columns: ColumnDef<Data>[] = [
   {
