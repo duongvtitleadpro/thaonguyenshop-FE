@@ -1,4 +1,4 @@
-import { EAuthStorageKey } from "@/constans/constans";
+import { EAuthStorageKey } from "@/constant/constans";
 import { useCallback } from "react";
 
 export const useGetAuthStorageValue = () => {

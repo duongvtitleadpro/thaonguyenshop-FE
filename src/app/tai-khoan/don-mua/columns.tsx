@@ -12,7 +12,7 @@ import {
   ProductStatusColor,
   ProductStatusTitle,
   ShipmentStatusTitle,
-} from "@/constans/product";
+} from "@/constant/product";
 import { currency } from "@/utils/currency";
 
 export const columns: ColumnDef<Data>[] = [

@@ -1,68 +1,48 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 
-import { WidgetCard, WidgetWrapper } from "@/components/widget";
-
-const data = [
-  {
-    srcImg:
-      "https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
-    title: "Sản phẩm 1",
-  },
-  {
-    srcImg:
-      "https://us.123rf.com/450wm/photochicken/photochicken2008/photochicken200800065/153425631-pritty-jeune-photographe-asiatique-fille-adolescente-voyage-avec-appareil-photo-prendre-une-photo-de.jpg?ver=6",
-    title: "Sản phẩm 2",
-  },
-  {
-    srcImg:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzLHAJh2MySmGUS6Lcf8QMNs1AV6zaO3gxNQa62pUCu3tDTvk9XR0pVVfsLt1CQpShl-c&usqp=CAU",
-    title: "Sản phẩm 3",
-  },
-  {
-    srcImg:
-      "https://thumbs.dreamstime.com/b/young-male-tourist-stand-steps-take-pictures-woman-holds-blue-camera-hands-man-serious-concentrated-130183917.jpg",
-    title: "Sản phẩm 4",
-  },
-  {
-    srcImg:
-      "https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
-    title: "Sản phẩm 1",
-  },
-  {
-    srcImg:
-      "https://us.123rf.com/450wm/photochicken/photochicken2008/photochicken200800065/153425631-pritty-jeune-photographe-asiatique-fille-adolescente-voyage-avec-appareil-photo-prendre-une-photo-de.jpg?ver=6",
-    title: "Sản phẩm 2",
-  },
-  {
-    srcImg:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzLHAJh2MySmGUS6Lcf8QMNs1AV6zaO3gxNQa62pUCu3tDTvk9XR0pVVfsLt1CQpShl-c&usqp=CAU",
-    title: "Sản phẩm 3",
-  },
-  {
-    srcImg:
-      "https://thumbs.dreamstime.com/b/young-male-tourist-stand-steps-take-pictures-woman-holds-blue-camera-hands-man-serious-concentrated-130183917.jpg",
-    title: "Sản phẩm 4",
-  },
-];
+import { ContactCard, WidgetCard, WidgetWrapper } from "@/components/widget";
+import { QueryKey } from "@/constant/query-key";
+import { getAllCategory } from "@/api/category";
 
 export default function Home() {
+  const { data: categoryListData } = useQuery({
+    queryKey: [QueryKey.GET_ALL_CATEGORY],
+    queryFn: getAllCategory,
+  });
+
   return (
-    <>
+    <div className="p-4">
       <div className="w-full h-10 bg-slate-300"></div>
-      <div className="w-full max-w-6xl mx-auto mt-12">
-        <WidgetWrapper headTitle="Hàng order ">
-          {data.map((item, index) => (
-            <WidgetCard key={index} {...item} />
-          ))}
-        </WidgetWrapper>
+      {categoryListData && (
+        <div className="w-full max-w-6xl mx-auto mt-12 flex flex-col gap-24">
+          <WidgetWrapper headTitle="Hàng order">
+            {categoryListData.data.map((item, index) => (
+              <WidgetCard
+                key={index}
+                id={item.id}
+                imageUrl={item.imageUrl}
+                name={item.name}
+              />
+            ))}
+          </WidgetWrapper>
+          <WidgetWrapper headTitle="Hàng có sẵn">
+            {categoryListData.data.map((item, index) => (
+              <WidgetCard
+                key={index}
+                id={item.id}
+                imageUrl={item.imageUrl}
+                name={item.name}
+              />
+            ))}
+          </WidgetWrapper>
+        </div>
+      )}
+      <div className="w-full max-w-6xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {new Array(4).fill(0).map((_, index) => (
+          <ContactCard key={index} />
+        ))}
       </div>
-      <div className="w-full max-w-6xl mx-auto mt-12">
-        <WidgetWrapper headTitle="Hàng order ">
-          {data.map((item, index) => (
-            <WidgetCard key={index} {...item} />
-          ))}
-        </WidgetWrapper>
-      </div>
-    </>
+    </div>
   );
 }

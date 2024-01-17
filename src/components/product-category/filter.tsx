@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { useDisclosure } from "@mantine/hooks";
 import { Checkbox, Collapse } from "@mantine/core";
 import { Plus, Minus } from "lucide-react";
+import { getProductSize } from "@/api/product";
+import { QueryKey } from "@/constant/query-key";
+import { useQuery } from "@tanstack/react-query";
 
 const SIZE_FILTER = [
   {
@@ -67,6 +70,10 @@ const FilterProduct = () => {
   const [openedSize, { toggle: toggleSize }] = useDisclosure(false);
   const [openedOrderProduct, { toggle: toggleOrderProduct }] =
     useDisclosure(false);
+  const { data: productSizeList } = useQuery({
+    queryKey: [QueryKey.GET_ALL_CATEGORY],
+    queryFn: getProductSize,
+  });
   return (
     <div className="w-72 p-4">
       <div>
@@ -85,11 +92,17 @@ const FilterProduct = () => {
             {openedSize ? <Minus /> : <Plus />}
           </div>
           <Collapse in={openedSize}>
-            <div className="flex flex-col gap-2 p-4">
-              {SIZE_FILTER.map((item, index) => (
-                <Checkbox key={index} label={item.title} className="text-sm" />
-              ))}
-            </div>
+            {productSizeList && (
+              <div className="flex flex-col gap-2 p-4">
+                {productSizeList.data.map((item, index) => (
+                  <Checkbox
+                    key={index}
+                    label={item.title}
+                    className="text-sm"
+                  />
+                ))}
+              </div>
+            )}
           </Collapse>
         </div>
         <Separator className="my-3" />

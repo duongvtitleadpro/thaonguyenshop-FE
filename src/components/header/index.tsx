@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { Icons } from "../icons";
 import ThaoNguyenLogo from "@images/logo/logo.svg";
-import { NavBarRoute } from "@/constans/route";
+import { NavBarRoute } from "@/constant/route";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
