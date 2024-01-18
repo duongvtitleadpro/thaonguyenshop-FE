@@ -21,8 +21,14 @@ export type Product = {
   price: number;
   warehouseStatus: WarehouseStatus;
   totalQuantity: number;
+  details: ProductDetail[];
   productImages: ProductImage[];
   categoryProducts: CategoryProduct[];
+};
+
+export type ProductDetail = {
+  color: ProductColor;
+  size: ProductSize[];
 };
 
 export type ProductImage = {
@@ -34,6 +40,7 @@ export type CategoryProduct = {
   category: {
     id: number;
     name: string;
+    imageUrl: string;
   };
 };
 
