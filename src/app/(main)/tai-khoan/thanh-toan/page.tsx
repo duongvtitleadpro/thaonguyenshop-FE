@@ -5,7 +5,7 @@ import { Data } from "./schema";
 import { columns } from "./columns";
 async function getData() {
   const data = await fs.readFile(
-    path.join(process.cwd(), "src/app/tai-khoan/thanh-toan/data.json")
+    path.join(process.cwd(), "src/app/(main)/tai-khoan/thanh-toan/data.json")
   );
 
   const rechargeData: Data[] = JSON.parse(data.toString()).data;

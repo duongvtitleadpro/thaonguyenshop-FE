@@ -26,7 +26,7 @@ const images = [
 
 async function getData(id: number) {
   const data = await fs.readFile(
-    path.join(process.cwd(), "src/app/product-category/data.json")
+    path.join(process.cwd(), "src/app/(main)/product-category/data.json")
   );
 
   const exportData: Data[] = JSON.parse(data.toString()).data;
