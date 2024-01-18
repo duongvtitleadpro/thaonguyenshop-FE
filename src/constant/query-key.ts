@@ -4,4 +4,5 @@ export enum QueryKey {
   GET_PRODUCT_SIZE = "get-product-size",
   GET_PRODUCT_COLOR = "get-product-color",
   GET_PRODUCT_DETAIL = "get-product-detail",
+  GET_USER_PROFILE = "get-user-profile",
 }

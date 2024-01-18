@@ -2,29 +2,31 @@
 
 import { getUserProfile } from "@/api/auth";
 import Header from "@/components/header";
+import { QueryKey } from "@/constant/query-key";
 import { authState } from "@/store/state/auth.atom";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 
 const UserManagementLayout = ({ children }: { children: React.ReactNode }) => {
   const [auth, setAuth] = useRecoilState(authState);
+  const { data: userData } = useQuery({
+    queryKey: [QueryKey.GET_USER_PROFILE],
+    queryFn: getUserProfile,
+    enabled: !auth.isAuthenticated,
+    retry: 3,
+    retryDelay(failureCount) {
+      return 1000 * failureCount;
+    },
+  });
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = await getUserProfile();
-        setAuth({
-          isAuthenticated: true,
-          user,
-        });
-      } catch (error) {
-        setAuth({
-          isAuthenticated: false,
-          user: null,
-        });
-      }
-    };
-    if (!auth.isAuthenticated) fetchData();
-  }, [auth, setAuth]);
+    if (userData) {
+      setAuth({
+        isAuthenticated: true,
+        user: userData,
+      });
+    }
+  }, [userData]);
   return (
     <div>
       <div className="h-screen">

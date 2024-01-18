@@ -1,32 +1,8 @@
 import { Response } from "@/types/common";
-import {
-  Product,
-  ProductColor,
-  ProductParam,
-  ProductSize,
-} from "@/types/product";
-import { objectToQueryString } from "@/utils";
+import { Order, OrderResponse } from "@/types/order";
 import axiosInstance from "@utils/axios";
 
-export const getProductList = async (
-  param: ProductParam
-): Promise<Response<Product>> => {
-  const search = objectToQueryString(param);
-  const { data } = await axiosInstance.get(`/product?${search}`);
-  return data;
-};
-
-export const getProductSize = async (): Promise<Response<ProductSize>> => {
-  const { data } = await axiosInstance.get(`/product-size`);
-  return data;
-};
-
-export const getProductColor = async (): Promise<Response<ProductColor>> => {
-  const { data } = await axiosInstance.get(`/product-color`);
-  return data;
-};
-
-export const getProductDetail = async (id: number): Promise<Product> => {
-  const { data } = await axiosInstance.get(`/product/${id}`);
+export const addOrder = async (order: Order): Promise<OrderResponse> => {
+  const { data } = await axiosInstance.post(`/order`, order);
   return data;
 };

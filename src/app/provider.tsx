@@ -2,6 +2,7 @@
 import { MantineProvider } from "@mantine/core";
 import { RecoilRoot } from "recoil";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/sonner";
 
 const client = new QueryClient();
 export default function App({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,7 @@ export default function App({ children }: { children: React.ReactNode }) {
     <RecoilRoot>
       <QueryClientProvider client={client}>
         <MantineProvider>{children} </MantineProvider>
+        <Toaster />
       </QueryClientProvider>
     </RecoilRoot>
   );

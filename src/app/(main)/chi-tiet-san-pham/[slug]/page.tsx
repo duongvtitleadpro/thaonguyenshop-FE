@@ -1,5 +1,5 @@
 "use client";
-import { SimpleGrid, List, NumberInput } from "@mantine/core";
+import { SimpleGrid, List, NumberInput, UnstyledButton } from "@mantine/core";
 import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useQuery } from "@tanstack/react-query";
@@ -9,16 +9,12 @@ import { currency } from "@/utils/currency";
 import { useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { cn } from "@/lib/utils";
-import { Ruler } from "lucide-react";
+import { Ruler, ShoppingBag } from "lucide-react";
+import { addOrder } from "@/api/order";
+import { OrderDetail } from "@/types/order";
+import { toast } from "sonner";
 
 const OPTIONS: EmblaOptionsType = {};
-
-type CartType = {
-  productId: number;
-  colorId: number;
-  sizeId: number;
-  quantity: number;
-};
 
 const DetailProductPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
@@ -28,7 +24,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
   });
 
   const [color, setColor] = useState<number | null>(null);
-  const [cart, setCart] = useState<CartType[]>([]);
+  const [cart, setCart] = useState<OrderDetail[]>([]);
 
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -66,8 +62,46 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
     setCart(newCart);
   };
 
-  const handleBuyProduct = () => {
+  const handleBuyProduct = async () => {
     console.log(cart);
+
+    if (!productDetailData) return;
+    try {
+      const order = await addOrder({
+        productId: productDetailData.id,
+        orderDetails: cart,
+      });
+      toast("Đơn hàng tạo thành công", {
+        description: (
+          <div className="w-full">
+            <p>Bạn đã mua:</p>
+            <ul className="space-y-4 text-left text-gray-500 dark:text-gray-400 ml-2 mt-1">
+              {order.orderDetails.map((item, index) => (
+                <li
+                  key={index}
+                  className="flex items-center space-x-3 rtl:space-x-reverse"
+                >
+                  <ShoppingBag size={16} color="#35a8e0" />
+                  <span>{`${item.color.title} - ${item.size.title}: ${item.quantity} cái`}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-lg">
+              Tổng tiền:{" "}
+              <span className="font-bold">
+                {currency.format(order.totalPrice)}
+              </span>
+            </p>
+          </div>
+        ),
+      });
+      setCart([]);
+    } catch (error) {
+      toast("Đã có lỗi xảy ra", {
+        description: "Vui lòng thử lại sau",
+      });
+      console.log(error);
+    }
   };
 
   return (
@@ -100,11 +134,24 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                   {currency.format(productDetailData.price)}
                 </p>
 
-                <form className="mt-10">
+                <div className="mt-10">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900">
-                      Màu sắc
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        Màu sắc
+                      </h3>
+                      {cart.length > 0 && (
+                        <UnstyledButton
+                          onClick={() => {
+                            setCart([]);
+                            setColor(null);
+                          }}
+                          className="text-sm font-medium text-[#35a8e0] hover:text-[#35a8e0]"
+                        >
+                          Xóa đơn hàng
+                        </UnstyledButton>
+                      )}
+                    </div>
                     <RadioGroup
                       value={color}
                       onChange={setColor}
@@ -155,12 +202,6 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                       <h3 className="text-sm font-medium text-gray-900">
                         Size
                       </h3>
-                      <a
-                        href="#"
-                        className="text-sm font-medium text-[#35a8e0] hover:text-[#35a8e0]"
-                      >
-                        Size guide
-                      </a>
                     </div>
                     {color && (
                       <List spacing="md" mt={4}>
@@ -193,13 +234,22 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                   </div>
 
                   <button
-                    type="button"
-                    className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] focus:outline-none focus:ring-2 focus:ring-[#35a8e0] focus:ring-offset-2"
+                    disabled={cart.length === 0}
+                    className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={handleBuyProduct}
                   >
                     Mua ngay
                   </button>
-                </form>
+                </div>
+              </div>
+              <div>
+                <p className="text-2xl tracking-tight text-gray-900 py-4 text-right">
+                  Tổng tiền:{" "}
+                  {currency.format(
+                    cart.reduce((acc, cur) => acc + cur.quantity, 0) *
+                      productDetailData.price
+                  )}
+                </p>
               </div>
               <div className="py-10">
                 <div>

@@ -17,12 +17,12 @@ import { SignInBody } from "@/types/auth";
 import { signinRequest } from "@/api/auth";
 import { setToken } from "@/utils";
 import { TOKEN_KEY } from "@/constant/auth";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { authState } from "@/store/state/auth.atom";
 import { Settings } from "lucide-react";
 
 const LoginModal = () => {
-  const { isAuthenticated, user } = useRecoilValue(authState);
+  const [{ isAuthenticated, user }, setAuth] = useRecoilState(authState);
   const [onpenedLogin, { open: openLogin, close: closeLogin }] =
     useDisclosure(false);
   const router = useRouter();
@@ -43,6 +43,10 @@ const LoginModal = () => {
       setToken(TOKEN_KEY.ACCESS, data.accessToken);
       setToken(TOKEN_KEY.REFRESH, data.refreshToken);
       router.push("/");
+      setAuth({
+        isAuthenticated: true,
+        user: data.user,
+      });
       signupForm.reset();
       closeLogin();
     },
