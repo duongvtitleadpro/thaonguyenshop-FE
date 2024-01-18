@@ -6,6 +6,8 @@ export type ProductParam = {
   category?: number;
   warehouseStatus?: WarehouseStatus;
   keyword?: string;
+  sizes: number[];
+  colors: number[];
 };
 
 export type Product = {
@@ -23,19 +25,21 @@ export type Product = {
   categoryProducts: CategoryProduct[];
 };
 
-export interface ProductImage {
+export type ProductImage = {
   id: number;
   imageUrl: string;
-}
+};
 
-export interface CategoryProduct {
+export type CategoryProduct = {
   category: {
     id: number;
     name: string;
   };
-}
+};
 
-export interface ProductSize {
+export type ProductSize = {
   id: number;
   title: string;
-}
+};
+
+export type ProductColor = ProductSize;

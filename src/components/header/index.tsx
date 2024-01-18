@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,16 +9,30 @@ import { Icons } from "../icons";
 import ThaoNguyenLogo from "@images/logo/logo.svg";
 import { NavBarRoute } from "@/constant/route";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { Drawer, UnstyledButton } from "@mantine/core";
+import { useSetRecoilState } from "recoil";
+import { filterProductState } from "@/store/state/filter.atom";
 import LoginModal from "../login-modal";
 
 const Header = () => {
+  const router = useRouter();
+  const [keyword, setKeyword] = React.useState("");
+  const setProductParam = useSetRecoilState(filterProductState);
   const pathname = usePathname();
   const path = useMemo(() => pathname.split("/")[1], [pathname]);
   const [onpenedMenu, { open: openMenu, close: closeMenu }] =
     useDisclosure(false);
+
+  const handleChangeKeyword = () => {
+    console.log(keyword);
+    setProductParam((prev) => ({
+      ...prev,
+      keyword: keyword,
+    }));
+    router.push("/product-category");
+  };
 
   return (
     <>
@@ -32,9 +46,9 @@ const Header = () => {
       </div>
       <div>
         <div className="h-full  flex gap-11 max-w-6xl mx-auto items-center justify-between">
-          <div className="basis-[147px]">
+          <Link href="/" className="basis-[147px]">
             <ThaoNguyenLogo />
-          </div>
+          </Link>
           <div className="hidden xl:flex flex-1 flex-col mt-2">
             <div className="flex items-center justify-between gap-20">
               <div className="flex w-full items-center">
@@ -42,8 +56,14 @@ const Header = () => {
                   type="text"
                   placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
                   className="rounded-none focus-visible:ring-0"
+                  value={keyword}
+                  onChange={(event) => setKeyword(event.currentTarget.value)}
                 />
-                <Button type="button" className="rounded-none bg-[#35A8E0]">
+                <Button
+                  type="button"
+                  className="rounded-none bg-[#35A8E0]"
+                  onClick={handleChangeKeyword}
+                >
                   TÌM KIẾM
                 </Button>
               </div>

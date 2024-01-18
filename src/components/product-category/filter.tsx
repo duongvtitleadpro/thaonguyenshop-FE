@@ -1,86 +1,90 @@
 "use client";
-import React from "react";
-import Link from "next/link";
-
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { useDisclosure } from "@mantine/hooks";
-import { Checkbox, Collapse } from "@mantine/core";
+import React, { useCallback, useEffect } from "react";
+import {
+  Checkbox,
+  CloseButton,
+  Collapse,
+  TextInput,
+  UnstyledButton,
+} from "@mantine/core";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { Plus, Minus } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+
 import { getProductSize } from "@/api/product";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
-
-const SIZE_FILTER = [
-  {
-    title: "L",
-    value: "L",
-  },
-  {
-    title: "M",
-    value: "M",
-  },
-  {
-    title: "S",
-    value: "S",
-  },
-  {
-    title: "XL",
-    value: "XL",
-  },
-  {
-    title: "XXL",
-    value: "XXL",
-  },
-];
-
-const ORDER_PRODUCT = [
-  {
-    name: "Giày Dép Người Lớn",
-    id: "giay-dep-nguoi-lon",
-  },
-  {
-    name: "Giày Dép Trẻ Em",
-    id: "giay-dep-tre-em",
-  },
-  {
-    name: "Phụ Kiện Người Lớn",
-    id: "phu-kien-nguoi-lon",
-  },
-  {
-    name: "Phụ Kiện Trẻ Em",
-    id: "phu-kien-tre-em",
-  },
-  {
-    name: "Quần Áo Bé Gái",
-    id: "quan-ao-be-gai",
-  },
-  {
-    name: "Quần Áo Bé Trai",
-    id: "quan-ao-be-trai",
-  },
-  {
-    name: "Sản Phẩm Khác",
-    id: "san-pham-khac",
-  },
-];
+import { useRecoilState } from "recoil";
+import { filterProductState } from "@/store/state/filter.atom";
+import { getAllCategory } from "@/api/category";
+import { WarehouseStatus } from "@/types/product";
 
 const FilterProduct = () => {
+  const [keyword, setKeyword] = React.useState("");
+  const [debounced] = useDebouncedValue(keyword, 500);
+  const [productParam, setProductParam] = useRecoilState(filterProductState);
   const [openedSize, { toggle: toggleSize }] = useDisclosure(false);
   const [openedOrderProduct, { toggle: toggleOrderProduct }] =
     useDisclosure(false);
+  const [openedReadyProduct, { toggle: toggleReadyProduct }] =
+    useDisclosure(false);
   const { data: productSizeList } = useQuery({
-    queryKey: [QueryKey.GET_ALL_CATEGORY],
+    queryKey: [QueryKey.GET_PRODUCT_SIZE],
     queryFn: getProductSize,
   });
+
+  const { data: categoryListData } = useQuery({
+    queryKey: [QueryKey.GET_ALL_CATEGORY],
+    queryFn: getAllCategory,
+  });
+
+  useEffect(() => {
+    setProductParam((prev) => ({
+      ...prev,
+      keyword: debounced,
+    }));
+  }, [debounced, setProductParam]);
+
+  const handleChangeSizeFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setProductParam((prev) => ({
+        ...prev,
+        sizes: [...prev.sizes, Number(e.target.value)],
+      }));
+    } else {
+      setProductParam((prev) => ({
+        ...prev,
+        sizes: prev.sizes.filter((item) => item !== Number(e.target.value)),
+      }));
+    }
+  };
+
+  const handleChangeCategoryFilter = (
+    warehouseStatus: WarehouseStatus,
+    categoryId: number
+  ) => {
+    setProductParam((prev) => ({
+      ...prev,
+      category: categoryId,
+      warehouseStatus,
+    }));
+  };
   return (
     <div className="w-72 p-4">
       <div>
-        <Input
+        <TextInput
+          value={keyword}
+          onChange={(event) => setKeyword(event.currentTarget.value)}
           type="text"
           placeholder="Tìm kiếm sản phẩm"
-          className="rounded-none focus-visible:ring-0"
+          rightSection={
+            <CloseButton
+              aria-label="Clear input"
+              onClick={() => setKeyword("")}
+              style={{ display: keyword ? undefined : "none" }}
+            />
+          }
         />
         <Separator className="my-3" />
         <div>
@@ -98,6 +102,9 @@ const FilterProduct = () => {
                   <Checkbox
                     key={index}
                     label={item.title}
+                    value={item.id}
+                    checked={productParam.sizes.includes(item.id)}
+                    onChange={handleChangeSizeFilter}
                     className="text-sm"
                   />
                 ))}
@@ -115,16 +122,59 @@ const FilterProduct = () => {
             {openedOrderProduct ? <Minus /> : <Plus />}
           </div>
           <Collapse in={openedOrderProduct}>
-            <div className="flex flex-col gap-2 p-4">
-              {ORDER_PRODUCT.map((item, index) => (
-                <Link
-                  key={index}
-                  href={`/product-category/hang-order/${item.id}`}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
+            {categoryListData && (
+              <div className="flex flex-col gap-2 p-4">
+                {categoryListData.data.map((item, index) => (
+                  <UnstyledButton
+                    key={index}
+                    onClick={() => handleChangeCategoryFilter("ORDER", item.id)}
+                  >
+                    <span
+                      className={cn(
+                        productParam.warehouseStatus === "ORDER" &&
+                          productParam.category === item.id &&
+                          "font-semibold underline text-blue-600"
+                      )}
+                    >
+                      {item.name}
+                    </span>
+                  </UnstyledButton>
+                ))}
+              </div>
+            )}
+          </Collapse>
+        </div>
+
+        <Separator className="my-3" />
+        <div>
+          <div
+            className="flex justify-between items-center cursor-pointer"
+            onClick={toggleReadyProduct}
+          >
+            <h2 className="text-base uppercase">Hàng Có Sẵn</h2>
+            {openedReadyProduct ? <Minus /> : <Plus />}
+          </div>
+          <Collapse in={openedReadyProduct}>
+            {categoryListData && (
+              <div className="flex flex-col gap-2 p-4">
+                {categoryListData.data.map((item, index) => (
+                  <UnstyledButton
+                    key={index}
+                    onClick={() => handleChangeCategoryFilter("READY", item.id)}
+                  >
+                    <span
+                      className={cn(
+                        productParam.warehouseStatus === "READY" &&
+                          productParam.category === item.id &&
+                          "font-semibold underline text-blue-600"
+                      )}
+                    >
+                      {item.name}
+                    </span>
+                  </UnstyledButton>
+                ))}
+              </div>
+            )}
           </Collapse>
         </div>
       </div>

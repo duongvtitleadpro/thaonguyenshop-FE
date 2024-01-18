@@ -1,5 +1,10 @@
 import { Response } from "@/types/common";
-import { Product, ProductParam, ProductSize } from "@/types/product";
+import {
+  Product,
+  ProductColor,
+  ProductParam,
+  ProductSize,
+} from "@/types/product";
 import { objectToQueryString } from "@/utils";
 import axiosInstance from "@utils/axios";
 
@@ -13,5 +18,10 @@ export const getProductList = async (
 
 export const getProductSize = async (): Promise<Response<ProductSize>> => {
   const { data } = await axiosInstance.get(`/product-size`);
+  return data;
+};
+
+export const getProductColor = async (): Promise<Response<ProductColor>> => {
+  const { data } = await axiosInstance.get(`/product-color`);
   return data;
 };

@@ -3,7 +3,7 @@ import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { promises as fs } from "fs";
 import path from "path";
-import { Data } from "@/app/product-category/schema";
+import { Data } from "@/app/(main)/product-category/schema";
 
 const OPTIONS: EmblaOptionsType = {};
 const images = [
