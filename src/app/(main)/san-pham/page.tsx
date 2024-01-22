@@ -9,13 +9,22 @@ import { useRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/filter.atom";
 import { useEffect } from "react";
 import { ATOM_KEY } from "@/store/key";
+import { useSearchParams } from "next/navigation";
 
 export default function ProductPage() {
   const [productParam, setProductParam] = useRecoilState(filterProductState);
+  const searchParams = useSearchParams();
   useEffect(() => {
     const filterProduct = sessionStorage.getItem(ATOM_KEY.FILTER_PRODUCT);
     if (filterProduct) {
       setProductParam(JSON.parse(filterProduct));
+    }
+    const keyword = searchParams.get("search");
+    if (keyword) {
+      setProductParam((prev) => ({
+        ...prev,
+        keyword,
+      }));
     }
   }, []);
   const { data: productListData } = useQuery({

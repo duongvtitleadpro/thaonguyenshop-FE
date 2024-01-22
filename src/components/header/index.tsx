@@ -1,7 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -11,7 +10,7 @@ import { NavBarRoute } from "@/constant/route";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
-import { Drawer, UnstyledButton } from "@mantine/core";
+import { CloseButton, Drawer, Input, UnstyledButton } from "@mantine/core";
 import { useSetRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/filter.atom";
 import LoginModal from "../login-modal";
@@ -26,12 +25,11 @@ const Header = () => {
     useDisclosure(false);
 
   const handleChangeKeyword = () => {
-    console.log(keyword);
     setProductParam((prev) => ({
       ...prev,
       keyword: keyword,
     }));
-    router.push("/san-pham");
+    if (pathname !== "/san-pham") router.push(`/san-pham?search=${keyword}`);
   };
 
   return (
@@ -53,15 +51,26 @@ const Header = () => {
             <div className="flex items-center justify-between gap-20">
               <div className="flex w-full items-center">
                 <Input
-                  type="text"
                   placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
-                  className="rounded-none focus-visible:ring-0"
+                  className="flex-1 h-full rounded-none"
+                  radius="xs"
                   value={keyword}
                   onChange={(event) => setKeyword(event.currentTarget.value)}
+                  rightSectionPointerEvents="all"
+                  rightSection={
+                    <CloseButton
+                      aria-label="Clear input"
+                      onClick={() => {
+                        setKeyword("");
+                        setProductParam((prev) => ({ ...prev, keyword: "" }));
+                      }}
+                      style={{ display: keyword ? undefined : "none" }}
+                    />
+                  }
                 />
                 <Button
                   type="button"
-                  className="rounded-none bg-[#35A8E0]"
+                  className="rounded-none bg-[#35A8E0] h-9"
                   onClick={handleChangeKeyword}
                 >
                   TÌM KIẾM

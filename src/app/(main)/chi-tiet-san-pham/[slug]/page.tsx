@@ -83,9 +83,11 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
   const handleBuyProduct = async () => {
     if (!auth.isAuthenticated) {
       toast("Bạn chưa đăng nhập", {
-        description: "Vui lòng đăng nhập để tiếp tục",
+        description: (
+          <p className="text-white">Vui lòng đăng nhập để tiếp tục</p>
+        ),
         style: {
-          backgroundColor: "#8d001b",
+          backgroundColor: "#7f1d1d",
           color: "#fff",
         },
       });
