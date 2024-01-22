@@ -5,17 +5,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@components/table/data-table-column-header";
 import DataTableRowActions from "@components/table/data-table-row-actions";
 import { Image } from "@mantine/core";
-import { Data } from "./schema";
 import Link from "next/link";
 import { format } from "date-fns";
-import {
-  ProductStatusColor,
-  ProductStatusTitle,
-  ShipmentStatusTitle,
-} from "@/constant/product";
+import { OrderStateTitle, OrderStatusTitle } from "@/constant/product";
 import { currency } from "@/utils/currency";
+import { PurchasedOrder } from "@/types/order";
 
-export const columns: ColumnDef<Data>[] = [
+export const columns: ColumnDef<PurchasedOrder>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -26,140 +22,168 @@ export const columns: ColumnDef<Data>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "path",
+    accessorKey: "user",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ảnh" />
+      <DataTableColumnHeader column={column} title="Tên khách hàng" />
     ),
     cell: ({ row }) => {
-      return (
-        <Image
-          src={`https://hoachipshop.com.vn/${row.getValue("path")}`}
-          w={56}
-          h={56}
-          alt=""
-        />
-      );
+      return <div>{row.original.user.name}</div>;
     },
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "productCode",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Sản phẩm" />
+      <DataTableColumnHeader column={column} title="Mã sản phẩm" />
+    ),
+    cell: ({ row }) => <div>{row.original.product.productCode}</div>,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "productName",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Tên sản phẩm" />
+    ),
+    cell: ({ row }) => <div>{row.original.product.name}</div>,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "color",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Mẫu" />
+    ),
+    cell: ({ row }) => <div>{row.original.orderDetailColor?.title || "-"}</div>,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "size",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Size" />
+    ),
+    cell: ({ row }) => <div>{row.original.orderDetailSize?.title || "-"}</div>,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "orderQuantity",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Số lượng đặt" />
+    ),
+    cell: ({ row }) => <div>{row.original.orderDetailQuantity}</div>,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  // {
+  //   accessorKey: "receivedQuantity",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Số lượng về" />
+  //   ),
+  //   cell: ({ row }) => <div>{row.original.productId}</div>,
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
+  {
+    accessorKey: "unitPrice",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Đơn giá" />
     ),
     cell: ({ row }) => (
-      <div className="w-40">
-        <Link
-          href={`chi-tiet-san-pham/${row.getValue("id")}`}
-          className="text-blue-600 hover:underline"
-        >
-          {row.getValue("name")}
-        </Link>
-        <div>
-          <p>
-            Mã SP: <b>{row.original.product_code}</b>
-          </p>
-          <ul className="font-bold ml-4">
-            {row.original.options.map((option, index) => (
-              <li key={index}>
-                {`${option.option_label || ""} (SL: ${option.qty})`}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <div>{`${currency.format(row.original.product.price)}`}</div>
     ),
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "number_of_product",
+    accessorKey: "totalCost",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Số lượng"
-        className="justify-end"
-      />
+      <DataTableColumnHeader column={column} title="Thành tiền" />
     ),
-    cell: ({ row }) => {
-      return (
-        <div className="text-right">{row.getValue("number_of_product")}</div>
-      );
-    },
-  },
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ngày lên đơn" />
+    cell: ({ row }) => (
+      <div>{`${currency.format(
+        row.original.product.price * row.original.orderDetailQuantity
+      )}`}</div>
     ),
-    cell: ({ row }) => {
-      return (
-        <div className="w-[80px]">{`${format(
-          new Date(row.getValue("created_at")),
-          "MM/dd/yyyy HH:mm:ss"
-        )}`}</div>
-      );
-    },
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "status",
+    accessorKey: "orderStatus",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Trạng thái" />
+      <DataTableColumnHeader column={column} title="Tình trạng đơn hàng" />
     ),
-    cell: ({ row }) => {
-      return (
-        <div
-          className={`font-semibold ${ProductStatusColor[row.original.status]}`}
-        >
-          {ProductStatusTitle[row.original.status]}
-        </div>
-      );
-    },
+    cell: ({ row }) => <div>{OrderStatusTitle[row.original.orderStatus]}</div>,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "orderState",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Trạng thái đơn hàng" />
+    ),
+    cell: ({ row }) => (
+      <div>{OrderStateTitle[row.original.allocationStatus]}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
 
   {
-    accessorKey: "shipment_status",
+    accessorKey: "orderDate",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tình trạng" />
+      <DataTableColumnHeader column={column} title="Ngày đặt hàng" />
     ),
-    cell: ({ row }) => {
-      return <div>{ShipmentStatusTitle[row.original.shipment_status]}</div>;
-    },
-  },
-  {
-    accessorKey: "price",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Tổng tiền"
-        className="justify-end"
-      />
+    cell: ({ row }) => (
+      <div>{`${format(
+        new Date(row.original.orderDate),
+        "MM/dd/yyyy HH:mm:ss"
+      )}`}</div>
     ),
-    cell: ({ row }) => {
-      return (
-        <div className="text-right">{`${currency.format(
-          row.getValue("price")
-        )}`}</div>
-      );
-    },
+    enableSorting: false,
+    enableHiding: false,
   },
+  // {
+  //   accessorKey: "orderState",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Ngày chia" />
+  //   ),
+  //   cell: ({ row }) => <div>{row.original.productId}</div>,
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
 
   {
     accessorKey: "note",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Ghi chú" />
     ),
-    cell: ({ row }) => {
-      return <div className="w-[80px]">{row.getValue("note")}</div>;
-    },
+    cell: ({ row }) => <div>{row.original?.note}</div>,
     enableSorting: false,
     enableHiding: false,
   },
+
+  // {
+  //   accessorKey: "location",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Vị trí" />
+  //   ),
+  //   cell: ({ row }) => <div>{row.original.productId}</div>,
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
+
+  // {
+  //   accessorKey: "orderPicker",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Nhân viên chia hàng" />
+  //   ),
+  //   cell: ({ row }) => <div>{row.original.productId}</div>,
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
 
   {
     id: "actions",

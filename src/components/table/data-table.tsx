@@ -32,11 +32,16 @@ import DataTableToolbar from "./data-table-toolbar";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  footer?: {
+    colSpan: number;
+    value: string;
+  }[];
 }
 
 export default function DataTable<TData, TValue>({
   columns,
   data,
+  footer,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -70,7 +75,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      {/* <DataTableToolbar table={table} /> */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -119,12 +124,17 @@ export default function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={3}>Total</TableCell>
-              <TableCell className="text-right">$2,500.00</TableCell>
-            </TableRow>
-          </TableFooter>
+          {footer && (
+            <TableFooter>
+              <TableRow>
+                {footer.map((item, index) => (
+                  <TableCell key={index} colSpan={item.colSpan}>
+                    {item.value}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       </div>
       <DataTablePagination table={table} />

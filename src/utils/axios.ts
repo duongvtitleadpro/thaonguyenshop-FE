@@ -34,18 +34,18 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const statusCode = error.response ? error.response.status : null;
-    if (statusCode === 401) {
-      const token = await refreshTokenRequest();
-      setToken(TOKEN_KEY.ACCESS, token.accessToken);
-      setToken(TOKEN_KEY.REFRESH, token.refreshToken);
-      return error.config;
-    }
-    return Promise.reject(error);
-  }
-);
+// axiosInstance.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const statusCode = error.response ? error.response.status : null;
+//     if (statusCode === 401) {
+//       const token = await refreshTokenRequest();
+//       setToken(TOKEN_KEY.ACCESS, token.accessToken);
+//       setToken(TOKEN_KEY.REFRESH, token.refreshToken);
+//       return error.config;
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export default axiosInstance;

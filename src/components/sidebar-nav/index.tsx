@@ -28,6 +28,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
         <Link
           key={item.href}
           href={item.href}
+          as={item.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
             pathname === item.href

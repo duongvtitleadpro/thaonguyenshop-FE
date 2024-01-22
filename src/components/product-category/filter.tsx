@@ -19,23 +19,24 @@ import { useRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/filter.atom";
 import { getAllCategory } from "@/api/category";
 import { WarehouseStatus } from "@/types/product";
+import { ATOM_KEY } from "@/store/key";
 
 const FilterProduct = () => {
   const [keyword, setKeyword] = React.useState("");
   const [debounced] = useDebouncedValue(keyword, 500);
   const [productParam, setProductParam] = useRecoilState(filterProductState);
-  const [openedSize, { toggle: toggleSize }] = useDisclosure(false);
+  const [openedSize, { toggle: toggleSize }] = useDisclosure(true);
   const [openedOrderProduct, { toggle: toggleOrderProduct }] =
-    useDisclosure(false);
+    useDisclosure(true);
   const [openedReadyProduct, { toggle: toggleReadyProduct }] =
-    useDisclosure(false);
+    useDisclosure(true);
   const { data: productSizeList } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_SIZE],
     queryFn: getProductSize,
   });
 
   const { data: categoryListData } = useQuery({
-    queryKey: [QueryKey.GET_ALL_CATEGORY],
+    queryKey: [QueryKey.GET_ALL_CATEGORY, productParam],
     queryFn: getAllCategory,
   });
 
@@ -45,6 +46,20 @@ const FilterProduct = () => {
       keyword: debounced,
     }));
   }, [debounced, setProductParam]);
+
+  const saveParamState = useCallback(() => {
+    sessionStorage.setItem(
+      ATOM_KEY.FILTER_PRODUCT,
+      JSON.stringify(productParam)
+    );
+  }, [productParam]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", saveParamState);
+    return () => {
+      window.removeEventListener("beforeunload", saveParamState);
+    };
+  }, [saveParamState]);
 
   const handleChangeSizeFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {

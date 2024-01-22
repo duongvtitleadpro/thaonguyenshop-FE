@@ -14,3 +14,7 @@ export const getToken = (key: string) => {
   const token = foundCookie.split("=")[1];
   return token;
 };
+
+export const clearToken = (key: string) => {
+  document.cookie = `${key}=; path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+};

@@ -28,18 +28,32 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
 
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
+    const listSizeNoColor = productDetailData.details.find(
+      (detail) => Object.keys(detail.color).length === 0
+    );
+    if (listSizeNoColor) {
+      return listSizeNoColor.size;
+    }
     const listSize = productDetailData.details.find(
       (detail) => detail.color.id === color
     );
-    return listSize ? listSize.size : [];
+    return listSize
+      ? listSize.size.length > 0
+        ? listSize.size
+        : [
+            {
+              id: null,
+              title: "Không có size",
+            },
+          ]
+      : [];
   }, [productDetailData, color]);
 
   const handleChangeCart = (
     value: number | string,
-    sizeId: number,
-    colorId: number
+    sizeId: number | null,
+    colorId: number | null
   ) => {
-    console.log("😻 ~ DetailProductPage ~ value:", value);
     if (!productDetailData) return;
     const newCart = [...cart];
     const index = newCart.findIndex(
@@ -82,7 +96,9 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                   className="flex items-center space-x-3 rtl:space-x-reverse"
                 >
                   <ShoppingBag size={16} color="#35a8e0" />
-                  <span>{`${item.color.title} - ${item.size.title}: ${item.quantity} cái`}</span>
+                  <span>{`${item?.color?.title || ""} - ${
+                    item?.size?.title || ""
+                  }: ${item.quantity} cái`}</span>
                 </li>
               ))}
             </ul>
@@ -121,7 +137,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                 options={OPTIONS}
               />
             </div>
-            <div className="mx-auto max-w-2xl px-4 pb-16 sm:px-6">
+            <div className="mx-auto w-full max-w-2xl px-4 pb-16 sm:px-6">
               <div>
                 <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl first-letter:capitalize">
                   {productDetailData.name}
@@ -161,37 +177,42 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                         Choose a size
                       </RadioGroup.Label>
                       <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
-                        {productDetailData.details.map((detail, index) => (
-                          <RadioGroup.Option
-                            key={index}
-                            value={detail.color.id}
-                            className={({ active }) =>
-                              cn(
-                                active ? "ring-2 ring-[#35a8e0]" : "",
-                                "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                              )
-                            }
-                          >
-                            {({ active, checked }) => (
-                              <>
-                                <RadioGroup.Label as="span">
-                                  {detail.color.title}
-                                </RadioGroup.Label>
+                        {productDetailData.details.map((detail, index) => {
+                          if (Object.keys(detail.color).length === 0) {
+                            return null;
+                          }
+                          return (
+                            <RadioGroup.Option
+                              key={index}
+                              value={detail.color.id}
+                              className={({ active }) =>
+                                cn(
+                                  active ? "ring-2 ring-[#35a8e0]" : "",
+                                  "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
+                                )
+                              }
+                            >
+                              {({ active, checked }) => (
+                                <>
+                                  <RadioGroup.Label as="span">
+                                    {detail.color.title}
+                                  </RadioGroup.Label>
 
-                                <span
-                                  className={cn(
-                                    active ? "border" : "border-2",
-                                    checked
-                                      ? "border-[#35a8e0]"
-                                      : "border-transparent",
-                                    "pointer-events-none absolute -inset-px rounded-md"
-                                  )}
-                                  aria-hidden="true"
-                                />
-                              </>
-                            )}
-                          </RadioGroup.Option>
-                        ))}
+                                  <span
+                                    className={cn(
+                                      active ? "border" : "border-2",
+                                      checked
+                                        ? "border-[#35a8e0]"
+                                        : "border-transparent",
+                                      "pointer-events-none absolute -inset-px rounded-md"
+                                    )}
+                                    aria-hidden="true"
+                                  />
+                                </>
+                              )}
+                            </RadioGroup.Option>
+                          );
+                        })}
                       </div>
                     </RadioGroup>
                   </div>
@@ -203,7 +224,8 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                         Size
                       </h3>
                     </div>
-                    {color && (
+                    {/* Color, size available */}
+                    {
                       <List spacing="md" mt={4}>
                         {listSizeByColor.map((size, index) => (
                           <List.Item key={index} icon={<Ruler />}>
@@ -230,8 +252,35 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                           </List.Item>
                         ))}
                       </List>
-                    )}
+                    }
                   </div>
+                  {/* No color, no size */}
+                  {productDetailData.details.length === 0 && (
+                    <div className="mt-10 flex gap-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-medium text-gray-900">
+                          Số lượng
+                        </h3>
+                      </div>
+                      <div className="flex gap-3 items-center">
+                        <NumberInput
+                          width={100}
+                          placeholder="0"
+                          min={0}
+                          value={
+                            cart.find(
+                              (product) =>
+                                product.sizeId === null &&
+                                product.colorId === null
+                            )?.quantity || 0
+                          }
+                          onChange={(value) =>
+                            handleChangeCart(value, null, null)
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <button
                     disabled={cart.length === 0}

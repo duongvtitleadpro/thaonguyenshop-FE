@@ -61,11 +61,11 @@ export default function Home() {
             </WidgetWrapper>
           </div>
         )}
-        <div className="w-full max-w-6xl mx-auto mt-40 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center">
+        {/* <div className="w-full max-w-6xl mx-auto mt-40 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center">
           {new Array(4).fill(0).map((_, index) => (
             <ContactCard key={index} />
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

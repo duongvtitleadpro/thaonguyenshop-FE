@@ -15,11 +15,11 @@ import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { SignInBody } from "@/types/auth";
 import { signinRequest } from "@/api/auth";
-import { setToken } from "@/utils";
+import { clearToken, setToken } from "@/utils";
 import { TOKEN_KEY } from "@/constant/auth";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { authState } from "@/store/state/auth.atom";
-import { Settings } from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
 
 const LoginModal = () => {
   const [{ isAuthenticated, user }, setAuth] = useRecoilState(authState);
@@ -57,6 +57,12 @@ const LoginModal = () => {
       );
     },
   });
+
+  const handleLogout = () => {
+    clearToken(TOKEN_KEY.ACCESS);
+    clearToken(TOKEN_KEY.REFRESH);
+    window.location.reload();
+  };
   return (
     <div className="cursor-pointer">
       {isAuthenticated ? (
@@ -72,6 +78,12 @@ const LoginModal = () => {
                 onClick={() => router.push("/tai-khoan/me")}
               >
                 Tài khoản
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<LogOut />}
+                onClick={() => handleLogout()}
+              >
+                Đăng xuất
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
@@ -105,7 +117,7 @@ const LoginModal = () => {
             placeholder="Mật khẩu"
             {...signupForm.getInputProps("password")}
           />
-          <Button type="submit" className="uppercase">
+          <Button type="submit" className="uppercase" c="white" bg="blue">
             Đăng nhập
           </Button>
         </form>

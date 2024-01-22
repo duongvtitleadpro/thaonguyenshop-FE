@@ -1,3 +1,5 @@
+import { Product } from "./product";
+
 export type Order = {
   productId: number;
   orderDetails: OrderDetail[];
@@ -5,8 +7,8 @@ export type Order = {
 
 export type OrderDetail = {
   productId: number;
-  colorId: number;
-  sizeId: number;
+  colorId: number | null;
+  sizeId: number | null;
   quantity: number;
 };
 
@@ -16,10 +18,19 @@ export type OrderResponse = {
   totalPrice: number;
   note: any;
   productId: number;
+  product: Product;
   userId: number;
-  orderStatus: string;
-  allocationStatus: any;
+  orderStatus: OrderStatus;
+  allocationStatus: AllocationStatus;
   orderDetails: OrderDetailRespose[];
+  user: User;
+};
+
+export type OrderParam = {
+  page?: number;
+  size?: number;
+  orderStatus?: OrderStatus[];
+  allocationStatus?: AllocationStatus[];
 };
 
 export type OrderDetailRespose = {
@@ -31,3 +42,26 @@ export type OrderDetailRespose = {
   };
   quantity: number;
 };
+
+export type User = {
+  id: number;
+  name: string;
+};
+
+export type PurchasedOrder = OrderResponse & {
+  orderDetailColor: {
+    title: string;
+  };
+  orderDetailSize: {
+    title: string;
+  };
+  orderDetailQuantity: number;
+};
+
+export type OrderStatus =
+  | "NOT_PURCHASED"
+  | "PURCHASED"
+  | "CANCELLED"
+  | "CUSTOMER_CANCELLED";
+
+export type AllocationStatus = "SENT" | "ALLOCATED";

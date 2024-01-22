@@ -31,7 +31,7 @@ const Header = () => {
       ...prev,
       keyword: keyword,
     }));
-    router.push("/product-category");
+    router.push("/san-pham");
   };
 
   return (
@@ -100,20 +100,28 @@ const Header = () => {
               onClose={closeMenu}
               withCloseButton={false}
               overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
+              styles={{
+                body: {
+                  height: "100%",
+                },
+              }}
             >
-              <div className="flex flex-col gap-4 py-20 px-4">
-                {NavBarRoute.map((item, index) => (
-                  <Link
-                    key={index}
-                    href={item.slug}
-                    className={cn(
-                      "hover:text-[#35A8E0] text-lg tracking-wide text-black",
-                      path === item.slug.split("/")[1] && "text-[#35A8E0]"
-                    )}
-                  >
-                    {item.title}
-                  </Link>
-                ))}
+              <div className="flex flex-col py-20 px-4 justify-between h-full">
+                <div className="flex flex-col gap-4 ">
+                  {NavBarRoute.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={item.slug}
+                      className={cn(
+                        "hover:text-[#35A8E0] text-lg tracking-wide text-black",
+                        path === item.slug.split("/")[1] && "text-[#35A8E0]"
+                      )}
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
+                </div>
+                <LoginModal />
               </div>
             </Drawer>
           </div>
