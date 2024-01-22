@@ -13,6 +13,8 @@ import { Ruler, ShoppingBag } from "lucide-react";
 import { addOrder } from "@/api/order";
 import { OrderDetail } from "@/types/order";
 import { toast } from "sonner";
+import { useRecoilState } from "recoil";
+import { authState } from "@/store/state/auth.atom";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -22,14 +24,16 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
     queryKey: [QueryKey.GET_PRODUCT_DETAIL, slug],
     queryFn: () => getProductDetail(Number(slug)),
   });
-
+  const [auth, setAuth] = useRecoilState(authState);
   const [color, setColor] = useState<number | null>(null);
   const [cart, setCart] = useState<OrderDetail[]>([]);
 
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
     const listSizeNoColor = productDetailData.details.find(
-      (detail) => Object.keys(detail.color).length === 0
+      (detail) =>
+        Object.keys(detail.color).length === 0 &&
+        productDetailData.details.length === 1
     );
     if (listSizeNoColor) {
       return listSizeNoColor.size;
@@ -77,8 +81,16 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
   };
 
   const handleBuyProduct = async () => {
-    console.log(cart);
-
+    if (!auth.isAuthenticated) {
+      toast("Bạn chưa đăng nhập", {
+        description: "Vui lòng đăng nhập để tiếp tục",
+        style: {
+          backgroundColor: "#8d001b",
+          color: "#fff",
+        },
+      });
+      return;
+    }
     if (!productDetailData) return;
     try {
       const order = await addOrder({
