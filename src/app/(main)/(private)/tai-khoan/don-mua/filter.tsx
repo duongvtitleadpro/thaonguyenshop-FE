@@ -80,7 +80,7 @@ const PurchaseOrderFilter = () => {
           value={purchaseOrderFilter.allocationStatus}
           onChange={handleChangeAllocationStatus}
         />
-        <MultiSelect
+        {/* <MultiSelect
           label="Mẫu"
           placeholder="Mẫu"
           data={OrderStatus}
@@ -93,7 +93,7 @@ const PurchaseOrderFilter = () => {
           data={OrderStatus}
           value={purchaseOrderFilter.orderStatus}
           onChange={handleChangeOrderStatus}
-        />
+        /> */}
         <ActionIcon
           variant="transparent"
           color="blue"

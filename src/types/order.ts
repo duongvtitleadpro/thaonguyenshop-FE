@@ -65,3 +65,16 @@ export type OrderStatus =
   | "CUSTOMER_CANCELLED";
 
 export type AllocationStatus = "SENT" | "ALLOCATED";
+
+export type OrderCombineParam = {
+  page?: number;
+  size?: number;
+};
+
+export type OrderCombineResponse = {
+  id: number;
+  code?: string;
+  createdAt: string;
+  totalPrice: number;
+  userId: number;
+};

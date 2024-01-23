@@ -30,7 +30,7 @@ const FilterProduct = () => {
   });
 
   const { data: categoryListData } = useQuery({
-    queryKey: [QueryKey.GET_ALL_CATEGORY, productParam],
+    queryKey: [QueryKey.GET_ALL_CATEGORY],
     queryFn: getAllCategory,
   });
 

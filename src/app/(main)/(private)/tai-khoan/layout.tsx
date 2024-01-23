@@ -32,9 +32,9 @@ const sidebarNavItems = [
 
 const UserManagementLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex">
+    <div className="flex flex-col lg:flex-row ">
       <SidebarNav items={sidebarNavItems} className="w-72 p-4" />
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 p-4">{children}</div>
     </div>
   );
 };

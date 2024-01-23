@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
 import { getProductDetail } from "@/api/product";
 import { currency } from "@/utils/currency";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { cn } from "@/lib/utils";
 import { Ruler, ShoppingBag } from "lucide-react";
@@ -258,7 +258,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                       <div className="flex items-center justify-between">
                         {listSizeByColor.length > 0 && (
                           <h3 className="text-sm font-medium text-gray-900">
-                            Số lượng
+                            Size
                           </h3>
                         )}
                       </div>
@@ -266,7 +266,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                       {
                         <List spacing="md" mt={4}>
                           {listSizeByColor.map((size, index) => (
-                            <List.Item key={index} icon={<Ruler />}>
+                            <List.Item key={index}>
                               <div className="flex gap-3 items-center">
                                 <span className="w-24 font-semibold">
                                   {size.title}

@@ -27,6 +27,19 @@ export default function ProductPage() {
       }));
     }
   }, []);
+
+  useEffect(() => {
+    return () => {
+      setProductParam({
+        page: 1,
+        limit: 10,
+        sizes: [],
+        colors: [],
+      });
+      sessionStorage.removeItem(ATOM_KEY.FILTER_PRODUCT);
+    };
+  }, []);
+
   const { data: productListData } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_LIST, productParam],
     queryFn: () => getProductList(productParam),

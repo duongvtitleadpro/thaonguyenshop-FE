@@ -6,4 +6,6 @@ export enum QueryKey {
   GET_PRODUCT_DETAIL = "get-product-detail",
   GET_USER_PROFILE = "get-user-profile",
   GET_PURCHASE_ORDER = "get-purchase-order",
+  GET_COMBINE_ORDER = "get-combine-order",
+  GET_COMBINE_ORDER_DETAIL = "get-combine-order-detail",
 }

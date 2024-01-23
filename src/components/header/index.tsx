@@ -11,14 +11,18 @@ import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { CloseButton, Drawer, Input, UnstyledButton } from "@mantine/core";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/filter.atom";
 import LoginModal from "../login-modal";
+import { ATOM_KEY } from "@/store/key";
 
 const Header = () => {
   const router = useRouter();
-  const [keyword, setKeyword] = React.useState("");
-  const setProductParam = useSetRecoilState(filterProductState);
+  const [productParam, setProductParam] = useRecoilState(filterProductState);
+  const keywordIntial =
+    typeof window !== "undefined" &&
+    JSON.parse(sessionStorage.getItem(ATOM_KEY.FILTER_PRODUCT) || "{}");
+  const [keyword, setKeyword] = React.useState(keywordIntial?.keyword || "");
   const pathname = usePathname();
   const path = useMemo(() => pathname.split("/")[1], [pathname]);
   const [onpenedMenu, { open: openMenu, close: closeMenu }] =

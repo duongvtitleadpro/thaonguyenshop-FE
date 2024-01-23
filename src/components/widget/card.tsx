@@ -14,7 +14,7 @@ const WidgetCard = (props: WidgetCardProps) => {
   return (
     <Link
       href="/san-pham"
-      className="flex flex-col p-4 border border-[#35A8E0] rounded-xl duration-300 hover:shadow-lg hover:border-none cursor-pointer"
+      className="flex flex-col h-full p-4 border border-[#35A8E0] rounded-xl duration-300 hover:shadow-lg hover:border-none cursor-pointer"
     >
       <div className="w-full flex-1 rounded-lg overflow-clip">
         <Image
