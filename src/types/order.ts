@@ -17,11 +17,13 @@ export type OrderResponse = {
   orderDate: string;
   totalPrice: number;
   note: any;
+  location?: string;
   productId: number;
   product: Product;
   userId: number;
   orderStatus: OrderStatus;
   allocationStatus: AllocationStatus;
+  allocatedDate: string;
   orderDetails: OrderDetailRespose[];
   user: User;
 };
@@ -41,6 +43,7 @@ export type OrderDetailRespose = {
     title: string;
   };
   quantity: number;
+  receivedQuantity: number;
 };
 
 export type User = {
@@ -77,4 +80,12 @@ export type OrderCombineResponse = {
   createdAt: string;
   totalPrice: number;
   userId: number;
+  combinedOrderDetails: CombinedOrderDetail[];
 };
+
+export interface CombinedOrderDetail {
+  id: number;
+  combinedOrderId: number;
+  orderId: number;
+  order: Omit<OrderResponse, "orderDetails">;
+}

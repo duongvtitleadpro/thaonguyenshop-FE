@@ -20,23 +20,6 @@ const PurchaseOrderPage = () => {
     queryFn: () => getOrder(purchaseOrderFilter),
   });
 
-  // const purchaseOrderDataConvert: PurchasedOrder[] = useMemo(() => {
-  //   if (!purchaseOrderData) return [];
-  //   const list: PurchasedOrder[] = [];
-  //   for (let i = 0; i < purchaseOrderData.data.length; i++) {
-  //     const item = purchaseOrderData.data[i];
-  //     item.orderDetails.forEach((detail) => {
-  //       list.push({
-  //         ...item,
-  //         orderDetailColor: detail.color,
-  //         orderDetailSize: detail.size,
-  //         orderDetailQuantity: detail.quantity,
-  //       });
-  //     });
-  //   }
-  //   return list;
-  // }, [purchaseOrderData]);
-
   const purchaseOrderFooter = useMemo(() => {
     if (!purchaseOrderData) return [];
     return [
