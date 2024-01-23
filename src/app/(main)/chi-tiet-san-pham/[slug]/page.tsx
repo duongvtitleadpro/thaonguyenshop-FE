@@ -184,6 +184,9 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                     {currency.format(productDetailData.price)}
                   </p>
                 )}
+                <p className="text-sm xl text-gray-600 mt-4">
+                  Nguồn gốc: {productDetailData?.origin}
+                </p>
 
                 {auth.isAuthenticated && (
                   <div className="mt-10">

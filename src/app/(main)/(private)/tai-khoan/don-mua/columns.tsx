@@ -44,7 +44,24 @@ export const columns: ColumnDef<OrderResponse>[] = [
         >
           {row.original.product.name}
         </Link>
-        <h2 className="text-xxs">{`Mã SP: ${row.original.product.productCode}`}</h2>
+        <h2 className="text-xs text-gray-400">{`Mã SP: ${row.original.product.productCode}`}</h2>
+        <ul className="ml-4 space-y-1 list-disc list-inside text-sm">
+          {row.original.orderDetails.map((orderDetail, index) => {
+            const colorTitle = orderDetail.color
+              ? `Mẫu: ${orderDetail.color.title};`
+              : "";
+            const sizeTitle = orderDetail.size
+              ? `Size: ${orderDetail.size.title};`
+              : "";
+            const quantityTitle = `(SL: ${orderDetail.quantity})`;
+            return (
+              <li key={index}>
+                {`${colorTitle} ${sizeTitle} `}
+                <b>{quantityTitle}</b>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     ),
     enableSorting: false,
@@ -68,24 +85,32 @@ export const columns: ColumnDef<OrderResponse>[] = [
   //   enableSorting: false,
   //   enableHiding: false,
   // },
-  // {
-  //   accessorKey: "orderQuantity",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Số lượng đặt" />
-  //   ),
-  //   cell: ({ row }) => <div>{row.original.orderDetailQuantity}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-  // {
-  //   accessorKey: "receivedQuantity",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Số lượng về" />
-  //   ),
-  //   cell: ({ row }) => <div>{row.original.productId}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+  {
+    accessorKey: "orderQuantity",
+    accessorFn: (row) =>
+      row.orderDetails.reduce((acc, cur) => acc + cur.quantity, 0),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Số lượng đặt" />
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("orderQuantity")}</div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "receivedQuantity",
+    accessorFn: (row) =>
+      row.orderDetails.reduce((acc, cur) => acc + cur.receivedQuantity, 0),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Số lượng về" />
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("receivedQuantity")}</div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "unitPrice",
     header: ({ column }) => (
@@ -97,19 +122,20 @@ export const columns: ColumnDef<OrderResponse>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: "totalCost",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Thành tiền" />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <div>{`${currency.format(
-  //       row.original.product.price * row.original.orderDetailQuantity
-  //     )}`}</div>
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+  {
+    accessorKey: "totalCost",
+    accessorFn: (row) =>
+      row.product.price *
+      row.orderDetails.reduce((acc, cur) => acc + cur.quantity, 0),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Thành tiền" />
+    ),
+    cell: ({ row }) => (
+      <div>{`${currency.format(row.original.totalPrice)}`}</div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "orderStatus",
     header: ({ column }) => (
@@ -127,7 +153,9 @@ export const columns: ColumnDef<OrderResponse>[] = [
       <DataTableColumnHeader column={column} title="Trạng thái đơn hàng" />
     ),
     cell: ({ row }) => (
-      <div>{OrderStateTitle[row.original.allocationStatus]}</div>
+      <div className="w-24">
+        {OrderStateTitle[row.original.allocationStatus]}
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -147,15 +175,24 @@ export const columns: ColumnDef<OrderResponse>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: "orderState",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Ngày chia" />
-  //   ),
-  //   cell: ({ row }) => <div>{row.original.productId}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+  {
+    accessorKey: "orderState",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Ngày chia" />
+    ),
+    cell: ({ row }) => (
+      <>
+        {row.original.allocatedDate && (
+          <div>{`${format(
+            new Date(row.original.allocatedDate),
+            "MM/dd/yyyy HH:mm:ss"
+          )}`}</div>
+        )}
+      </>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
 
   {
     accessorKey: "note",
