@@ -42,7 +42,7 @@ const LoginModal = () => {
     onSuccess: (data) => {
       setToken(TOKEN_KEY.ACCESS, data.accessToken);
       setToken(TOKEN_KEY.REFRESH, data.refreshToken);
-      router.push("/");
+      router.refresh();
       setAuth({
         isAuthenticated: true,
         user: data.user,
@@ -61,15 +61,28 @@ const LoginModal = () => {
   const handleLogout = () => {
     clearToken(TOKEN_KEY.ACCESS);
     clearToken(TOKEN_KEY.REFRESH);
-    window.location.reload();
+    setAuth({
+      isAuthenticated: false,
+      user: null,
+    });
+    router.refresh();
   };
   return (
     <div className="cursor-pointer">
       {isAuthenticated ? (
         <div className="flex items-center gap-2">
-          <Menu shadow="md" width={200}>
+          <Menu
+            shadow="md"
+            width={200}
+            trigger="hover"
+            openDelay={100}
+            closeDelay={400}
+          >
             <Menu.Target>
-              <Avatar src={user?.avatarUrl} color="white" variant="light" />
+              <div className="flex items-center gap-2">
+                <Avatar src={user?.avatarUrl} color="white" variant="light" />
+                <div>Xin chào, {user?.name}</div>
+              </div>
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Label>{user?.name}</Menu.Label>
@@ -87,8 +100,6 @@ const LoginModal = () => {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
-
-          <div>Xin chào, {user?.name}</div>
         </div>
       ) : (
         <div className="flex gap-2" onClick={openLogin}>

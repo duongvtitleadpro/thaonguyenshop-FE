@@ -5,17 +5,20 @@ import { Data } from "./schema";
 import { columns } from "./columns";
 async function getData() {
   const data = await fs.readFile(
-    path.join(process.cwd(), "src/app/(main)/tai-khoan/thanh-toan/data.json")
+    path.join(
+      process.cwd(),
+      "src/app/(main)/(private)/tai-khoan/don-xuat/data.json"
+    )
   );
 
-  const rechargeData: Data[] = JSON.parse(data.toString()).data;
+  const exportData: Data[] = JSON.parse(data.toString()).data;
 
-  return rechargeData;
+  return exportData;
 }
-const PaymentPage = async () => {
+const ExportOrderPage = async () => {
   const data = await getData();
 
   return <DataTable data={data} columns={columns} />;
 };
 
-export default PaymentPage;
+export default ExportOrderPage;

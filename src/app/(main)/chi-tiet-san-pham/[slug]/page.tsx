@@ -28,6 +28,29 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
   const [color, setColor] = useState<number | null>(null);
   const [cart, setCart] = useState<OrderDetail[]>([]);
 
+  const listColor = useMemo(() => {
+    if (!productDetailData) return [];
+    // No color, no size
+    if (productDetailData.details.length === 0) {
+      return [];
+    }
+    // No color, have size
+    const listNoColorHaveSize =
+      productDetailData.details.length === 1 &&
+      productDetailData.details.find(
+        (detail) => Object.keys(detail.color).length === 0
+      );
+    if (listNoColorHaveSize) {
+      return [];
+    }
+
+    // list color
+    const listColorData = productDetailData.details.filter(
+      (detail) => Object.keys(detail.color).length > 0
+    );
+    return listColorData.map((item) => item.color);
+  }, [productDetailData]);
+
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
     const listSizeNoColor = productDetailData.details.find(
@@ -41,17 +64,10 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
     const listSize = productDetailData.details.find(
       (detail) => detail.color.id === color
     );
-    return listSize
-      ? listSize.size.length > 0
-        ? listSize.size
-        : [
-            {
-              id: null,
-              title: "Không có size",
-            },
-          ]
-      : [];
+    return listSize ? listSize.size : [];
   }, [productDetailData, color]);
+
+  console.log("😻 ~ listSizeByColor ~ listSizeByColor:", listSizeByColor);
 
   const handleChangeCart = (
     value: number | string,
@@ -139,6 +155,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
       <div className="w-full max-w-6xl mx-auto mt-12">
         {productDetailData && (
           <SimpleGrid cols={{ base: 1, md: 2 }}>
+            {/* Slider */}
             <div>
               <EmblaCarousel
                 images={
@@ -151,6 +168,8 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                 options={OPTIONS}
               />
             </div>
+
+            {/* Product info */}
             <div className="mx-auto w-full max-w-2xl px-4 pb-16 sm:px-6">
               <div>
                 <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl first-letter:capitalize">
@@ -160,160 +179,168 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
 
               <div className="mt-4">
                 <h2 className="sr-only">Chi tiết sản phẩm</h2>
-                <p className="text-3xl tracking-tight text-gray-900">
-                  {currency.format(productDetailData.price)}
-                </p>
+                {auth.isAuthenticated && (
+                  <p className="text-3xl tracking-tight text-gray-900">
+                    {currency.format(productDetailData.price)}
+                  </p>
+                )}
 
-                <div className="mt-10">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        Màu sắc
-                      </h3>
-                      {cart.length > 0 && (
-                        <UnstyledButton
-                          onClick={() => {
-                            setCart([]);
-                            setColor(null);
-                          }}
-                          className="text-sm font-medium text-[#35a8e0] hover:text-[#35a8e0]"
-                        >
-                          Xóa đơn hàng
-                        </UnstyledButton>
-                      )}
-                    </div>
-                    <RadioGroup
-                      value={color}
-                      onChange={setColor}
-                      className="mt-4"
-                    >
-                      <RadioGroup.Label className="sr-only">
-                        Choose a size
-                      </RadioGroup.Label>
-                      <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
-                        {productDetailData.details.map((detail, index) => {
-                          if (Object.keys(detail.color).length === 0) {
-                            return null;
-                          }
-                          return (
-                            <RadioGroup.Option
-                              key={index}
-                              value={detail.color.id}
-                              className={({ active }) =>
-                                cn(
-                                  active ? "ring-2 ring-[#35a8e0]" : "",
-                                  "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                                )
-                              }
-                            >
-                              {({ active, checked }) => (
-                                <>
-                                  <RadioGroup.Label as="span">
-                                    {detail.color.title}
-                                  </RadioGroup.Label>
-
-                                  <span
-                                    className={cn(
-                                      active ? "border" : "border-2",
-                                      checked
-                                        ? "border-[#35a8e0]"
-                                        : "border-transparent",
-                                      "pointer-events-none absolute -inset-px rounded-md"
-                                    )}
-                                    aria-hidden="true"
-                                  />
-                                </>
-                              )}
-                            </RadioGroup.Option>
-                          );
-                        })}
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  {/* Sizes */}
+                {auth.isAuthenticated && (
                   <div className="mt-10">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        Size
-                      </h3>
-                    </div>
-                    {/* Color, size available */}
-                    {
-                      <List spacing="md" mt={4}>
-                        {listSizeByColor.map((size, index) => (
-                          <List.Item key={index} icon={<Ruler />}>
-                            <div className="flex gap-3 items-center">
-                              <span className="w-24 font-semibold">
-                                {size.title}
-                              </span>
-                              <NumberInput
-                                width={100}
-                                placeholder="0"
-                                min={0}
-                                value={
-                                  cart.find(
-                                    (product) =>
-                                      product.sizeId === size.id &&
-                                      product.colorId === color
-                                  )?.quantity || 0
-                                }
-                                onChange={(value) =>
-                                  handleChangeCart(value, size.id, color)
-                                }
-                              />
-                            </div>
-                          </List.Item>
-                        ))}
-                      </List>
-                    }
-                  </div>
-                  {/* No color, no size */}
-                  {productDetailData.details.length === 0 && (
-                    <div className="mt-10 flex gap-3">
+                    {/* Colors */}
+                    <div>
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-medium text-gray-900">
-                          Số lượng
-                        </h3>
+                        {listColor.length > 0 && (
+                          <h3 className="text-sm font-medium text-gray-900">
+                            Mẫu/Màu
+                          </h3>
+                        )}
+                        {cart.length > 0 && (
+                          <UnstyledButton
+                            onClick={() => {
+                              setCart([]);
+                              setColor(null);
+                            }}
+                            className="text-sm font-medium text-[#35a8e0] hover:text-[#35a8e0]"
+                          >
+                            Xóa đơn hàng
+                          </UnstyledButton>
+                        )}
                       </div>
-                      <div className="flex gap-3 items-center">
-                        <NumberInput
-                          width={100}
-                          placeholder="0"
-                          min={0}
-                          value={
-                            cart.find(
-                              (product) =>
-                                product.sizeId === null &&
-                                product.colorId === null
-                            )?.quantity || 0
-                          }
-                          onChange={(value) =>
-                            handleChangeCart(value, null, null)
-                          }
-                        />
-                      </div>
-                    </div>
-                  )}
+                      <RadioGroup
+                        value={color}
+                        onChange={setColor}
+                        className="mt-4"
+                      >
+                        <RadioGroup.Label className="sr-only">
+                          Chọn một mẫu
+                        </RadioGroup.Label>
+                        <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
+                          {listColor.map((color, index) => {
+                            return (
+                              <RadioGroup.Option
+                                key={index}
+                                value={color.id}
+                                className={({ active }) =>
+                                  cn(
+                                    active ? "ring-2 ring-[#35a8e0]" : "",
+                                    "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
+                                  )
+                                }
+                              >
+                                {({ active, checked }) => (
+                                  <>
+                                    <RadioGroup.Label as="span">
+                                      {color.title}
+                                    </RadioGroup.Label>
 
-                  <button
-                    disabled={cart.length === 0}
-                    className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={handleBuyProduct}
-                  >
-                    Mua ngay
-                  </button>
+                                    <span
+                                      className={cn(
+                                        active ? "border" : "border-2",
+                                        checked
+                                          ? "border-[#35a8e0]"
+                                          : "border-transparent",
+                                        "pointer-events-none absolute -inset-px rounded-md"
+                                      )}
+                                      aria-hidden="true"
+                                    />
+                                  </>
+                                )}
+                              </RadioGroup.Option>
+                            );
+                          })}
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    {/* Sizes */}
+                    <div className="mt-10">
+                      <div className="flex items-center justify-between">
+                        {listSizeByColor.length > 0 && (
+                          <h3 className="text-sm font-medium text-gray-900">
+                            Số lượng
+                          </h3>
+                        )}
+                      </div>
+                      {/* Size available */}
+                      {
+                        <List spacing="md" mt={4}>
+                          {listSizeByColor.map((size, index) => (
+                            <List.Item key={index} icon={<Ruler />}>
+                              <div className="flex gap-3 items-center">
+                                <span className="w-24 font-semibold">
+                                  {size.title}
+                                </span>
+                                <NumberInput
+                                  width={100}
+                                  placeholder="0"
+                                  min={0}
+                                  value={
+                                    cart.find(
+                                      (product) =>
+                                        product.sizeId === size.id &&
+                                        product.colorId === color
+                                    )?.quantity || 0
+                                  }
+                                  onChange={(value) =>
+                                    handleChangeCart(value, size.id, color)
+                                  }
+                                />
+                              </div>
+                            </List.Item>
+                          ))}
+                        </List>
+                      }
+                    </div>
+                    {/* No size */}
+                    {(productDetailData.details.length === 0 ||
+                      (color && listSizeByColor.length === 0)) && (
+                      <div className="mt-10 flex gap-3">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-sm font-medium text-gray-900">
+                            Số lượng
+                          </h3>
+                        </div>
+                        <div className="flex gap-3 items-center">
+                          <NumberInput
+                            width={100}
+                            placeholder="0"
+                            min={0}
+                            value={
+                              cart.find(
+                                (product) =>
+                                  product.sizeId === null &&
+                                  product.colorId === color
+                              )?.quantity || 0
+                            }
+                            onChange={(value) =>
+                              handleChangeCart(value, null, color)
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <button
+                      disabled={cart.length === 0}
+                      className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={handleBuyProduct}
+                    >
+                      Mua ngay
+                    </button>
+                  </div>
+                )}
+              </div>
+              {auth.isAuthenticated && (
+                <div>
+                  <p className="text-2xl tracking-tight text-gray-900 py-4 text-right">
+                    Tổng tiền:{" "}
+                    {currency.format(
+                      cart.reduce((acc, cur) => acc + cur.quantity, 0) *
+                        productDetailData.price
+                    )}
+                  </p>
                 </div>
-              </div>
-              <div>
-                <p className="text-2xl tracking-tight text-gray-900 py-4 text-right">
-                  Tổng tiền:{" "}
-                  {currency.format(
-                    cart.reduce((acc, cur) => acc + cur.quantity, 0) *
-                      productDetailData.price
-                  )}
-                </p>
-              </div>
+              )}
               <div className="py-10">
                 <div>
                   <h3 className="text-lg font-semibold">Mô tả:</h3>
@@ -323,6 +350,14 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                     </p>
                   </div>
                 </div>
+                {!auth.isAuthenticated && (
+                  <button
+                    disabled={true}
+                    className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Vui lòng đăng nhập để mua hàng
+                  </button>
+                )}
               </div>
             </div>
           </SimpleGrid>

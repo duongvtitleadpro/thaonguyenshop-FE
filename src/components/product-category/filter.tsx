@@ -1,12 +1,6 @@
 "use client";
 import React, { useCallback, useEffect } from "react";
-import {
-  Checkbox,
-  CloseButton,
-  Collapse,
-  TextInput,
-  UnstyledButton,
-} from "@mantine/core";
+import { Checkbox, Collapse, UnstyledButton } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { Plus, Minus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -88,20 +82,6 @@ const FilterProduct = () => {
   return (
     <div className="w-72 p-4">
       <div>
-        <TextInput
-          value={keyword}
-          onChange={(event) => setKeyword(event.currentTarget.value)}
-          type="text"
-          placeholder="Tìm kiếm sản phẩm"
-          rightSection={
-            <CloseButton
-              aria-label="Clear input"
-              onClick={() => setKeyword("")}
-              style={{ display: keyword ? undefined : "none" }}
-            />
-          }
-        />
-        <Separator className="my-3" />
         <div>
           <div
             className="flex justify-between items-center cursor-pointer"

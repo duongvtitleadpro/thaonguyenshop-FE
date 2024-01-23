@@ -67,14 +67,14 @@ const PurchaseOrderFilter = () => {
     <div className="my-3">
       <div className="flex gap-3 items-end">
         <MultiSelect
-          label="Tình trạng"
+          label="Đơn hàng"
           placeholder="Tình trạng"
           data={OrderStatus}
           value={purchaseOrderFilter.orderStatus}
           onChange={handleChangeOrderStatus}
         />
         <MultiSelect
-          label="Trạng thái"
+          label="Đơn hàng"
           placeholder="Trạng thái"
           data={AllocationStatus}
           value={purchaseOrderFilter.allocationStatus}

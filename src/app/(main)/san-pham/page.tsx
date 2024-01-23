@@ -67,13 +67,22 @@ export default function ProductPage() {
                 ))}
               </SimpleGrid>
             </div>
-            <Pagination
-              total={productListData.totalPage}
-              value={productListData.page}
-              onChange={handleChangePage}
-              className="mt-4"
-              color="blue"
-            />
+            {productListData.data.length > 0 ? (
+              <Pagination
+                total={productListData.totalPage}
+                value={productListData.page}
+                onChange={handleChangePage}
+                className="mt-4"
+                color="blue"
+                styles={{
+                  control: {
+                    backgroundColor: "var(--_control-bg-color)",
+                  },
+                }}
+              />
+            ) : (
+              <div className="text-center">Không có sản phẩm nào</div>
+            )}
           </>
         )}
       </div>

@@ -67,6 +67,9 @@ const Header = () => {
                       style={{ display: keyword ? undefined : "none" }}
                     />
                   }
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") handleChangeKeyword();
+                  }}
                 />
                 <Button
                   type="button"

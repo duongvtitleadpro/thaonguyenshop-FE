@@ -13,11 +13,11 @@ import { PurchasedOrder } from "@/types/order";
 
 export const columns: ColumnDef<PurchasedOrder>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "order",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
+      <DataTableColumnHeader column={column} title="STT" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="w-4">{row.index + 1}</div>,
     enableSorting: false,
     enableHiding: false,
   },
