@@ -227,7 +227,18 @@ export const columns: ColumnDef<OrderResponse>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      return <DataTableRowActions />;
+      const orderId = row.original.id;
+      const productId = row.original.productId;
+      const canEditOrder = row.original.orderStatus === "NOT_PURCHASED";
+      const canDeleteOrder = row.original.orderStatus === "NOT_PURCHASED";
+      return (
+        <DataTableRowActions
+          orderId={orderId}
+          productId={productId}
+          canEditOrder={canEditOrder}
+          canDeleteOrder={canDeleteOrder}
+        />
+      );
     },
   },
 ];

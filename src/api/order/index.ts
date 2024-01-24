@@ -5,8 +5,9 @@ import {
   OrderResponse,
   OrderCombineParam,
   OrderCombineResponse,
+  ResponseWithTotal,
 } from "@/types/order";
-import { objectToQueryString, objectToQueryStringByComma } from "@/utils";
+import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
 
 export const addOrder = async (order: Order): Promise<OrderResponse> => {
@@ -16,7 +17,7 @@ export const addOrder = async (order: Order): Promise<OrderResponse> => {
 
 export const getOrder = async (
   param: OrderParam
-): Promise<Response<OrderResponse>> => {
+): Promise<ResponseWithTotal<OrderResponse>> => {
   const search = objectToQueryStringByComma(param);
   const { data } = await axiosInstance.get(`/order?${search}`);
   return data;
@@ -34,5 +35,10 @@ export const getCombineOrderDetail = async (
   id: number
 ): Promise<OrderCombineResponse> => {
   const { data } = await axiosInstance.get(`/order/combined-orders/${id}`);
+  return data;
+};
+
+export const cancelOrder = async (id: number) => {
+  const { data } = await axiosInstance.patch(`/order/cancel/${id}`);
   return data;
 };

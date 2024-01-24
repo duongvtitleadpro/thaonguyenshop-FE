@@ -1,3 +1,4 @@
+import { Response } from "./common";
 import { Product } from "./product";
 
 export type Order = {
@@ -33,6 +34,9 @@ export type OrderParam = {
   size?: number;
   orderStatus?: OrderStatus[];
   allocationStatus?: AllocationStatus[];
+  sizeIds?: number[];
+  colorIds?: number[];
+  query?: string;
 };
 
 export type OrderDetailRespose = {
@@ -89,3 +93,9 @@ export interface CombinedOrderDetail {
   orderId: number;
   order: Omit<OrderResponse, "orderDetails">;
 }
+
+export type ResponseWithTotal<T> = Response<T> & {
+  totalPrice: number;
+  totalQuantity: number;
+  totalRecievedQuantity: number;
+};

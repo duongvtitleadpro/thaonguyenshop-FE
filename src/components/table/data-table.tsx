@@ -3,7 +3,10 @@ import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  OnChangeFn,
+  PaginationState,
   SortingState,
+  Updater,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -34,8 +37,11 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   footer?: {
     colSpan: number;
-    value: string;
+    value?: string;
+    className?: string;
   }[];
+  // handleGoToPage: (pageIndex: number) => void;
+  // handleChangePageSize: (pageSize: number) => void;
 }
 
 export default function DataTable<TData, TValue>({
@@ -51,6 +57,22 @@ export default function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  // const setPageIndex = React.useCallback(
+  //   (updater: any) => {
+  //     const page = updater(pagination);
+  //     console.log("😻 ~ page:", page);
+  //     setPagination((prevState) => ({ ...prevState, ...page }));
+  //     handleGoToPage(page.pageIndex);
+  //     // handleChangePageSize(page.pageSize);
+  //   },
+  //   [pagination, handleGoToPage]
+  // );
+
   const table = useReactTable({
     data,
     columns,
@@ -59,7 +81,9 @@ export default function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination,
     },
+    // manualPagination: true,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -67,77 +91,84 @@ export default function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    // onPaginationChange: setPageIndex,
   });
 
   return (
-    <div className="space-y-4 overflow-x-auto">
+    <div className="space-y-4 overflow-auto h-full w-full">
       {/* <DataTableToolbar table={table} /> */}
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+      <div className="rounded-md border shadow-md h-full w-full">
+        <div className="h-full relative overflow-auto w-full">
+          <Table className="h-full">
+            <TableHeader className="sticky top-0 bg-secondary">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    Không có kết quả.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+            {footer && (
+              <TableFooter className="sticky bottom-0 bg-secondary">
+                <TableRow>
+                  {footer.map((item, index) => (
+                    <TableCell
+                      key={index}
+                      colSpan={item.colSpan}
+                      className={item?.className || ""}
+                    >
+                      {item.value}
                     </TableCell>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
+              </TableFooter>
             )}
-          </TableBody>
-          {footer && (
-            <TableFooter>
-              <TableRow>
-                {footer.map((item, index) => (
-                  <TableCell key={index} colSpan={item.colSpan}>
-                    {item.value}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableFooter>
-          )}
-        </Table>
+          </Table>
+        </div>
       </div>
-      <DataTablePagination table={table} />
+      {/* <DataTablePagination table={table} /> */}
     </div>
   );
 }

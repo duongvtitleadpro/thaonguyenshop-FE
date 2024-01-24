@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -11,13 +11,14 @@ import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { CloseButton, Drawer, Input, UnstyledButton } from "@mantine/core";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/filter.atom";
 import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
 
 const Header = () => {
   const router = useRouter();
+  const headerRef = React.useRef<HTMLDivElement>(null);
   const [productParam, setProductParam] = useRecoilState(filterProductState);
   const keywordIntial =
     typeof window !== "undefined" &&
@@ -37,7 +38,7 @@ const Header = () => {
   };
 
   return (
-    <>
+    <div>
       <div className="hidden xl:block h-11 bg-[#35A8E0]">
         <div className="h-full flex max-w-6xl mx-auto items-center justify-between text-white">
           <div>
@@ -143,7 +144,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
