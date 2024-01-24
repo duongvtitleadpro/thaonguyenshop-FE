@@ -80,7 +80,7 @@ export default function ProductPage() {
             </div>
             {productListData.data.length > 0 ? (
               <Pagination
-                total={productListData.totalPages}
+                total={productListData.totalPage}
                 value={productListData.page}
                 onChange={handleChangePage}
                 className="mt-4"

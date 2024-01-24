@@ -102,7 +102,7 @@ export default function DataTable<TData, TValue>({
     <div className="space-y-4 overflow-auto h-full w-full">
       {/* <DataTableToolbar table={table} /> */}
       <div className="rounded-md border shadow-md h-full w-full">
-        <div className="h-full relative overflow-auto w-full">
+        <div className="h-full relative overflow-auto w-full table-data-wrapper">
           <Table className="h-full">
             <TableHeader className="sticky top-0 bg-secondary">
               {table.getHeaderGroups().map((headerGroup) => (
