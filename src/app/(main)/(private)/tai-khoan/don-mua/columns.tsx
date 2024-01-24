@@ -226,6 +226,8 @@ export const columns: ColumnDef<OrderResponse>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions />,
+    cell: ({ row }) => {
+      return <DataTableRowActions />;
+    },
   },
 ];

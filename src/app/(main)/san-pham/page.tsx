@@ -6,7 +6,10 @@ import { FilterProduct, ProductCard } from "@/components/product-category";
 import { QueryKey } from "@/constant/query-key";
 import { getProductList } from "@/api/product";
 import { useRecoilState } from "recoil";
-import { filterProductState } from "@/store/state/filter.atom";
+import {
+  FILTER_PRODUCT_DEFAULT,
+  filterProductState,
+} from "@/store/state/filter.atom";
 import { useEffect } from "react";
 import { ATOM_KEY } from "@/store/key";
 import { useSearchParams } from "next/navigation";
@@ -30,12 +33,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     return () => {
-      setProductParam({
-        page: 1,
-        limit: 10,
-        sizes: [],
-        colors: [],
-      });
+      setProductParam(FILTER_PRODUCT_DEFAULT);
       sessionStorage.removeItem(ATOM_KEY.FILTER_PRODUCT);
     };
   }, []);

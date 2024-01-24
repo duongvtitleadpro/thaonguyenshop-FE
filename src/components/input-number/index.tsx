@@ -1,0 +1,49 @@
+"use client";
+
+import {
+  NumberInput,
+  NumberInputProps,
+  NumberInputHandlers,
+  Button,
+  Tooltip,
+} from "@mantine/core";
+import { Minus, Plus } from "lucide-react";
+import { useRef } from "react";
+const InputNumber = (props: NumberInputProps) => {
+  const handlersRef = useRef<NumberInputHandlers>(null);
+  return (
+    <div className="flex">
+      <Button
+        onClick={() => handlersRef.current?.decrement()}
+        variant="default"
+        radius={0}
+        className="w-9 h-9 p-0 border-r-0 "
+      >
+        <Minus className="w-3 h-3" />
+      </Button>
+      <Tooltip label={props.value}>
+        <NumberInput
+          w={50}
+          handlersRef={handlersRef}
+          hideControls
+          radius={0}
+          allowNegative={false}
+          clampBehavior="strict"
+          stepHoldDelay={500}
+          stepHoldInterval={100}
+          {...props}
+        />
+      </Tooltip>
+      <Button
+        onClick={() => handlersRef.current?.increment()}
+        variant="default"
+        radius={0}
+        className="w-9 h-9 p-0 border-l-0"
+      >
+        <Plus className="w-3 h-3" />
+      </Button>
+    </div>
+  );
+};
+
+export default InputNumber;

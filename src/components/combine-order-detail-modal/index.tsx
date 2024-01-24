@@ -32,16 +32,20 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
       <Modal
         opened={opened}
         onClose={close}
-        title={`Chi tiết đơn xuất ${combineOrderData?.code}`}
+        title={
+          <h1 className="font-bold text-2xl">
+            Chi tiết đơn xuất {combineOrderData?.code}
+          </h1>
+        }
         centered
         size="70%"
       >
         {combineOrderData && (
           <div>
             <h1 className="font-semibold">{`Tên khách hàng: ${auth.user?.name}`}</h1>
-            <h2>{`Tên khách hàng: ${format(
+            <h2 className="mb-4">{`Ngày giờ xuất đơn: ${format(
               new Date(combineOrderData.createdAt),
-              "MM-dd-yyyy HH:mm:ss"
+              "HH:mm:ss MM/dd/yyyy"
             )}`}</h2>
             <DataTable
               columns={columns}

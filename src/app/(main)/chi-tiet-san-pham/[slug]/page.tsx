@@ -15,6 +15,7 @@ import { OrderDetail } from "@/types/order";
 import { toast } from "sonner";
 import { useRecoilState } from "recoil";
 import { authState } from "@/store/state/auth.atom";
+import InputNumber from "@/components/input-number";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -27,6 +28,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
   const [auth, setAuth] = useRecoilState(authState);
   const [color, setColor] = useState<number | null>(null);
   const [cart, setCart] = useState<OrderDetail[]>([]);
+  console.log("😻 ~ DetailProductPage ~ cart:", cart);
 
   const listColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -67,8 +69,6 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
     return listSize ? listSize.size : [];
   }, [productDetailData, color]);
 
-  console.log("😻 ~ listSizeByColor ~ listSizeByColor:", listSizeByColor);
-
   const handleChangeCart = (
     value: number | string,
     sizeId: number | null,
@@ -86,12 +86,13 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
         newCart.splice(index, 1);
       }
     } else {
-      newCart.push({
-        productId: productDetailData.id,
-        colorId,
-        sizeId,
-        quantity: Number(value),
-      });
+      Number(value) > 0 &&
+        newCart.push({
+          productId: productDetailData.id,
+          colorId,
+          sizeId,
+          quantity: Number(value),
+        });
     }
     setCart(newCart);
   };
@@ -118,20 +119,6 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
       toast("Đơn hàng tạo thành công", {
         description: (
           <div className="w-full">
-            <p>Bạn đã mua:</p>
-            <ul className="space-y-4 text-left text-gray-500 dark:text-gray-400 ml-2 mt-1">
-              {order.orderDetails.map((item, index) => (
-                <li
-                  key={index}
-                  className="flex items-center space-x-3 rtl:space-x-reverse"
-                >
-                  <ShoppingBag size={16} color="#35a8e0" />
-                  <span>{`${item?.color?.title || ""} - ${
-                    item?.size?.title || ""
-                  }: ${item.quantity} cái`}</span>
-                </li>
-              ))}
-            </ul>
             <p className="mt-4 text-lg">
               Tổng tiền:{" "}
               <span className="font-bold">
@@ -274,8 +261,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                                 <span className="w-24 font-semibold">
                                   {size.title}
                                 </span>
-                                <NumberInput
-                                  width={100}
+                                <InputNumber
                                   placeholder="0"
                                   min={0}
                                   value={
@@ -305,8 +291,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                           </h3>
                         </div>
                         <div className="flex gap-3 items-center">
-                          <NumberInput
-                            width={100}
+                          <InputNumber
                             placeholder="0"
                             min={0}
                             value={
