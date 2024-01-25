@@ -25,7 +25,7 @@ const PurchaseOrderPage = () => {
     if (!purchaseOrderData) return [];
     return [
       {
-        colSpan: 3,
+        colSpan: 5,
         value: "Tổng tiền",
       },
       {
@@ -44,7 +44,7 @@ const PurchaseOrderPage = () => {
         className: "text-right",
       },
       {
-        colSpan: 6,
+        colSpan: 5,
       },
     ];
   }, [purchaseOrderData]);

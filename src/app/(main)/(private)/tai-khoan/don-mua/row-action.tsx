@@ -36,7 +36,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         size="sm"
         disabled={!canEditOrder}
         onClick={() =>
-          router.push(`/chi-tiet-don-mua/${productId}?order=${orderId}`)
+          router.push(`/chi-tiet-san-pham/${productId}?order=${orderId}`)
         }
       >
         <Pencil className="w-4 h-4" />

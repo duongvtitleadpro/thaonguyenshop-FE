@@ -3,9 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import DataTableColumnHeader from "@components/table/data-table-column-header";
-import { format } from "date-fns";
 import { currency } from "@/utils/currency";
 import { CombinedOrderDetail } from "@/types/order";
+import { TableCell } from "../ui/table";
 
 export const columns: ColumnDef<CombinedOrderDetail>[] = [
   {
@@ -22,7 +22,9 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Tên sản phẩm" />
     ),
-    cell: ({ row }) => <div>{row.original?.order?.product?.name}</div>,
+    cell: ({ row }) => (
+      <div className="font-semibold">{row.original?.order?.product?.name}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -31,7 +33,18 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Mẫu" />
     ),
-    cell: ({ row }) => <div>{row.original?.order?.product?.name}</div>,
+    cell: ({ row }) => {
+      const colorList = row.original?.order.orderDetails.map(
+        (detail) => detail.color?.title || "-"
+      );
+      return (
+        <div role="group" className="flex flex-col">
+          {colorList.map((item, index) => (
+            <TableCell key={index}>{item}</TableCell>
+          ))}
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -40,7 +53,18 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Size" />
     ),
-    cell: ({ row }) => <div>{row.original?.order?.product?.name}</div>,
+    cell: ({ row }) => {
+      const sizeList = row.original?.order.orderDetails.map(
+        (detail) => detail.size?.title || "-"
+      );
+      return (
+        <div role="group" className="flex flex-col">
+          {sizeList.map((item, index) => (
+            <TableCell key={index}>{item}</TableCell>
+          ))}
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -50,7 +74,18 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="SL đặt" />
     ),
-    cell: ({ row }) => <div>{row.original?.order?.product?.totalQuantity}</div>,
+    cell: ({ row }) => {
+      const quantityList = row.original?.order.orderDetails.map(
+        (detail) => detail.quantity
+      );
+      return (
+        <div role="group" className="flex flex-col">
+          {quantityList.map((item, index) => (
+            <TableCell key={index}>{item}</TableCell>
+          ))}
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -59,7 +94,18 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="SL về" />
     ),
-    cell: ({ row }) => <div>{row.original?.order?.product?.name}</div>,
+    cell: ({ row }) => {
+      const receivedQuantityList = row.original?.order.orderDetails.map(
+        (detail) => detail.receivedQuantity
+      );
+      return (
+        <div role="group" className="flex flex-col">
+          {receivedQuantityList.map((item, index) => (
+            <TableCell key={index}>{item}</TableCell>
+          ))}
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -69,7 +115,9 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Đơn giá" />
     ),
-    cell: ({ row }) => <div>{row.original?.order?.product?.price}</div>,
+    cell: ({ row }) => (
+      <div>{currency.format(row.original?.order?.product?.price)}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -79,7 +127,20 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Thành tiền" />
     ),
-    cell: ({ row }) => <div>{row.original?.order?.totalPrice}</div>,
+    cell: ({ row }) => {
+      const quantityList = row.original?.order.orderDetails.map(
+        (detail) => detail.quantity
+      );
+      return (
+        <div role="group" className="flex flex-col">
+          {quantityList.map((item, index) => (
+            <TableCell key={index}>
+              {currency.format(row.original?.order?.product?.price * item)}
+            </TableCell>
+          ))}
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },

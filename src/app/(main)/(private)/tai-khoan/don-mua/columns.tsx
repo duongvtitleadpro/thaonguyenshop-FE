@@ -13,6 +13,8 @@ import { currency } from "@/utils/currency";
 import { OrderResponse } from "@/types/order";
 import DataTableRowActions from "./row-action";
 import Link from "next/link";
+import { TableCell } from "@/components/ui/table";
+import { Tooltip } from "@mantine/core";
 
 export const columns: ColumnDef<OrderResponse>[] = [
   {
@@ -41,64 +43,85 @@ export const columns: ColumnDef<OrderResponse>[] = [
       <DataTableColumnHeader column={column} title="Sản phẩm" />
     ),
     cell: ({ row }) => (
-      <div className="w-40">
+      <div className="w-40 flex">
         <Link
           href={`/chi-tiet-san-pham/${row.original.productId}`}
           className="text-base font-semibold text-blue-600 hover:underline cursor-pointer"
         >
           {row.original.product.name}
         </Link>
-        <h2 className="text-xs text-gray-400">{`Mã SP: ${row.original.product.productCode}`}</h2>
-        <ul className="ml-4 space-y-1 list-disc list-inside text-sm">
-          {row.original.orderDetails.map((orderDetail, index) => {
-            const colorTitle = orderDetail.color
-              ? `Mẫu: ${orderDetail.color.title};`
-              : "";
-            const sizeTitle = orderDetail.size
-              ? `Size: ${orderDetail.size.title};`
-              : "";
-            const quantityTitle = `(SL: ${orderDetail.quantity})`;
-            return (
-              <li key={index}>
-                {`${colorTitle} ${sizeTitle} `}
-                <b>{quantityTitle}</b>
-              </li>
-            );
-          })}
-        </ul>
       </div>
     ),
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: "color",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Mẫu" />
-  //   ),
-  //   cell: ({ row }) => <div>{row.original.orderDetailColor?.title || "-"}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-  // {
-  //   accessorKey: "size",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Size" />
-  //   ),
-  //   cell: ({ row }) => <div>{row.original.orderDetailSize?.title || "-"}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+  {
+    accessorKey: "color",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Mẫu" />
+    ),
+    cell: ({ row }) => {
+      const colorList = row.original?.orderDetails.map(
+        (detail) => detail.color?.title || "-"
+      );
+      return (
+        <div role="group" className="flex flex-col hover:cursor-pointer">
+          {colorList.map((item, index) => (
+            <TableCell key={index} className="hover:bg-slate-300">
+              {item}
+            </TableCell>
+          ))}
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "size",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Size" />
+    ),
+    cell: ({ row }) => {
+      const sizeList = row.original?.orderDetails.map(
+        (detail) => detail.size?.title || "-"
+      );
+      return (
+        <div role="group" className="flex flex-col hover:cursor-pointer">
+          {sizeList.map((item, index) => (
+            <TableCell key={index} className="hover:bg-slate-300">
+              {item}
+            </TableCell>
+          ))}
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "orderQuantity",
     accessorFn: (row) =>
       row.orderDetails.reduce((acc, cur) => acc + cur.quantity, 0),
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Số lượng đặt" />
+      <DataTableColumnHeader column={column} title="SL đặt" />
     ),
-    cell: ({ row }) => (
-      <div className="text-center">{row.getValue("orderQuantity")}</div>
-    ),
+    cell: ({ row }) => {
+      const quantityList = row.original?.orderDetails.map(
+        (detail) => detail.quantity
+      );
+      return (
+        <Tooltip label={`Tổng: ${row.getValue("orderQuantity")}`}>
+          <div role="group" className="flex flex-col hover:cursor-pointer">
+            {quantityList.map((item, index) => (
+              <TableCell key={index} className="text-center hover:bg-slate-300">
+                {item}
+              </TableCell>
+            ))}
+          </div>
+        </Tooltip>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -107,11 +130,24 @@ export const columns: ColumnDef<OrderResponse>[] = [
     accessorFn: (row) =>
       row.orderDetails.reduce((acc, cur) => acc + cur.receivedQuantity, 0),
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Số lượng về" />
+      <DataTableColumnHeader column={column} title="SL về" />
     ),
-    cell: ({ row }) => (
-      <div className="text-center">{row.getValue("receivedQuantity")}</div>
-    ),
+    cell: ({ row }) => {
+      const receivedQuantityList = row.original?.orderDetails.map(
+        (detail) => detail.receivedQuantity
+      );
+      return (
+        <Tooltip label={`Tổng: ${row.getValue("receivedQuantity")}`}>
+          <div role="group" className="flex flex-col hover:cursor-pointer">
+            {receivedQuantityList.map((item, index) => (
+              <TableCell key={index} className="text-center hover:bg-slate-300">
+                {item}
+              </TableCell>
+            ))}
+          </div>
+        </Tooltip>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -134,9 +170,26 @@ export const columns: ColumnDef<OrderResponse>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Thành tiền" />
     ),
-    cell: ({ row }) => (
-      <div>{`${currency.format(row.original.totalPrice)}`}</div>
-    ),
+    cell: ({ row }) => {
+      const quantityList = row.original?.orderDetails.map(
+        (detail) => detail.quantity
+      );
+      return (
+        <Tooltip
+          label={`Tổng: ${currency.format(
+            row.original.product.price * Number(row.getValue("orderQuantity"))
+          )}`}
+        >
+          <div role="group" className="flex flex-col hover:cursor-pointer">
+            {quantityList.map((item, index) => (
+              <TableCell key={index} className="hover:bg-slate-300">
+                {currency.format(row.original.product.price * item)}
+              </TableCell>
+            ))}
+          </div>
+        </Tooltip>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },

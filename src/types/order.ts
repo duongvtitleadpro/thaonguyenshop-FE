@@ -3,6 +3,7 @@ import { Product } from "./product";
 
 export type Order = {
   productId: number;
+  note: string;
   orderDetails: OrderDetail[];
 };
 
@@ -42,9 +43,11 @@ export type OrderParam = {
 export type OrderDetailRespose = {
   size: {
     title: string;
+    id: number;
   };
   color: {
     title: string;
+    id: number;
   };
   quantity: number;
   receivedQuantity: number;
@@ -87,12 +90,12 @@ export type OrderCombineResponse = {
   combinedOrderDetails: CombinedOrderDetail[];
 };
 
-export interface CombinedOrderDetail {
+export type CombinedOrderDetail = {
   id: number;
   combinedOrderId: number;
   orderId: number;
-  order: Omit<OrderResponse, "orderDetails">;
-}
+  order: OrderResponse;
+};
 
 export type ResponseWithTotal<T> = Response<T> & {
   totalPrice: number;

@@ -1,5 +1,5 @@
 "use client";
-import { SimpleGrid, List, NumberInput, UnstyledButton } from "@mantine/core";
+import { SimpleGrid, List, UnstyledButton, Textarea } from "@mantine/core";
 import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useQuery } from "@tanstack/react-query";
@@ -9,8 +9,7 @@ import { currency } from "@/utils/currency";
 import { useEffect, useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { cn } from "@/lib/utils";
-import { Ruler, ShoppingBag } from "lucide-react";
-import { addOrder } from "@/api/order";
+import { addOrder, getOrderDetail } from "@/api/order";
 import { OrderDetail } from "@/types/order";
 import { toast } from "sonner";
 import { useRecoilState } from "recoil";
@@ -19,7 +18,13 @@ import InputNumber from "@/components/input-number";
 
 const OPTIONS: EmblaOptionsType = {};
 
-const DetailProductPage = ({ params }: { params: { slug: string } }) => {
+const DetailProductPage = ({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { order: string };
+}) => {
   const { slug } = params;
   const { data: productDetailData } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_DETAIL, slug],
@@ -28,7 +33,7 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
   const [auth, setAuth] = useRecoilState(authState);
   const [color, setColor] = useState<number | null>(null);
   const [cart, setCart] = useState<OrderDetail[]>([]);
-  console.log("😻 ~ DetailProductPage ~ cart:", cart);
+  const [note, setNote] = useState("");
 
   const listColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -112,23 +117,46 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
     }
     if (!productDetailData) return;
     try {
-      const order = await addOrder({
-        productId: productDetailData.id,
-        orderDetails: cart,
-      });
-      toast("Đơn hàng tạo thành công", {
-        description: (
-          <div className="w-full">
-            <p className="mt-4 text-lg">
-              Tổng tiền:{" "}
-              <span className="font-bold">
-                {currency.format(order.totalPrice)}
-              </span>
-            </p>
-          </div>
-        ),
-      });
+      if (searchParams?.order) {
+        const order = await addOrder({
+          productId: productDetailData.id,
+          note,
+          orderDetails: cart,
+        });
+        toast("Sửa đơn hàng thành công", {
+          description: (
+            <div className="w-full">
+              <p className="mt-4 text-lg">
+                Tổng tiền:{" "}
+                <span className="font-bold">
+                  {currency.format(order.totalPrice)}
+                </span>
+              </p>
+            </div>
+          ),
+        });
+      } else {
+        const order = await addOrder({
+          productId: productDetailData.id,
+          note,
+          orderDetails: cart,
+        });
+        toast("Đơn hàng tạo thành công", {
+          description: (
+            <div className="w-full">
+              <p className="mt-4 text-lg">
+                Tổng tiền:{" "}
+                <span className="font-bold">
+                  {currency.format(order.totalPrice)}
+                </span>
+              </p>
+            </div>
+          ),
+        });
+      }
+
       setCart([]);
+      setNote("");
     } catch (error) {
       toast("Đã có lỗi xảy ra", {
         description: "Vui lòng thử lại sau",
@@ -136,6 +164,33 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (!searchParams?.order) return;
+    const orderId = searchParams.order;
+    const fetchOrder = async () => {
+      try {
+        const order = await getOrderDetail(orderId);
+        const orderCart = order.orderDetails.map((detail) => ({
+          productId: order.product.id,
+          colorId: detail?.color?.id || null,
+          sizeId: detail?.size?.id || null,
+          quantity: detail.quantity,
+        }));
+        setCart(orderCart);
+        setNote(order.note);
+      } catch (error) {
+        toast("Đã có lỗi xảy ra", {
+          description: <p className="text-white">Vui lòng thử lại sau</p>,
+          style: {
+            backgroundColor: "#7f1d1d",
+            color: "#fff",
+          },
+        });
+      }
+    };
+    fetchOrder();
+  }, [searchParams?.order]);
 
   return (
     <div className="p-4">
@@ -308,12 +363,23 @@ const DetailProductPage = ({ params }: { params: { slug: string } }) => {
                         </div>
                       </div>
                     )}
+
+                    <Textarea
+                      className="mt-6"
+                      label="Ghi chú đơn hàng"
+                      placeholder="Viết ghi chú tại đây"
+                      value={note}
+                      onChange={(event) => setNote(event.currentTarget.value)}
+                      autosize
+                      minRows={2}
+                      maxRows={4}
+                    />
                     <button
                       disabled={cart.length === 0}
                       className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleBuyProduct}
                     >
-                      Mua ngay
+                      {searchParams?.order ? "Sửa đơn hàng" : "Mua ngay"}
                     </button>
                   </div>
                 )}

@@ -23,6 +23,11 @@ export const getOrder = async (
   return data;
 };
 
+export const getOrderDetail = async (id: string): Promise<OrderResponse> => {
+  const { data } = await axiosInstance.get(`/order/${id}`);
+  return data;
+};
+
 export const getCombineOrder = async (
   param: OrderCombineParam
 ): Promise<Response<OrderCombineResponse>> => {
