@@ -4,7 +4,11 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import DataTableColumnHeader from "@components/table/data-table-column-header";
 import { format } from "date-fns";
-import { OrderStateTitle, OrderStatusTitle } from "@/constant/product";
+import {
+  OrderStateTitle,
+  OrderStatusColor,
+  OrderStatusTitle,
+} from "@/constant/product";
 import { currency } from "@/utils/currency";
 import { OrderResponse } from "@/types/order";
 import DataTableRowActions from "./row-action";
@@ -142,7 +146,13 @@ export const columns: ColumnDef<OrderResponse>[] = [
       <DataTableColumnHeader column={column} title="Tình trạng đơn hàng" />
     ),
     cell: ({ row }) => (
-      <div className="w-32">{OrderStatusTitle[row.original.orderStatus]}</div>
+      <div
+        className={`w-32 font-semibold ${
+          OrderStatusColor[row.original.orderStatus]
+        }`}
+      >
+        {OrderStatusTitle[row.original.orderStatus]}
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,

@@ -24,6 +24,11 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
   });
   const { orderId, productId, canEditOrder, canDeleteOrder } = props;
   const router = useRouter();
+
+  const handleCancelOrder = async () => {
+    await cancelOrder(orderId);
+    refetch();
+  };
   return (
     <div className="flex gap-1">
       <Button
@@ -40,10 +45,8 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         variant="ghost"
         size="sm"
         disabled={!canDeleteOrder}
-        onClick={() => {
-          cancelOrder(orderId);
-          refetch();
-        }}
+        onClick={handleCancelOrder}
+        className="disabled:cursor-not-allowed"
       >
         <Trash2 className="w-4 h-4" />
       </Button>
