@@ -88,7 +88,7 @@ const LoginModal = () => {
               <Menu.Label>{user?.name}</Menu.Label>
               <Menu.Item
                 leftSection={<Settings />}
-                onClick={() => router.push("/tai-khoan/me")}
+                onClick={() => router.push("/tai-khoan/don-mua")}
               >
                 Tài khoản
               </Menu.Item>

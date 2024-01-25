@@ -23,7 +23,7 @@ const InputNumber = (props: NumberInputProps) => {
       </Button>
       <Tooltip label={props.value}>
         <NumberInput
-          w={50}
+          w={40}
           handlersRef={handlersRef}
           hideControls
           radius={0}

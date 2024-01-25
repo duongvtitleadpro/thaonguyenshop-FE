@@ -1,7 +1,13 @@
 "use client";
 
 import { useRecoilState } from "recoil";
-import { MultiSelect, ActionIcon, Input, CloseButton } from "@mantine/core";
+import {
+  MultiSelect,
+  ActionIcon,
+  Input,
+  CloseButton,
+  Tooltip,
+} from "@mantine/core";
 import {
   PurchaseOrderFilterDefaultValue,
   purchaseOrderFilterState,
@@ -190,15 +196,17 @@ const PurchaseOrderFilter = () => {
           value={selectedSizeList}
           onChange={handleChangeSizeFilter}
         />
-        <ActionIcon
-          variant="transparent"
-          color="blue"
-          onClick={() =>
-            setPurchaseOrderFilter(PurchaseOrderFilterDefaultValue)
-          }
-        >
-          <X />
-        </ActionIcon>
+        <Tooltip label="Xóa bộ lọc">
+          <ActionIcon
+            variant="transparent"
+            color="blue"
+            onClick={() =>
+              setPurchaseOrderFilter(PurchaseOrderFilterDefaultValue)
+            }
+          >
+            <X />
+          </ActionIcon>
+        </Tooltip>
       </div>
     </div>
   );

@@ -260,7 +260,7 @@ const DetailProductPage = ({
                         <RadioGroup.Label className="sr-only">
                           Chọn một mẫu
                         </RadioGroup.Label>
-                        <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
+                        <div className="grid grid-cols-6 gap-4 sm:grid-cols-8 lg:grid-cols-6">
                           {listColor.map((color, index) => {
                             return (
                               <RadioGroup.Option
@@ -269,7 +269,7 @@ const DetailProductPage = ({
                                 className={({ active }) =>
                                   cn(
                                     active ? "ring-2 ring-[#35a8e0]" : "",
-                                    "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
+                                    "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1"
                                   )
                                 }
                               >

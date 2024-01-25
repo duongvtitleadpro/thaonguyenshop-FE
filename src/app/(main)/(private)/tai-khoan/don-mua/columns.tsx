@@ -38,9 +38,20 @@ export const columns: ColumnDef<OrderResponse>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "product",
+    accessorKey: "productCode",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Sản phẩm" />
+      <DataTableColumnHeader column={column} title="Mã sản phẩm" />
+    ),
+    cell: ({ row }) => {
+      return <div>{row.original.product.productCode}</div>;
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "productName",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Tên sản phẩm" />
     ),
     cell: ({ row }) => (
       <div className="w-40 flex">
