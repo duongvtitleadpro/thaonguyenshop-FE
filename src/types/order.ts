@@ -6,6 +6,11 @@ export type Order = {
   note: string;
   orderDetails: OrderDetail[];
 };
+export type EditOrder = {
+  orderId: number;
+  note: string;
+  orderDetails: OrderDetail[];
+};
 
 export type OrderDetail = {
   productId: number;
@@ -41,6 +46,7 @@ export type OrderParam = {
 };
 
 export type OrderDetailRespose = {
+  id?: number;
   size: {
     title: string;
     id: number;

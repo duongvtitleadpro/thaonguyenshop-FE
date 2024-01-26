@@ -9,12 +9,13 @@ import { currency } from "@/utils/currency";
 import { useEffect, useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { cn } from "@/lib/utils";
-import { addOrder, getOrderDetail } from "@/api/order";
+import { addOrder, editOrder, getOrderDetail } from "@/api/order";
 import { OrderDetail } from "@/types/order";
 import { toast } from "sonner";
 import { useRecoilState } from "recoil";
 import { authState } from "@/store/state/auth.atom";
 import InputNumber from "@/components/input-number";
+import { usePathname, useRouter } from "next/navigation";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -26,6 +27,8 @@ const DetailProductPage = ({
   searchParams: { order: string };
 }) => {
   const { slug } = params;
+  const pathname = usePathname();
+  const router = useRouter();
   const { data: productDetailData } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_DETAIL, slug],
     queryFn: () => getProductDetail(Number(slug)),
@@ -88,7 +91,11 @@ const DetailProductPage = ({
       if (Number(value) > 0) {
         newCart[index].quantity = Number(value);
       } else {
-        newCart.splice(index, 1);
+        if (searchParams?.order) {
+          newCart[index].quantity = Number(value);
+        } else {
+          newCart.splice(index, 1);
+        }
       }
     } else {
       Number(value) > 0 &&
@@ -118,23 +125,28 @@ const DetailProductPage = ({
     if (!productDetailData) return;
     try {
       if (searchParams?.order) {
-        const order = await addOrder({
-          productId: productDetailData.id,
+        const order = await editOrder({
+          orderId: Number(searchParams?.order),
           note,
           orderDetails: cart,
         });
+        console.log("😻 ~ handleBuyProduct ~ order:", order);
         toast("Sửa đơn hàng thành công", {
           description: (
             <div className="w-full">
               <p className="mt-4 text-lg">
                 Tổng tiền:{" "}
                 <span className="font-bold">
-                  {currency.format(order.totalPrice)}
+                  {currency.format(
+                    cart.reduce((acc, cur) => acc + cur.quantity, 0) *
+                      productDetailData.price
+                  )}
                 </span>
               </p>
             </div>
           ),
         });
+        router.push(pathname);
       } else {
         const order = await addOrder({
           productId: productDetailData.id,
@@ -172,6 +184,7 @@ const DetailProductPage = ({
       try {
         const order = await getOrderDetail(orderId);
         const orderCart = order.orderDetails.map((detail) => ({
+          id: detail.id,
           productId: order.product.id,
           colorId: detail?.color?.id || null,
           sizeId: detail?.size?.id || null,

@@ -6,12 +6,18 @@ import {
   OrderCombineParam,
   OrderCombineResponse,
   ResponseWithTotal,
+  EditOrder,
 } from "@/types/order";
 import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
 
 export const addOrder = async (order: Order): Promise<OrderResponse> => {
   const { data } = await axiosInstance.post(`/order`, order);
+  return data;
+};
+
+export const editOrder = async (order: EditOrder): Promise<OrderResponse> => {
+  const { data } = await axiosInstance.put(`/order/customer`, order);
   return data;
 };
 
