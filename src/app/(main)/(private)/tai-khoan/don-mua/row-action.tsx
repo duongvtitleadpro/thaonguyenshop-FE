@@ -36,6 +36,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
     <div className="flex gap-1">
       <Button
         variant="ghost"
+        c="blue"
         size="sm"
         disabled={!canEditOrder}
         onClick={() =>
@@ -46,6 +47,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
       </Button>
       <Button
         variant="ghost"
+        c="blue"
         size="sm"
         disabled={!canDeleteOrder}
         onClick={open}
