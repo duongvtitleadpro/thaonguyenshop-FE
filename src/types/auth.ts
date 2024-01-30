@@ -18,8 +18,12 @@ export type SignInResponse = {
 
 export type User = {
   id: number;
-  username: string;
   name: string;
+  username: string;
   role: string;
-  avatarUrl: string;
+  phone: string;
+  address: string;
+  paid: number;
+  totalCost: number;
+  debt: number;
 };
