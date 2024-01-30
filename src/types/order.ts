@@ -107,7 +107,7 @@ export type CombinedOrderDetail = {
 
 export type ResponseWithTotal<T> = Response<T> & {
   totalPrice: number;
-  totalRecievedPrice: number;
+  totalReceivedPrice: number;
   totalQuantity: number;
-  totalRecievedQuantity: number;
+  totalReceivedQuantity: number;
 };
