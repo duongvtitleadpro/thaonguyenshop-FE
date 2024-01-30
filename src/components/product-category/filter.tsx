@@ -10,7 +10,7 @@ import { getProductSize } from "@/api/product";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilState } from "recoil";
-import { filterProductState } from "@/store/state/filter.atom";
+import { filterProductState } from "@/store/state/product-filter.atom";
 import { getAllCategory } from "@/api/category";
 import { WarehouseStatus } from "@/types/product";
 import { ATOM_KEY } from "@/store/key";

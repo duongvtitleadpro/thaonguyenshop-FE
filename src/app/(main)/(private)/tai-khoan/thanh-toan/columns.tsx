@@ -2,32 +2,30 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@components/table/data-table-column-header";
-import DataTableRowActions from "@components/table/data-table-row-actions";
-import { Data } from "./schema";
 import { format } from "date-fns";
-const currency = new Intl.NumberFormat("vi-VN", {
-  style: "currency",
-  currency: "VND",
-});
+import { PaymentDetail } from "@/types/payment";
+import { currency } from "@/utils/currency";
 
-export const columns: ColumnDef<Data>[] = [
+export const columns: ColumnDef<PaymentDetail>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "paymentCode",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
+      <DataTableColumnHeader column={column} title="Mã thanh toán" />
     ),
-    cell: ({ row }) => <div>{`TT00${row.getValue("id")}`}</div>,
+    cell: ({ row }) => (
+      <div className="font-semibold">{row.getValue("paymentCode")}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ngày tạo" />
+      <DataTableColumnHeader column={column} title="Ngày giờ tạo" />
     ),
     cell: ({ row }) => (
       <div>{`${format(
-        new Date(row.getValue("created_at")),
+        new Date(row.getValue("createdAt")),
         "MM:dd:yyyy HH:mm:ss"
       )}`}</div>
     ),
@@ -35,16 +33,12 @@ export const columns: ColumnDef<Data>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "trade_content",
+    accessorKey: "content",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Nội dung giao dịch"
-        className="text-right"
-      />
+      <DataTableColumnHeader column={column} title="Nội dung" />
     ),
     cell: ({ row }) => {
-      return <div className="text-right">{row.getValue("trade_content")}</div>;
+      return <div>{row.getValue("content")}</div>;
     },
     enableSorting: false,
     enableHiding: false,
@@ -59,16 +53,9 @@ export const columns: ColumnDef<Data>[] = [
       />
     ),
     cell: ({ row }) => {
-      return (
-        <div className="text-right">{`${currency.format(
-          row.getValue("amount")
-        )}`}</div>
-      );
+      return <div>{`${currency.format(row.getValue("amount"))}`}</div>;
     },
-  },
-
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    enableSorting: false,
+    enableHiding: false,
   },
 ];

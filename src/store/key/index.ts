@@ -3,4 +3,5 @@ export enum ATOM_KEY {
   FILTER_PRODUCT = "filter-product",
   PURCHASE_ORDER_FILTER = "purchase-order-filter",
   COMBINE_ORDER_FILTER = "combine-order-filter",
+  PAYMENT_FILTER = "payment-filter",
 }

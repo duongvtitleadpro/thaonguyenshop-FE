@@ -5,7 +5,7 @@ import { ContactCard, WidgetCard, WidgetWrapper } from "@/components/widget";
 import { QueryKey } from "@/constant/query-key";
 import { getAllCategory } from "@/api/category";
 import { useSetRecoilState } from "recoil";
-import { filterProductState } from "@/store/state/filter.atom";
+import { filterProductState } from "@/store/state/product-filter.atom";
 import { UnstyledButton } from "@mantine/core";
 import { WarehouseStatus } from "@/types/product";
 

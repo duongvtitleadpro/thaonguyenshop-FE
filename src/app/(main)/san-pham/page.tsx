@@ -9,7 +9,7 @@ import { useRecoilState } from "recoil";
 import {
   FILTER_PRODUCT_DEFAULT,
   filterProductState,
-} from "@/store/state/filter.atom";
+} from "@/store/state/product-filter.atom";
 import { useEffect } from "react";
 import { ATOM_KEY } from "@/store/key";
 import { useSearchParams } from "next/navigation";

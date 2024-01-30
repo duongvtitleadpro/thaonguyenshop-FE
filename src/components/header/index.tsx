@@ -12,7 +12,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { CloseButton, Drawer, Input, UnstyledButton } from "@mantine/core";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { filterProductState } from "@/store/state/filter.atom";
+import { filterProductState } from "@/store/state/product-filter.atom";
 import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
 
