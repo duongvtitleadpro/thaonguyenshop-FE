@@ -84,11 +84,13 @@ const Header = () => {
                   TÌM KIẾM
                 </Button>
               </div>
-              <div className="flex">
-                <Icons.phone />
+              <div className="flex items-center gap-2">
+                <Icons.phone color="#35A8E0" />
                 <div>
-                  <h1>HOTLINE</h1>
-                  <p>0921.367.363</p>
+                  <h1 className="text-[#35A8E0] font-semibold">HOTLINE</h1>
+                  <p className="italic text-[#e02020] font-semibold">
+                    0921.367.363
+                  </p>
                 </div>
               </div>
             </div>

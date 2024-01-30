@@ -40,7 +40,7 @@ const PurchaseOrderPage = () => {
       },
       {
         colSpan: 2,
-        value: `${currency.format(purchaseOrderData.totalPrice)}`,
+        value: `${currency.format(purchaseOrderData.totalRecievedPrice)}`,
         className: "text-right",
       },
       {

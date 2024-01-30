@@ -1,6 +1,7 @@
 "use client";
 
 import { getUserProfile } from "@/api/auth";
+import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { QueryKey } from "@/constant/query-key";
 import { authState } from "@/store/state/auth.atom";
@@ -32,6 +33,7 @@ const UserManagementLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="h-screen">
         <Header></Header>
         <div>{children}</div>
+        {/* <Footer /> */}
       </div>
     </div>
   );

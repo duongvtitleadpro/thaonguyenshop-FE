@@ -8,7 +8,7 @@ const UserPage = () => {
   const auth = useRecoilValue(authState);
   return (
     <>
-      <h1>Tài khoản</h1>
+      <h1 className="text-xl font-semibold">Tài khoản</h1>
       <div className="mt-3">
         {auth.user && (
           <div className="flex flex-col">
