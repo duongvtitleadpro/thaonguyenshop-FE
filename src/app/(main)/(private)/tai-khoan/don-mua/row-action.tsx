@@ -65,7 +65,12 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
             <Button variant="outline" onClick={close} color="blue">
               Không, quay lại
             </Button>
-            <Button variant="filled" onClick={handleCancelOrder} color="red">
+            <Button
+              variant="filled"
+              onClick={handleCancelOrder}
+              color="red"
+              className="bg-[#f03e3e] text-white"
+            >
               Có, hủy đơn hàng
             </Button>
           </div>
