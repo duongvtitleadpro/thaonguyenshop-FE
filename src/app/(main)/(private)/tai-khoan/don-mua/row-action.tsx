@@ -42,6 +42,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         onClick={() =>
           router.push(`/chi-tiet-san-pham/${productId}?order=${orderId}`)
         }
+        className="disabled:cursor-not-allowed disabled:opacity-25"
       >
         <Pencil className="w-4 h-4" />
       </Button>
@@ -51,7 +52,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         size="sm"
         disabled={!canDeleteOrder}
         onClick={open}
-        className="disabled:cursor-not-allowed"
+        className="disabled:cursor-not-allowed disabled:opacity-25"
       >
         <Trash2 className="w-4 h-4" />
       </Button>
@@ -64,7 +65,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
             <Button variant="outline" onClick={close} color="blue">
               Không, quay lại
             </Button>
-            <Button onClick={handleCancelOrder} color="red">
+            <Button variant="filled" onClick={handleCancelOrder} color="red">
               Có, hủy đơn hàng
             </Button>
           </div>
