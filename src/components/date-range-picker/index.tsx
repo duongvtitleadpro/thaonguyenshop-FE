@@ -46,12 +46,12 @@ export default function DatePickerWithRange(props: DatePickerWithRangeProps) {
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>Chọn ngày</span>
             )}
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 flex flex-col items-end"
+          className="w-auto p-2 flex flex-col items-end"
           align="end"
         >
           <Calendar
@@ -62,7 +62,9 @@ export default function DatePickerWithRange(props: DatePickerWithRangeProps) {
             onSelect={onDateChange}
             numberOfMonths={2}
           />
-          <Button onClick={() => onDateChange(undefined)}>Clear</Button>
+          <Button size="sm" onClick={() => onDateChange(undefined)}>
+            Xóa
+          </Button>
         </PopoverContent>
       </Popover>
     </div>

@@ -40,9 +40,9 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full gap-3">
       <Input
-        placeholder="Tìm kiếm mã thanh toán, thời gian tạo, nội dung và tiền"
+        placeholder="Tìm kiếm mã thanh toán, nội dung và tiền"
         value={keyword}
         onChange={(event) => setKeyword(event.currentTarget.value)}
         rightSectionPointerEvents="all"
@@ -59,7 +59,7 @@ const PaymentPage = () => {
         onKeyDown={(event) => {
           if (event.key === "Enter") handleSearchKeyword();
         }}
-        className="mb-4 w-1/3"
+        className="w-1/3"
       />
       {paymentData && (
         <div className="w-full">

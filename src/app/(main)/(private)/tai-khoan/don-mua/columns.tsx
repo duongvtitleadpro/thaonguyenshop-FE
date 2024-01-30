@@ -183,12 +183,13 @@ export const columns: ColumnDef<OrderResponse>[] = [
     ),
     cell: ({ row }) => {
       const quantityList = row.original?.orderDetails.map(
-        (detail) => detail.quantity
+        (detail) => detail.receivedQuantity
       );
       return (
         <Tooltip
           label={`Tổng: ${currency.format(
-            row.original.product.price * Number(row.getValue("orderQuantity"))
+            row.original.product.price *
+              Number(row.getValue("receivedQuantity"))
           )}`}
         >
           <div role="group" className="flex flex-col hover:cursor-pointer">

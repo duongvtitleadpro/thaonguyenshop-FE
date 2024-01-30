@@ -1,13 +1,14 @@
 "use client";
 
 import { cancelOrder, getOrder } from "@/api/order";
-import { Button } from "@/components/ui/button";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
-import { Pencil, Trash2 } from "lucide-react";
+import { AlertCircle, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.atom";
 import { useRecoilValue } from "recoil";
+import { Modal, Button } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 interface DataTableRowActionsProps {
   orderId: number;
@@ -18,6 +19,7 @@ interface DataTableRowActionsProps {
 
 const DataTableRowActions = (props: DataTableRowActionsProps) => {
   const purchaseOrderFilter = useRecoilValue(purchaseOrderFilterState);
+  const [opened, { open, close }] = useDisclosure(false);
   const { refetch } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
     queryFn: () => getOrder(purchaseOrderFilter),
@@ -29,6 +31,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
     await cancelOrder(orderId);
     refetch();
   };
+
   return (
     <div className="flex gap-1">
       <Button
@@ -45,11 +48,26 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         variant="ghost"
         size="sm"
         disabled={!canDeleteOrder}
-        onClick={handleCancelOrder}
+        onClick={open}
         className="disabled:cursor-not-allowed"
       >
         <Trash2 className="w-4 h-4" />
       </Button>
+      <Modal opened={opened} onClose={close} withCloseButton={false} centered>
+        <div className="flex flex-col items-center gap-3">
+          <AlertCircle className="w-10 h-10" color="#f03e3e" />
+          <h1 className="text-2xl font-semibold">Hủy đơn hàng</h1>
+          <p>Bạn có chắc chắn muốn hủy đơn hàng?</p>
+          <div className="w-full flex justify-between mt-3">
+            <Button variant="outline" onClick={close} color="blue">
+              Không, quay lại
+            </Button>
+            <Button onClick={handleCancelOrder} color="red">
+              Có, hủy đơn hàng
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

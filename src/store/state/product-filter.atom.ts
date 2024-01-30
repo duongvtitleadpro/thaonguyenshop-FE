@@ -7,6 +7,7 @@ export const FILTER_PRODUCT_DEFAULT: ProductParam = {
   limit: 12,
   sizes: [],
   colors: [],
+  sort: "createdAt,desc",
 };
 
 export const filterProductState = atom<ProductParam>({

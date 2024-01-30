@@ -8,6 +8,7 @@ export type ProductParam = {
   keyword?: string;
   sizes: number[];
   colors: number[];
+  sort?: string;
 };
 
 export type Product = {

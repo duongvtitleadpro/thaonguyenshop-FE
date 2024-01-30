@@ -26,7 +26,7 @@ const PurchaseOrderPage = () => {
     return [
       {
         colSpan: 6,
-        value: "Tổng tiền",
+        value: "Tổng",
       },
       {
         colSpan: 1,
