@@ -26,4 +26,5 @@ export type User = {
   paid: number;
   totalCost: number;
   debt: number;
+  avatarUrl?: string;
 };
