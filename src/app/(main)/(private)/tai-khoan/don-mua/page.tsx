@@ -1,10 +1,9 @@
 "use client";
-import { CalendarDateRangePicker } from "@/components/date-range-picker";
 import DataTable from "@/components/table/data-table";
 import { columns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
 import { getOrder } from "@/api/order";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import PurchaseOrderFilter from "./filter";
 import { useRecoilState } from "recoil";
 import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.atom";
@@ -16,6 +15,7 @@ const PurchaseOrderPage = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
     purchaseOrderFilterState
   );
+
   const { data: purchaseOrderData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
     queryFn: () => getOrder(purchaseOrderFilter),
@@ -57,7 +57,6 @@ const PurchaseOrderPage = () => {
   };
 
   const handleChangePageSize = (pageSize: string | null) => {
-    console.log("😻 ~ handleChangePageSize ~ pageSize:", pageSize);
     setPurchaseOrderFilter((prev) => ({
       ...prev,
       size: Number(pageSize),
@@ -67,7 +66,6 @@ const PurchaseOrderPage = () => {
   return (
     <div className="flex flex-col h-full">
       <PurchaseOrderFilter />
-      {/* <CalendarDateRangePicker /> */}
       {purchaseOrderData && (
         <div className="h-[550px] w-full">
           <DataTable

@@ -16,9 +16,11 @@ import { AllocationStatus, OrderStatus } from "@/types/order";
 import { X } from "lucide-react";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCategory } from "@/api/category";
-import React, { forwardRef, useMemo } from "react";
+import React, { useMemo } from "react";
 import { getProductColor, getProductSize } from "@/api/product";
+import DatePickerWithRange from "@/components/date-range-picker";
+import { format } from "date-fns";
+import { DateRange } from "react-day-picker";
 
 type OrderStatusType = {
   value: string;
@@ -57,6 +59,7 @@ const AllocationStatus: OrderStatusType[] = [
 
 const PurchaseOrderFilter = () => {
   const [keyword, setKeyword] = React.useState("");
+  const [date, setDate] = React.useState<DateRange | undefined>();
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
     purchaseOrderFilterState
   );
@@ -70,6 +73,28 @@ const PurchaseOrderFilter = () => {
     queryKey: [QueryKey.GET_PRODUCT_COLOR],
     queryFn: getProductColor,
   });
+
+  React.useEffect(() => {
+    if (!date?.to || !date.from) {
+      setPurchaseOrderFilter((prev) => {
+        const param = { ...prev };
+        delete param.startDate;
+        delete param.endDate;
+        return {
+          ...param,
+        };
+      });
+      return;
+    }
+    const startDate = format(date.from, "yyyy-MM-dd");
+    const endDate = format(date.to, "yyyy-MM-dd");
+
+    setPurchaseOrderFilter((prev) => ({
+      ...prev,
+      startDate,
+      endDate,
+    }));
+  }, [date, setPurchaseOrderFilter]);
 
   const handleChangeOrderStatus = (value: string[]) => {
     setPurchaseOrderFilter((prev) => ({
@@ -146,8 +171,9 @@ const PurchaseOrderFilter = () => {
 
   return (
     <div className="mb-3 flex gap-4 flex-col">
-      <div className="w-1/3">
+      <div className="flex justify-between">
         <Input
+          className="w-1/3"
           placeholder="Tìm kiếm tên, mã sản phẩm"
           value={keyword}
           onChange={(event) => setKeyword(event.currentTarget.value)}
@@ -166,6 +192,7 @@ const PurchaseOrderFilter = () => {
             if (event.key === "Enter") handleSearchKeyword();
           }}
         />
+        <DatePickerWithRange date={date} onDateChange={setDate} />
       </div>
       <div className="flex gap-3 items-end">
         <MultiSelect

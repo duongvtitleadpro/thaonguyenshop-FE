@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
@@ -14,13 +14,14 @@ import {
   PopoverTrigger,
 } from "@components/ui/popover";
 
-export function CalendarDateRangePicker({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2023, 0, 20),
-    to: addDays(new Date(2023, 0, 20), 20),
-  });
+type DatePickerWithRangeProps = {
+  className?: string;
+  date: DateRange | undefined;
+  onDateChange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+};
+
+export default function DatePickerWithRange(props: DatePickerWithRangeProps) {
+  const { className, date, onDateChange } = props;
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -30,7 +31,7 @@ export function CalendarDateRangePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[260px] justify-start text-left font-normal",
+              "w-[300px] justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
@@ -49,15 +50,19 @@ export function CalendarDateRangePicker({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent
+          className="w-auto p-0 flex flex-col items-end"
+          align="end"
+        >
           <Calendar
             initialFocus
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={onDateChange}
             numberOfMonths={2}
           />
+          <Button onClick={() => onDateChange(undefined)}>Clear</Button>
         </PopoverContent>
       </Popover>
     </div>

@@ -43,6 +43,8 @@ export type OrderParam = {
   sizeIds?: number[];
   colorIds?: number[];
   query?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 export type OrderDetailRespose = {

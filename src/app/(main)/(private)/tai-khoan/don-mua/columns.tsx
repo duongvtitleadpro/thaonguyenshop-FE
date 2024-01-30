@@ -250,7 +250,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "orderState",
+    accessorKey: "allocatedDate",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Ngày chia" />
     ),

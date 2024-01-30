@@ -15,16 +15,11 @@ const sidebarNavItems = [
   },
   {
     id: 3,
-    title: "Trả hàng",
-    href: "/tai-khoan/tra-hang",
-  },
-  {
-    id: 4,
     title: "Thanh toán",
     href: "/tai-khoan/thanh-toan",
   },
   {
-    id: 5,
+    id: 4,
     title: "Tài khoản",
     href: "/tai-khoan/me",
   },
