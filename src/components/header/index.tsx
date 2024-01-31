@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -11,14 +11,13 @@ import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { CloseButton, Drawer, Input, UnstyledButton } from "@mantine/core";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/product-filter.atom";
 import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
 
 const Header = () => {
   const router = useRouter();
-  const headerRef = React.useRef<HTMLDivElement>(null);
   const [productParam, setProductParam] = useRecoilState(filterProductState);
   const keywordIntial =
     typeof window !== "undefined" &&
@@ -49,7 +48,11 @@ const Header = () => {
       </div>
       <div>
         <div className="h-full  flex gap-11 max-w-6xl mx-auto items-center justify-between">
-          <Link href="/" className="basis-[147px]">
+          <Link
+            href="/"
+            className="basis-[147px]"
+            onClick={() => setKeyword("")}
+          >
             <ThaoNguyenLogo />
           </Link>
           <div className="hidden xl:flex flex-1 flex-col mt-2">

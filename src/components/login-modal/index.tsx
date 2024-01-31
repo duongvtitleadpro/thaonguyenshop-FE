@@ -21,7 +21,12 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { authState } from "@/store/state/auth.atom";
 import { Settings, LogOut } from "lucide-react";
 
-const LoginModal = () => {
+interface LoginModalProps {
+  customButton?: React.ReactNode;
+}
+
+const LoginModal = (props: LoginModalProps) => {
+  const { customButton } = props;
   const [{ isAuthenticated, user }, setAuth] = useRecoilState(authState);
   const [onpenedLogin, { open: openLogin, close: closeLogin }] =
     useDisclosure(false);
@@ -69,43 +74,47 @@ const LoginModal = () => {
   };
   return (
     <div className="cursor-pointer">
-      {isAuthenticated ? (
-        <div className="flex items-center gap-2">
-          <Menu
-            shadow="md"
-            width={200}
-            trigger="hover"
-            openDelay={100}
-            closeDelay={400}
-          >
-            <Menu.Target>
-              <div className="flex items-center gap-2">
-                <Avatar src={user?.avatarUrl} color="white" variant="light" />
-                <div>Xin chào, {user?.name}</div>
-              </div>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>{user?.name}</Menu.Label>
-              <Menu.Item
-                leftSection={<Settings />}
-                onClick={() => router.push("/tai-khoan/don-mua")}
-              >
-                Tài khoản
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<LogOut />}
-                onClick={() => handleLogout()}
-              >
-                Đăng xuất
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </div>
+      {!customButton ? (
+        isAuthenticated ? (
+          <div className="flex items-center gap-2">
+            <Menu
+              shadow="md"
+              width={200}
+              trigger="hover"
+              openDelay={100}
+              closeDelay={400}
+            >
+              <Menu.Target>
+                <div className="flex items-center gap-2">
+                  <Avatar src={user?.avatarUrl} color="white" variant="light" />
+                  <div>Xin chào, {user?.name}</div>
+                </div>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>{user?.name}</Menu.Label>
+                <Menu.Item
+                  leftSection={<Settings />}
+                  onClick={() => router.push("/tai-khoan/don-mua")}
+                >
+                  Tài khoản
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<LogOut />}
+                  onClick={() => handleLogout()}
+                >
+                  Đăng xuất
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </div>
+        ) : (
+          <div className="flex gap-2" onClick={openLogin}>
+            <Icons.user />
+            <span>Đăng nhập</span>
+          </div>
+        )
       ) : (
-        <div className="flex gap-2" onClick={openLogin}>
-          <Icons.user />
-          <span>Đăng nhập</span>
-        </div>
+        <div onClick={openLogin}>{customButton}</div>
       )}
       <Modal
         opened={onpenedLogin}

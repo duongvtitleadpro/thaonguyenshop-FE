@@ -30,12 +30,12 @@ const PurchaseOrderPage = () => {
       },
       {
         colSpan: 1,
-        value: `${purchaseOrderData.totalQuantity}`,
+        value: `${purchaseOrderData.totalQuantity || 0}`,
         className: "text-center",
       },
       {
         colSpan: 1,
-        value: `${purchaseOrderData.totalReceivedQuantity}`,
+        value: `${purchaseOrderData.totalReceivedQuantity || 0} `,
         className: "text-center",
       },
       {

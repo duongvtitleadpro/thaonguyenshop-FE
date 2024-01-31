@@ -104,7 +104,7 @@ export default function DataTable<TData, TValue>({
       <div className="rounded-md border shadow-md h-full w-full">
         <div className="h-full relative overflow-auto w-full table-data-wrapper">
           <Table className="h-full">
-            <TableHeader className="sticky top-0 bg-secondary">
+            <TableHeader className="sticky top-0 bg-secondary z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {

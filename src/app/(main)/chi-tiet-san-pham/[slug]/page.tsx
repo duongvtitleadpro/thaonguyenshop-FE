@@ -16,6 +16,7 @@ import { useRecoilState } from "recoil";
 import { authState } from "@/store/state/auth.atom";
 import InputNumber from "@/components/input-number";
 import { usePathname, useRouter } from "next/navigation";
+import LoginModal from "@/components/login-modal";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -418,12 +419,13 @@ const DetailProductPage = ({
                   </div>
                 </div>
                 {!auth.isAuthenticated && (
-                  <button
-                    disabled={true}
-                    className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Vui lòng đăng nhập để mua hàng
-                  </button>
+                  <LoginModal
+                    customButton={
+                      <button className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed">
+                        Vui lòng đăng nhập để mua hàng
+                      </button>
+                    }
+                  />
                 )}
               </div>
             </div>
