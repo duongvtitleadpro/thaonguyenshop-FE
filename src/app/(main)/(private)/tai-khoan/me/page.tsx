@@ -16,13 +16,13 @@ const UserPage = () => {
               <span className="font-semibold w-32 inline-block">
                 Tiền hàng:
               </span>{" "}
-              <span>{currency.format(auth.user.paid)}</span>
+              <span>{currency.format(auth.user.totalCost)}</span>
             </p>
             <p>
               <span className="font-semibold w-32 inline-block">
                 Thanh toán:
               </span>{" "}
-              <span>{currency.format(auth.user?.totalCost)}</span>
+              <span>{currency.format(auth.user?.paid)}</span>
             </p>
             <p>
               <span className="font-semibold w-32 inline-block">Công nợ:</span>{" "}
