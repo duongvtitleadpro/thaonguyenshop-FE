@@ -20,6 +20,7 @@ export type OrderDetail = {
 };
 
 export type OrderResponse = {
+  adminNote?: string;
   id: number;
   orderDate: string;
   totalPrice: number;

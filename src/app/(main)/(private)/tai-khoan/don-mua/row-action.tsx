@@ -33,9 +33,10 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
   };
 
   return (
-    <div className="flex gap-1">
+    <div className="w-16 flex gap-1">
       <Button
         variant="ghost"
+        p={4}
         c="blue"
         size="sm"
         disabled={!canEditOrder}
@@ -44,17 +45,18 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         }
         className="disabled:cursor-not-allowed disabled:opacity-25"
       >
-        <Pencil className="w-4 h-4" />
+        <Pencil className="w-5 h-5" />
       </Button>
       <Button
         variant="ghost"
+        p={4}
         c="blue"
         size="sm"
         disabled={!canDeleteOrder}
         onClick={open}
         className="disabled:cursor-not-allowed disabled:opacity-25"
       >
-        <Trash2 className="w-4 h-4" />
+        <Trash2 className="w-5 h-5" />
       </Button>
       <Modal opened={opened} onClose={close} withCloseButton={false} centered>
         <div className="flex flex-col items-center gap-3">

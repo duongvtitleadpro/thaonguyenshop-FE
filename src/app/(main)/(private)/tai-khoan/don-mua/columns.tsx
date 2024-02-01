@@ -274,7 +274,14 @@ export const columns: ColumnDef<OrderResponse>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Ghi chú" />
     ),
-    cell: ({ row }) => <div>{row.original?.note}</div>,
+    cell: ({ row }) => (
+      <div className="w-32">
+        <p>{row.original?.note}</p>
+        {row.original?.adminNote && (
+          <p className="text-red-600 font-semibold">{`Admin note: ${row.original?.adminNote}`}</p>
+        )}
+      </div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
