@@ -29,6 +29,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
 
   const handleCancelOrder = async () => {
     await cancelOrder(orderId);
+    close();
     refetch();
   };
 
