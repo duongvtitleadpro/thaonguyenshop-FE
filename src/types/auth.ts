@@ -28,3 +28,8 @@ export type User = {
   debt: number;
   avatarUrl?: string;
 };
+
+export type ChangePasswordBody = {
+  password: string;
+  newPassword: string;
+};

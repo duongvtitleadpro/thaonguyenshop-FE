@@ -1,6 +1,7 @@
 import axiosInstance from "@utils/axios";
 import {
   AuthToken,
+  ChangePasswordBody,
   SignInBody,
   SignInResponse,
   SignUpBody,
@@ -30,5 +31,10 @@ export const refreshTokenRequest = async () => {
 
 export const getUserProfile = async (): Promise<User> => {
   const { data } = await axiosInstance.get("/auth/profile");
+  return data;
+};
+
+export const changePasswordRequest = async (body: ChangePasswordBody) => {
+  const { data } = await axiosInstance.patch("/auth/change-password", body);
   return data;
 };
