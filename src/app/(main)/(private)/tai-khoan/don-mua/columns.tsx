@@ -14,25 +14,28 @@ import { OrderResponse } from "@/types/order";
 import DataTableRowActions from "./row-action";
 import Link from "next/link";
 import { TableCell } from "@/components/ui/table";
-import { Tooltip } from "@mantine/core";
+import { Image, Tooltip } from "@mantine/core";
+import { placeholderImage } from "@/constant/common";
 
 export const columns: ColumnDef<OrderResponse>[] = [
   {
-    accessorKey: "order",
+    accessorKey: "imageProduct",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="STT" />
-    ),
-    cell: ({ row }) => <div className="w-4">{row.index + 1}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "user",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tên khách hàng" />
+      <DataTableColumnHeader column={column} title="Hình ảnh" />
     ),
     cell: ({ row }) => {
-      return <div>{row.original.user.name}</div>;
+      return (
+        <div className="w-20">
+          <Image
+            src={
+              row.original.product?.productImages?.length > 0
+                ? row.original.product?.productImages[0]?.imageUrl
+                : placeholderImage
+            }
+            alt={row.original.product.name}
+          />
+        </div>
+      );
     },
     enableSorting: false,
     enableHiding: false,
@@ -54,7 +57,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
       <DataTableColumnHeader column={column} title="Tên sản phẩm" />
     ),
     cell: ({ row }) => (
-      <div className="w-40 flex">
+      <div className="w-32 flex">
         <Link
           href={`/chi-tiet-san-pham/${row.original.productId}`}
           className="text-base font-semibold text-blue-600 hover:underline cursor-pointer"
@@ -78,7 +81,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
       return (
         <div role="group" className="flex flex-col hover:cursor-pointer">
           {colorList.map((item, index) => (
-            <TableCell key={index} className="hover:bg-slate-300">
+            <TableCell key={index} className="hover:bg-slate-300  border-none">
               {item}
             </TableCell>
           ))}
@@ -100,7 +103,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
       return (
         <div role="group" className="flex flex-col hover:cursor-pointer">
           {sizeList.map((item, index) => (
-            <TableCell key={index} className="hover:bg-slate-300">
+            <TableCell key={index} className="hover:bg-slate-300 border-none">
               {item}
             </TableCell>
           ))}
@@ -125,7 +128,10 @@ export const columns: ColumnDef<OrderResponse>[] = [
         <Tooltip label={`Tổng: ${row.getValue("orderQuantity")}`}>
           <div role="group" className="flex flex-col hover:cursor-pointer">
             {quantityList.map((item, index) => (
-              <TableCell key={index} className="text-center hover:bg-slate-300">
+              <TableCell
+                key={index}
+                className="text-center hover:bg-slate-300  border-none"
+              >
                 {item}
               </TableCell>
             ))}
@@ -151,7 +157,10 @@ export const columns: ColumnDef<OrderResponse>[] = [
         <Tooltip label={`Tổng: ${row.getValue("receivedQuantity")}`}>
           <div role="group" className="flex flex-col hover:cursor-pointer">
             {receivedQuantityList.map((item, index) => (
-              <TableCell key={index} className="text-center hover:bg-slate-300">
+              <TableCell
+                key={index}
+                className="text-center hover:bg-slate-300 border-none"
+              >
                 {item}
               </TableCell>
             ))}
@@ -194,7 +203,10 @@ export const columns: ColumnDef<OrderResponse>[] = [
         >
           <div role="group" className="flex flex-col hover:cursor-pointer">
             {quantityList.map((item, index) => (
-              <TableCell key={index} className="hover:bg-slate-300">
+              <TableCell
+                key={index}
+                className="hover:bg-slate-300 border-none bor"
+              >
                 {currency.format(row.original.product.price * item)}
               </TableCell>
             ))}
@@ -246,24 +258,6 @@ export const columns: ColumnDef<OrderResponse>[] = [
         new Date(row.original.orderDate),
         "MM/dd/yyyy HH:mm:ss"
       )}`}</div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "allocatedDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ngày chia" />
-    ),
-    cell: ({ row }) => (
-      <>
-        {row.original.allocatedDate && (
-          <div>{`${format(
-            new Date(row.original.allocatedDate),
-            "MM/dd/yyyy HH:mm:ss"
-          )}`}</div>
-        )}
-      </>
     ),
     enableSorting: false,
     enableHiding: false,

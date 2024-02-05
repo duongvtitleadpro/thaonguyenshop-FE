@@ -6,7 +6,7 @@ import { Thumb } from "./embla-carousel-thumb";
 import { Image } from "@mantine/core";
 import { flushSync } from "react-dom";
 import "./embla.css";
-import PlaceholderImage from "@/assets/images/placeholder/placeholder-img.jpg";
+import { placeholderImage } from "@/constant/common";
 
 type PropType = {
   images: string[];
@@ -99,7 +99,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                     className="embla__slide__img embla__parallax__img"
                     src={image}
                     alt="Your alt text"
-                    fallbackSrc="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
+                    fallbackSrc={placeholderImage}
                   />
                 </div>
               </div>

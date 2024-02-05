@@ -1,6 +1,7 @@
 import { Image } from "@mantine/core";
 import React from "react";
 import "./embla.css";
+import { placeholderImage } from "@/constant/common";
 
 type PropType = {
   selected: boolean;
@@ -27,7 +28,7 @@ export const Thumb: React.FC<PropType> = (props) => {
           className="embla-thumbs__slide__img"
           src={imgSrc}
           alt="Your alt text"
-          fallbackSrc="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
+          fallbackSrc={placeholderImage}
         />
       </button>
     </div>

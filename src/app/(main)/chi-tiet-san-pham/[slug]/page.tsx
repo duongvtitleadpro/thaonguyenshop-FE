@@ -1,5 +1,11 @@
 "use client";
-import { SimpleGrid, List, UnstyledButton, Textarea } from "@mantine/core";
+import {
+  SimpleGrid,
+  List,
+  UnstyledButton,
+  Textarea,
+  Indicator,
+} from "@mantine/core";
 import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useQuery } from "@tanstack/react-query";
@@ -77,6 +83,19 @@ const DetailProductPage = ({
     );
     return listSize ? listSize.size : [];
   }, [productDetailData, color]);
+
+  const totalItemInCart = useMemo(() => {
+    const total: any = {};
+    listColor.forEach((color) => {
+      let quantity =
+        cart
+          .filter((item) => item.colorId === color.id)
+          .reduce((acc, cur) => acc + cur.quantity, 0) || 0;
+      total[color.id] = quantity;
+    });
+    return total;
+  }, [cart, listColor]);
+  console.log("😻 ~ totalItemInCart ~ totalItemInCart:", totalItemInCart);
 
   const handleChangeCart = (
     value: number | string,
@@ -244,6 +263,10 @@ const DetailProductPage = ({
                   Nguồn gốc: {productDetailData?.origin}
                 </p>
 
+                {productDetailData.productStatus === "BOUGHT" && (
+                  <p className="text-sm xl text-gray-600 mt-4">Đã mua hàng</p>
+                )}
+
                 {auth.isAuthenticated && (
                   <div className="mt-10">
                     {/* Colors */}
@@ -277,35 +300,41 @@ const DetailProductPage = ({
                         <div className="grid grid-cols-6 gap-4 sm:grid-cols-8 lg:grid-cols-6">
                           {listColor.map((color, index) => {
                             return (
-                              <RadioGroup.Option
+                              <Indicator
+                                inline
+                                label={totalItemInCart[color.id]}
+                                size={16}
                                 key={index}
-                                value={color.id}
-                                className={({ active }) =>
-                                  cn(
-                                    active ? "ring-2 ring-[#35a8e0]" : "",
-                                    "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1"
-                                  )
-                                }
                               >
-                                {({ active, checked }) => (
-                                  <>
-                                    <RadioGroup.Label as="span">
-                                      {color.title}
-                                    </RadioGroup.Label>
+                                <RadioGroup.Option
+                                  value={color.id}
+                                  className={({ active }) =>
+                                    cn(
+                                      active ? "ring-2 ring-[#35a8e0]" : "",
+                                      "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1"
+                                    )
+                                  }
+                                >
+                                  {({ active, checked }) => (
+                                    <div>
+                                      <RadioGroup.Label as="span">
+                                        {color.title}
+                                      </RadioGroup.Label>
 
-                                    <span
-                                      className={cn(
-                                        active ? "border" : "border-2",
-                                        checked
-                                          ? "border-[#35a8e0]"
-                                          : "border-transparent",
-                                        "pointer-events-none absolute -inset-px rounded-md"
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                  </>
-                                )}
-                              </RadioGroup.Option>
+                                      <span
+                                        className={cn(
+                                          active ? "border" : "border-2",
+                                          checked
+                                            ? "border-[#35a8e0]"
+                                            : "border-transparent",
+                                          "pointer-events-none absolute -inset-px rounded-md"
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    </div>
+                                  )}
+                                </RadioGroup.Option>
+                              </Indicator>
                             );
                           })}
                         </div>
@@ -389,11 +418,18 @@ const DetailProductPage = ({
                       maxRows={4}
                     />
                     <button
-                      disabled={cart.length === 0}
+                      disabled={
+                        cart.length === 0 ||
+                        productDetailData.productStatus === "BOUGHT"
+                      }
                       className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleBuyProduct}
                     >
-                      {searchParams?.order ? "Sửa đơn hàng" : "Mua ngay"}
+                      {productDetailData.productStatus === "BOUGHT"
+                        ? "Vui lòng liên hệ admin để đặt hàng"
+                        : searchParams?.order
+                        ? "Sửa đơn hàng"
+                        : "Mua ngay"}
                     </button>
                   </div>
                 )}

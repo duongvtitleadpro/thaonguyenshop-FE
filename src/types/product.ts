@@ -21,10 +21,12 @@ export type Product = {
   phoneNumber?: string;
   price: number;
   warehouseStatus: WarehouseStatus;
+  productStatus: ProductStatus;
   totalQuantity: number;
   details: ProductDetail[];
   productImages: ProductImage[];
   categoryProducts: CategoryProduct[];
+  isDeleted: boolean;
 };
 
 export type ProductDetail = {
@@ -51,3 +53,10 @@ export type ProductSize = {
 };
 
 export type ProductColor = ProductSize;
+
+export type ProductStatus =
+  | "UNPURCHASED"
+  | "BOUGHT"
+  | "CANCELLED"
+  | "HANDLE"
+  | null;
