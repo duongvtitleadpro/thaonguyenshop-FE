@@ -264,7 +264,9 @@ const DetailProductPage = ({
                 </p>
 
                 {productDetailData.productStatus === "BOUGHT" && (
-                  <p className="text-sm xl text-gray-600 mt-4">Đã mua hàng</p>
+                  <p className="text-blue-600 italic font-semibold mt-4">
+                    Đã mua hàng
+                  </p>
                 )}
 
                 {auth.isAuthenticated && (
