@@ -11,7 +11,7 @@ import {
 import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
 
-export const addOrder = async (order: Order): Promise<OrderResponse> => {
+export const addOrder = async (order: Order): Promise<OrderResponse[]> => {
   const { data } = await axiosInstance.post(`/order`, order);
   return data;
 };

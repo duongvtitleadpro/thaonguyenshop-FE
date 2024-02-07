@@ -65,7 +65,6 @@ export default function DataTable<TData, TValue>({
   // const setPageIndex = React.useCallback(
   //   (updater: any) => {
   //     const page = updater(pagination);
-  //     console.log("😻 ~ page:", page);
   //     setPagination((prevState) => ({ ...prevState, ...page }));
   //     handleGoToPage(page.pageIndex);
   //     // handleChangePageSize(page.pageSize);
