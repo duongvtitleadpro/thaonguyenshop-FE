@@ -16,13 +16,14 @@ import { useEffect, useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { cn } from "@/lib/utils";
 import { addOrder, editOrder, getOrderDetail } from "@/api/order";
-import { OrderDetail } from "@/types/order";
+import { OrderDetail, OrderResponse } from "@/types/order";
 import { toast } from "sonner";
 import { useRecoilState } from "recoil";
 import { authState } from "@/store/state/auth.atom";
 import InputNumber from "@/components/input-number";
 import { usePathname, useRouter } from "next/navigation";
 import LoginModal from "@/components/login-modal";
+import { format } from "date-fns";
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -44,6 +45,9 @@ const DetailProductPage = ({
   const [color, setColor] = useState<number | null>(null);
   const [cart, setCart] = useState<OrderDetail[]>([]);
   const [note, setNote] = useState("");
+  const [order, setOrder] = useState<OrderResponse | null>(null);
+
+  const isEditOrder = useMemo(() => searchParams?.order, [searchParams?.order]);
 
   const listColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -62,11 +66,18 @@ const DetailProductPage = ({
     }
 
     // list color
-    const listColorData = productDetailData.details.filter(
+    let listColorData = productDetailData.details.filter(
       (detail) => Object.keys(detail.color).length > 0
     );
+
+    if (isEditOrder) {
+      listColorData = listColorData.filter(
+        (item) => item.color.id === order?.orderDetails[0]?.color?.id
+      );
+    }
+
     return listColorData.map((item) => item.color);
-  }, [productDetailData]);
+  }, [productDetailData, order]);
 
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -76,12 +87,23 @@ const DetailProductPage = ({
         productDetailData.details.length === 1
     );
     if (listSizeNoColor) {
-      return listSizeNoColor.size;
+      return isEditOrder
+        ? listSizeNoColor.size.filter(
+            (size) => size.id === order?.orderDetails[0]?.size?.id
+          )
+        : listSizeNoColor.size;
     }
-    const listSize = productDetailData.details.find(
+    let listSize = productDetailData.details.find(
       (detail) => detail.color.id === color
     );
-    return listSize ? listSize.size : [];
+
+    return listSize
+      ? isEditOrder
+        ? listSize.size.filter(
+            (size) => size.id === order?.orderDetails[0]?.size?.id
+          )
+        : listSize.size
+      : [];
   }, [productDetailData, color]);
 
   const totalItemInCart = useMemo(() => {
@@ -95,7 +117,6 @@ const DetailProductPage = ({
     });
     return total;
   }, [cart, listColor]);
-  console.log("😻 ~ totalItemInCart ~ totalItemInCart:", totalItemInCart);
 
   const handleChangeCart = (
     value: number | string,
@@ -111,7 +132,7 @@ const DetailProductPage = ({
       if (Number(value) > 0) {
         newCart[index].quantity = Number(value);
       } else {
-        if (searchParams?.order) {
+        if (isEditOrder) {
           newCart[index].quantity = Number(value);
         } else {
           newCart.splice(index, 1);
@@ -144,13 +165,25 @@ const DetailProductPage = ({
     }
     if (!productDetailData) return;
     try {
-      if (searchParams?.order) {
+      if (isEditOrder) {
+        const lastEditText = "\nLần sửa gần nhất: ";
+        const indexOfNoteEditTime = note.indexOf(lastEditText);
+        const oldNoteEditTime =
+          indexOfNoteEditTime !== -1
+            ? note.substring(indexOfNoteEditTime + lastEditText.length)
+            : "";
+        const noteEdit =
+          indexOfNoteEditTime !== -1
+            ? note.replace(
+                oldNoteEditTime,
+                format(new Date(), "dd/MM/yyyy HH:mm")
+              )
+            : note + lastEditText + format(new Date(), "dd/MM/yyyy HH:mm");
         const order = await editOrder({
           orderId: Number(searchParams?.order),
-          note,
+          note: noteEdit,
           orderDetails: cart,
         });
-        console.log("😻 ~ handleBuyProduct ~ order:", order);
         toast("Sửa đơn hàng thành công", {
           description: (
             <div className="w-full">
@@ -179,7 +212,9 @@ const DetailProductPage = ({
               <p className="mt-4 text-lg">
                 Tổng tiền:{" "}
                 <span className="font-bold">
-                  {currency.format(order.totalPrice)}
+                  {currency.format(
+                    order.reduce((acc, cur) => acc + cur.totalPrice, 0)
+                  )}
                 </span>
               </p>
             </div>
@@ -198,11 +233,17 @@ const DetailProductPage = ({
   };
 
   useEffect(() => {
-    if (!searchParams?.order) return;
+    if (!isEditOrder) return;
     const orderId = searchParams.order;
     const fetchOrder = async () => {
       try {
         const order = await getOrderDetail(orderId);
+        const lastEditText = "\nLần sửa gần nhất: ";
+        const indexOfNoteEditTime = order?.note.indexOf(lastEditText);
+        const oldNote =
+          indexOfNoteEditTime !== -1
+            ? order?.note.slice(0, indexOfNoteEditTime)
+            : order?.note;
         const orderCart = order.orderDetails.map((detail) => ({
           id: detail.id,
           productId: order.product.id,
@@ -210,8 +251,9 @@ const DetailProductPage = ({
           sizeId: detail?.size?.id || null,
           quantity: detail.quantity,
         }));
+        setOrder(order);
         setCart(orderCart);
-        setNote(order.note);
+        setNote(oldNote);
       } catch (error) {
         toast("Đã có lỗi xảy ra", {
           description: <p className="text-white">Vui lòng thử lại sau</p>,
@@ -429,7 +471,7 @@ const DetailProductPage = ({
                     >
                       {productDetailData.productStatus === "BOUGHT"
                         ? "Vui lòng liên hệ admin để đặt hàng"
-                        : searchParams?.order
+                        : isEditOrder
                         ? "Sửa đơn hàng"
                         : "Mua ngay"}
                     </button>

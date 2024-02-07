@@ -81,7 +81,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
       return (
         <div role="group" className="flex flex-col hover:cursor-pointer">
           {colorList.map((item, index) => (
-            <TableCell key={index} className="hover:bg-slate-300  border-none">
+            <TableCell key={index} className="  border-none">
               {item}
             </TableCell>
           ))}
@@ -101,9 +101,9 @@ export const columns: ColumnDef<OrderResponse>[] = [
         (detail) => detail.size?.title || "-"
       );
       return (
-        <div role="group" className="flex flex-col hover:cursor-pointer">
+        <div className="flex flex-col hover:cursor-pointer">
           {sizeList.map((item, index) => (
-            <TableCell key={index} className="hover:bg-slate-300 border-none">
+            <TableCell key={index} className=" border-none">
               {item}
             </TableCell>
           ))}
@@ -125,18 +125,13 @@ export const columns: ColumnDef<OrderResponse>[] = [
         (detail) => detail.quantity
       );
       return (
-        <Tooltip label={`Tổng: ${row.getValue("orderQuantity")}`}>
-          <div role="group" className="flex flex-col hover:cursor-pointer">
-            {quantityList.map((item, index) => (
-              <TableCell
-                key={index}
-                className="text-center hover:bg-slate-300  border-none"
-              >
-                {item}
-              </TableCell>
-            ))}
-          </div>
-        </Tooltip>
+        <div className="flex flex-col hover:cursor-pointer">
+          {quantityList.map((item, index) => (
+            <TableCell key={index} className="text-center  border-none">
+              {item}
+            </TableCell>
+          ))}
+        </div>
       );
     },
     enableSorting: false,
@@ -154,18 +149,13 @@ export const columns: ColumnDef<OrderResponse>[] = [
         (detail) => detail.receivedQuantity
       );
       return (
-        <Tooltip label={`Tổng: ${row.getValue("receivedQuantity")}`}>
-          <div role="group" className="flex flex-col hover:cursor-pointer">
-            {receivedQuantityList.map((item, index) => (
-              <TableCell
-                key={index}
-                className="text-center hover:bg-slate-300 border-none"
-              >
-                {item}
-              </TableCell>
-            ))}
-          </div>
-        </Tooltip>
+        <div className="flex flex-col hover:cursor-pointer">
+          {receivedQuantityList.map((item, index) => (
+            <TableCell key={index} className="text-center  border-none">
+              {item}
+            </TableCell>
+          ))}
+        </div>
       );
     },
     enableSorting: false,
@@ -195,23 +185,13 @@ export const columns: ColumnDef<OrderResponse>[] = [
         (detail) => detail.receivedQuantity
       );
       return (
-        <Tooltip
-          label={`Tổng: ${currency.format(
-            row.original.product.price *
-              Number(row.getValue("receivedQuantity"))
-          )}`}
-        >
-          <div role="group" className="flex flex-col hover:cursor-pointer">
-            {quantityList.map((item, index) => (
-              <TableCell
-                key={index}
-                className="hover:bg-slate-300 border-none bor"
-              >
-                {currency.format(row.original.product.price * item)}
-              </TableCell>
-            ))}
-          </div>
-        </Tooltip>
+        <div className="flex flex-col hover:cursor-pointer">
+          {quantityList.map((item, index) => (
+            <TableCell key={index} className=" border-none bor">
+              {currency.format(row.original.product.price * item)}
+            </TableCell>
+          ))}
+        </div>
       );
     },
     enableSorting: false,
@@ -270,7 +250,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-32">
-        <p>{row.original?.note}</p>
+        <p className="whitespace-pre-line">{row.original?.note}</p>
         {row.original?.adminNote && (
           <p className="text-red-600 font-semibold">{`Admin note: ${row.original?.adminNote}`}</p>
         )}
