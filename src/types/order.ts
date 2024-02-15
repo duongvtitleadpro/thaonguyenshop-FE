@@ -119,4 +119,7 @@ export type SummaryOrderStatus = {
   totalUnPurchased: number;
   totalCancelled: number;
   totalCustomerCancelled: number;
+  totalOrderAllocated: number;
+  totalAllocated: number;
+  totalSent: number;
 };

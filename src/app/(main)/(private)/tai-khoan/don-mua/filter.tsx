@@ -35,8 +35,6 @@ type OrderStatusType = {
   summaryField: keyof SummaryOrderStatus;
 };
 
-type AllocationStatusType = Omit<OrderStatusType, "summaryField">;
-
 const OrderStatus: OrderStatusType[] = [
   {
     value: "PURCHASED",
@@ -60,14 +58,16 @@ const OrderStatus: OrderStatusType[] = [
   },
 ];
 
-const AllocationStatus: AllocationStatusType[] = [
+const AllocationStatus: OrderStatusType[] = [
   {
     value: "ALLOCATED",
     label: "Đã chia",
+    summaryField: "totalAllocated",
   },
   {
     value: "SENT",
     label: "Đã xuất",
+    summaryField: "totalSent",
   },
 ];
 
@@ -193,6 +193,18 @@ const PurchaseOrderFilter = () => {
     });
   }, [summaryOrderStatus]);
 
+  const allocationStatusWithSummary = useMemo(() => {
+    if (!summaryOrderStatus) return AllocationStatus;
+    return AllocationStatus.map((item) => {
+      return {
+        ...item,
+        label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
+          summaryOrderStatus.totalOrderAllocated
+        })`,
+      };
+    });
+  }, [summaryOrderStatus]);
+
   const handleSearchKeyword = () => {
     setPurchaseOrderFilter((prev) => ({
       ...prev,
@@ -236,7 +248,7 @@ const PurchaseOrderFilter = () => {
         <MultiSelect
           label="Trạng thái đơn hàng"
           placeholder="Trạng thái"
-          data={AllocationStatus}
+          data={allocationStatusWithSummary}
           value={purchaseOrderFilter.allocationStatus}
           onChange={handleChangeAllocationStatus}
         />
