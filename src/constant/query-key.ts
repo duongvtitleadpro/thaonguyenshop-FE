@@ -9,4 +9,5 @@ export enum QueryKey {
   GET_COMBINE_ORDER = "get-combine-order",
   GET_COMBINE_ORDER_DETAIL = "get-combine-order-detail",
   GET_PAYMENT_LIST = "get-payment-list",
+  GET_SUMMARY_ORDER_STATUS = "get-summary-order-status",
 }

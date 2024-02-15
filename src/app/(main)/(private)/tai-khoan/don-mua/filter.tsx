@@ -7,12 +7,18 @@ import {
   Input,
   CloseButton,
   Tooltip,
+  OptionsFilter,
+  ComboboxItem,
 } from "@mantine/core";
 import {
   PurchaseOrderFilterDefaultValue,
   purchaseOrderFilterState,
 } from "@/store/state/purchase-order-filter.atom";
-import { AllocationStatus, OrderStatus } from "@/types/order";
+import {
+  AllocationStatus,
+  OrderStatus,
+  SummaryOrderStatus,
+} from "@/types/order";
 import { X } from "lucide-react";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
@@ -21,32 +27,40 @@ import { getProductColor, getProductSize } from "@/api/product";
 import DatePickerWithRange from "@/components/date-range-picker";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
+import { getSummaryOrderStatus } from "@/api/order";
 
 type OrderStatusType = {
   value: string;
   label: string;
+  summaryField: keyof SummaryOrderStatus;
 };
+
+type AllocationStatusType = Omit<OrderStatusType, "summaryField">;
 
 const OrderStatus: OrderStatusType[] = [
   {
     value: "PURCHASED",
     label: "Đã mua",
+    summaryField: "totalPurchased",
   },
   {
     value: "NOT_PURCHASED",
     label: "Chưa mua hàng",
+    summaryField: "totalUnPurchased",
   },
   {
     value: "CANCELLED",
     label: "Hủy",
+    summaryField: "totalCancelled",
   },
   {
     value: "CUSTOMER_CANCELLED",
     label: "Khách hủy đơn",
+    summaryField: "totalCustomerCancelled",
   },
 ];
 
-const AllocationStatus: OrderStatusType[] = [
+const AllocationStatus: AllocationStatusType[] = [
   {
     value: "ALLOCATED",
     label: "Đã chia",
@@ -72,6 +86,11 @@ const PurchaseOrderFilter = () => {
   const { data: productColorList } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_COLOR],
     queryFn: getProductColor,
+  });
+
+  const { data: summaryOrderStatus } = useQuery({
+    queryKey: [QueryKey.GET_SUMMARY_ORDER_STATUS],
+    queryFn: getSummaryOrderStatus,
   });
 
   React.useEffect(() => {
@@ -162,6 +181,18 @@ const PurchaseOrderFilter = () => {
       .map((item) => item.value);
   }, [sizeList, purchaseOrderFilter.sizeIds]);
 
+  const orderStatusWithSummary = useMemo(() => {
+    if (!summaryOrderStatus) return OrderStatus;
+    return OrderStatus.map((item) => {
+      return {
+        ...item,
+        label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
+          summaryOrderStatus.totalOrder
+        })`,
+      };
+    });
+  }, [summaryOrderStatus]);
+
   const handleSearchKeyword = () => {
     setPurchaseOrderFilter((prev) => ({
       ...prev,
@@ -198,7 +229,7 @@ const PurchaseOrderFilter = () => {
         <MultiSelect
           label="Tình trạng đơn hàng"
           placeholder="Tình trạng"
-          data={OrderStatus}
+          data={orderStatusWithSummary}
           value={purchaseOrderFilter.orderStatus}
           onChange={handleChangeOrderStatus}
         />

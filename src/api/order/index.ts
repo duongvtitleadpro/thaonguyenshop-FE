@@ -7,6 +7,7 @@ import {
   OrderCombineResponse,
   ResponseWithTotal,
   EditOrder,
+  SummaryOrderStatus,
 } from "@/types/order";
 import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
@@ -51,5 +52,10 @@ export const getCombineOrderDetail = async (
 
 export const cancelOrder = async (id: number) => {
   const { data } = await axiosInstance.patch(`/order/cancel/${id}`);
+  return data;
+};
+
+export const getSummaryOrderStatus = async (): Promise<SummaryOrderStatus> => {
+  const { data } = await axiosInstance.get(`/order/summary-order-status`);
   return data;
 };

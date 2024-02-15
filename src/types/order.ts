@@ -112,3 +112,11 @@ export type ResponseWithTotal<T> = Response<T> & {
   totalQuantity: number;
   totalReceivedQuantity: number;
 };
+
+export type SummaryOrderStatus = {
+  totalOrder: number;
+  totalPurchased: number;
+  totalUnPurchased: number;
+  totalCancelled: number;
+  totalCustomerCancelled: number;
+};
