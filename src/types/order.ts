@@ -67,14 +67,15 @@ export type User = {
   name: string;
 };
 
-export type PurchasedOrder = OrderResponse & {
-  orderDetailColor: {
+export type PurchasedOrder = ResponseWithTotal<OrderResponse> & {
+  size: {
     title: string;
-  };
-  orderDetailSize: {
+    id: number;
+  }[];
+  color: {
     title: string;
-  };
-  orderDetailQuantity: number;
+    id: number;
+  }[];
 };
 
 export type OrderStatus =

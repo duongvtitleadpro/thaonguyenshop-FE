@@ -8,6 +8,7 @@ import {
   ResponseWithTotal,
   EditOrder,
   SummaryOrderStatus,
+  PurchasedOrder,
 } from "@/types/order";
 import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
@@ -22,9 +23,7 @@ export const editOrder = async (order: EditOrder): Promise<OrderResponse> => {
   return data;
 };
 
-export const getOrder = async (
-  param: OrderParam
-): Promise<ResponseWithTotal<OrderResponse>> => {
+export const getOrder = async (param: OrderParam): Promise<PurchasedOrder> => {
   const search = objectToQueryStringByComma(param);
   const { data } = await axiosInstance.get(`/order?${search}`);
   return data;

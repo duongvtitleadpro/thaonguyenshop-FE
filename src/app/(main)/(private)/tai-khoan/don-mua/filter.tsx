@@ -23,11 +23,10 @@ import { X } from "lucide-react";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
-import { getProductColor, getProductSize } from "@/api/product";
 import DatePickerWithRange from "@/components/date-range-picker";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
-import { getSummaryOrderStatus } from "@/api/order";
+import { getOrder, getSummaryOrderStatus } from "@/api/order";
 
 type OrderStatusType = {
   value: string;
@@ -78,19 +77,9 @@ const PurchaseOrderFilter = () => {
     purchaseOrderFilterState
   );
 
-  const { data: productSizeList } = useQuery({
-    queryKey: [QueryKey.GET_PRODUCT_SIZE],
-    queryFn: getProductSize,
-  });
-
-  const { data: productColorList } = useQuery({
-    queryKey: [QueryKey.GET_PRODUCT_COLOR],
-    queryFn: getProductColor,
-  });
-
-  const { data: summaryOrderStatus } = useQuery({
-    queryKey: [QueryKey.GET_SUMMARY_ORDER_STATUS],
-    queryFn: getSummaryOrderStatus,
+  const { data: purchaseOrderData, refetch } = useQuery({
+    queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
+    queryFn: () => getOrder(purchaseOrderFilter),
   });
 
   React.useEffect(() => {
@@ -144,20 +133,24 @@ const PurchaseOrderFilter = () => {
   };
 
   const sizeList = useMemo(() => {
-    if (!productSizeList) return [];
-    return productSizeList.data.map((item) => ({
-      value: item.id.toString(),
-      label: item.title,
-    }));
-  }, [productSizeList]);
+    if (!purchaseOrderData?.size) return [];
+    return purchaseOrderData.size
+      .filter((item) => !!item)
+      .map((item) => ({
+        value: item.id.toString(),
+        label: item.title,
+      }));
+  }, [purchaseOrderData]);
 
   const colorList = useMemo(() => {
-    if (!productColorList) return [];
-    return productColorList.data.map((item) => ({
-      value: item.id.toString(),
-      label: item.title,
-    }));
-  }, [productColorList]);
+    if (!purchaseOrderData?.color) return [];
+    return purchaseOrderData.color
+      .filter((item) => !!item)
+      .map((item) => ({
+        value: item.id.toString(),
+        label: item.title,
+      }));
+  }, [purchaseOrderData]);
 
   const selectedColorList = useMemo(() => {
     if (!purchaseOrderFilter.colorIds) return [];
@@ -181,29 +174,29 @@ const PurchaseOrderFilter = () => {
       .map((item) => item.value);
   }, [sizeList, purchaseOrderFilter.sizeIds]);
 
-  const orderStatusWithSummary = useMemo(() => {
-    if (!summaryOrderStatus) return OrderStatus;
-    return OrderStatus.map((item) => {
-      return {
-        ...item,
-        label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
-          summaryOrderStatus.totalOrder
-        })`,
-      };
-    });
-  }, [summaryOrderStatus]);
+  // const orderStatusWithSummary = useMemo(() => {
+  //   if (!summaryOrderStatus) return OrderStatus;
+  //   return OrderStatus.map((item) => {
+  //     return {
+  //       ...item,
+  //       label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
+  //         summaryOrderStatus.totalOrder
+  //       })`,
+  //     };
+  //   });
+  // }, [summaryOrderStatus]);
 
-  const allocationStatusWithSummary = useMemo(() => {
-    if (!summaryOrderStatus) return AllocationStatus;
-    return AllocationStatus.map((item) => {
-      return {
-        ...item,
-        label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
-          summaryOrderStatus.totalOrderAllocated
-        })`,
-      };
-    });
-  }, [summaryOrderStatus]);
+  // const allocationStatusWithSummary = useMemo(() => {
+  //   if (!summaryOrderStatus) return AllocationStatus;
+  //   return AllocationStatus.map((item) => {
+  //     return {
+  //       ...item,
+  //       label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
+  //         summaryOrderStatus.totalOrderAllocated
+  //       })`,
+  //     };
+  //   });
+  // }, [summaryOrderStatus]);
 
   const handleSearchKeyword = () => {
     setPurchaseOrderFilter((prev) => ({
