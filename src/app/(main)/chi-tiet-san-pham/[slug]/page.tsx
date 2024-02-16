@@ -24,6 +24,9 @@ import InputNumber from "@/components/input-number";
 import { usePathname, useRouter } from "next/navigation";
 import LoginModal from "@/components/login-modal";
 import { format } from "date-fns";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -493,9 +496,14 @@ const DetailProductPage = ({
                 <div>
                   <h3 className="text-lg font-semibold">Mô tả:</h3>
                   <div className="space-y-6">
-                    <p className="text-base text-gray-900">
+                    <pre
+                      className={cn(
+                        inter.className,
+                        "text-base text-gray-900 whitespace-pre-line"
+                      )}
+                    >
                       {productDetailData.description}
-                    </p>
+                    </pre>
                   </div>
                 </div>
                 {!auth.isAuthenticated && (
