@@ -121,6 +121,13 @@ const DetailProductPage = ({
     return total;
   }, [cart, listColor]);
 
+  const isBoughtStatus = useMemo(() => {
+    return (
+      productDetailData?.productStatus === "BOUGHT" ||
+      productDetailData?.productStatus === "HANDLE"
+    );
+  }, [productDetailData]);
+
   const handleChangeCart = (
     value: number | string,
     sizeId: number | null,
@@ -308,7 +315,7 @@ const DetailProductPage = ({
                   Nguồn gốc: {productDetailData?.origin}
                 </p>
 
-                {productDetailData.productStatus === "BOUGHT" && (
+                {isBoughtStatus && (
                   <p className="text-blue-600 italic font-semibold mt-4">
                     Đã mua hàng
                   </p>
@@ -465,14 +472,11 @@ const DetailProductPage = ({
                       maxRows={4}
                     />
                     <button
-                      disabled={
-                        cart.length === 0 ||
-                        productDetailData.productStatus === "BOUGHT"
-                      }
+                      disabled={cart.length === 0 || isBoughtStatus}
                       className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleBuyProduct}
                     >
-                      {productDetailData.productStatus === "BOUGHT"
+                      {isBoughtStatus
                         ? "Vui lòng liên hệ admin để đặt hàng"
                         : isEditOrder
                         ? "Sửa đơn hàng"

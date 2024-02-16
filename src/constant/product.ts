@@ -21,12 +21,12 @@ export enum ProductStatusTitle {
   UNPURCHASED = "Chưa mua hàng",
   BOUGHT = "Đã mua hàng",
   CANCELLED = "Hủy",
-  HANDLE = "Cần xử lý",
+  HANDLE = "Đã mua hàng",
 }
 
 export enum ProductStatusColor {
   UNPURCHASED = "text-blue-500",
   BOUGHT = "text-green-500",
   CANCELLED = "text-red-500",
-  HANDLE = "text-yellow-500",
+  HANDLE = "text-green-500",
 }
