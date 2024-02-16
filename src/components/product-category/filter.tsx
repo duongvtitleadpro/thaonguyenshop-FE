@@ -19,7 +19,7 @@ const FilterProduct = () => {
   const [keyword, setKeyword] = React.useState("");
   const [debounced] = useDebouncedValue(keyword, 500);
   const [productParam, setProductParam] = useRecoilState(filterProductState);
-  const [openedSize, { toggle: toggleSize }] = useDisclosure(true);
+  const [openedSize, { toggle: toggleSize }] = useDisclosure(false);
   const [openedOrderProduct, { toggle: toggleOrderProduct }] =
     useDisclosure(true);
   const [openedReadyProduct, { toggle: toggleReadyProduct }] =

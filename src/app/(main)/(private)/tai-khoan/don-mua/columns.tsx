@@ -167,7 +167,9 @@ export const columns: ColumnDef<OrderResponse>[] = [
       <DataTableColumnHeader column={column} title="Đơn giá" />
     ),
     cell: ({ row }) => (
-      <div>{`${currency.format(row.original.product.price)}`}</div>
+      <div className="text-right">{`${currency.format(
+        row.original.product.price
+      )}`}</div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -185,7 +187,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
         (detail) => detail.receivedQuantity
       );
       return (
-        <div className="flex flex-col hover:cursor-pointer">
+        <div className="flex flex-col hover:cursor-pointer text-right">
           {quantityList.map((item, index) => (
             <TableCell key={index} className=" border-none bor">
               {currency.format(row.original.product.price * item)}

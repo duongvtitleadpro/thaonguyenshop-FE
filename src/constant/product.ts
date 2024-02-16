@@ -16,3 +16,17 @@ export enum OrderStateTitle {
   SENT = "Đã xuất",
   ALLOCATED = "Đã chia",
 }
+
+export enum ProductStatusTitle {
+  UNPURCHASED = "Chưa mua hàng",
+  BOUGHT = "Đã mua hàng",
+  CANCELLED = "Hủy",
+  HANDLE = "Cần xử lý",
+}
+
+export enum ProductStatusColor {
+  UNPURCHASED = "text-blue-500",
+  BOUGHT = "text-green-500",
+  CANCELLED = "text-red-500",
+  HANDLE = "text-yellow-500",
+}

@@ -75,6 +75,7 @@ export default function ProductPage() {
                     name={item.name}
                     price={item.price}
                     status={item.productStatus}
+                    origin={item.origin}
                   />
                 ))}
               </SimpleGrid>

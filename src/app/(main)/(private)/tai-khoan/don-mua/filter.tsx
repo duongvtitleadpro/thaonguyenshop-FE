@@ -241,14 +241,14 @@ const PurchaseOrderFilter = () => {
         <MultiSelect
           label="Tình trạng đơn hàng"
           placeholder="Tình trạng"
-          data={orderStatusWithSummary}
+          data={OrderStatus}
           value={purchaseOrderFilter.orderStatus}
           onChange={handleChangeOrderStatus}
         />
         <MultiSelect
           label="Trạng thái đơn hàng"
           placeholder="Trạng thái"
-          data={allocationStatusWithSummary}
+          data={AllocationStatus}
           value={purchaseOrderFilter.allocationStatus}
           onChange={handleChangeAllocationStatus}
         />

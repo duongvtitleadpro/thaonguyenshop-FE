@@ -25,7 +25,7 @@ const PurchaseOrderPage = () => {
     if (!purchaseOrderData) return [];
     return [
       {
-        colSpan: 6,
+        colSpan: 5,
         value: "Tổng",
       },
       {
