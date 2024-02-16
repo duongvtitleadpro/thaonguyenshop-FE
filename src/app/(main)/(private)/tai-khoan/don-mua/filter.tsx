@@ -76,6 +76,8 @@ const PurchaseOrderFilter = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
     purchaseOrderFilterState
   );
+  const [color, setColor] = React.useState<number[]>([]);
+  const [size, setSize] = React.useState<number[]>([]);
 
   const { data: purchaseOrderData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
@@ -118,17 +120,25 @@ const PurchaseOrderFilter = () => {
     }));
   };
 
-  const handleChangeSizeFilter = (value: string[]) => {
+  const handleChangeSize = (value: string[]) => {
+    setSize(value.map((item) => Number(item)));
+  };
+
+  const handleChangeSizeFilter = () => {
     setPurchaseOrderFilter((prev) => ({
       ...prev,
-      sizeIds: value.map((item) => Number(item)),
+      sizeIds: size,
     }));
   };
 
-  const handleChangeColorFilter = (value: string[]) => {
+  const handleChangeColor = (value: string[]) => {
+    setColor(value.map((item) => Number(item)));
+  };
+
+  const handleChangeColorFilter = () => {
     setPurchaseOrderFilter((prev) => ({
       ...prev,
-      colorIds: value.map((item) => Number(item)),
+      colorIds: color,
     }));
   };
 
@@ -153,26 +163,18 @@ const PurchaseOrderFilter = () => {
   }, [purchaseOrderData]);
 
   const selectedColorList = useMemo(() => {
-    if (!purchaseOrderFilter.colorIds) return [];
+    if (!color) return [];
     return colorList
-      .filter(
-        (item) =>
-          purchaseOrderFilter.colorIds &&
-          purchaseOrderFilter.colorIds.includes(Number(item.value))
-      )
+      .filter((item) => color && color.includes(Number(item.value)))
       .map((item) => item.value);
-  }, [colorList, purchaseOrderFilter.colorIds]);
+  }, [colorList, color]);
 
   const selectedSizeList = useMemo(() => {
-    if (!purchaseOrderFilter.sizeIds) return [];
+    if (!size) return [];
     return sizeList
-      .filter(
-        (item) =>
-          purchaseOrderFilter.sizeIds &&
-          purchaseOrderFilter.sizeIds.includes(Number(item.value))
-      )
+      .filter((item) => size && size.includes(Number(item.value)))
       .map((item) => item.value);
-  }, [sizeList, purchaseOrderFilter.sizeIds]);
+  }, [sizeList, size]);
 
   // const orderStatusWithSummary = useMemo(() => {
   //   if (!summaryOrderStatus) return OrderStatus;
@@ -203,6 +205,12 @@ const PurchaseOrderFilter = () => {
       ...prev,
       query: keyword,
     }));
+  };
+
+  const handleClearFilter = () => {
+    setColor([]);
+    setSize([]);
+    setPurchaseOrderFilter(PurchaseOrderFilterDefaultValue);
   };
 
   return (
@@ -250,22 +258,22 @@ const PurchaseOrderFilter = () => {
           placeholder="Mẫu"
           data={colorList}
           value={selectedColorList}
-          onChange={handleChangeColorFilter}
+          onChange={handleChangeColor}
+          onDropdownClose={handleChangeColorFilter}
         />
         <MultiSelect
           label="Size"
           placeholder="Size"
           data={sizeList}
           value={selectedSizeList}
-          onChange={handleChangeSizeFilter}
+          onChange={handleChangeSize}
+          onDropdownClose={handleChangeSizeFilter}
         />
         <Tooltip label="Xóa bộ lọc">
           <ActionIcon
             variant="transparent"
             color="blue"
-            onClick={() =>
-              setPurchaseOrderFilter(PurchaseOrderFilterDefaultValue)
-            }
+            onClick={handleClearFilter}
           >
             <X />
           </ActionIcon>
