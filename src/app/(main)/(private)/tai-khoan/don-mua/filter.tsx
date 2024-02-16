@@ -9,6 +9,7 @@ import {
   Tooltip,
   OptionsFilter,
   ComboboxItem,
+  ComboboxOptionsProps,
 } from "@mantine/core";
 import {
   PurchaseOrderFilterDefaultValue,
@@ -27,6 +28,8 @@ import DatePickerWithRange from "@/components/date-range-picker";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { getOrder, getSummaryOrderStatus } from "@/api/order";
+import { ComboboxOptionProps } from "@headlessui/react";
+import { useClickOutside, useDisclosure } from "@mantine/hooks";
 
 type OrderStatusType = {
   value: string;
@@ -79,6 +82,9 @@ const PurchaseOrderFilter = () => {
   const [color, setColor] = React.useState<number[]>([]);
   const [size, setSize] = React.useState<number[]>([]);
 
+  const [colorDropdown, setColorDropdown] = React.useState(false);
+  const [sizeDropdown, setSizeDropdown] = React.useState(false);
+
   const { data: purchaseOrderData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
     queryFn: () => getOrder(purchaseOrderFilter),
@@ -122,9 +128,16 @@ const PurchaseOrderFilter = () => {
 
   const handleChangeSize = (value: string[]) => {
     setSize(value.map((item) => Number(item)));
+    if (!sizeDropdown) {
+      setPurchaseOrderFilter((prev) => ({
+        ...prev,
+        sizeIds: value.map((item) => Number(item)),
+      }));
+    }
   };
 
   const handleChangeSizeFilter = () => {
+    setSizeDropdown(false);
     setPurchaseOrderFilter((prev) => ({
       ...prev,
       sizeIds: size,
@@ -133,13 +146,28 @@ const PurchaseOrderFilter = () => {
 
   const handleChangeColor = (value: string[]) => {
     setColor(value.map((item) => Number(item)));
+    if (!colorDropdown) {
+      setPurchaseOrderFilter((prev) => ({
+        ...prev,
+        colorIds: value.map((item) => Number(item)),
+      }));
+    }
   };
 
   const handleChangeColorFilter = () => {
+    setColorDropdown(false);
     setPurchaseOrderFilter((prev) => ({
       ...prev,
       colorIds: color,
     }));
+  };
+
+  const openColorDropdown = () => {
+    setColorDropdown(true);
+  };
+
+  const openSizeDropdown = () => {
+    setSizeDropdown(true);
   };
 
   const sizeList = useMemo(() => {
@@ -260,6 +288,7 @@ const PurchaseOrderFilter = () => {
           value={selectedColorList}
           onChange={handleChangeColor}
           onDropdownClose={handleChangeColorFilter}
+          onDropdownOpen={openColorDropdown}
         />
         <MultiSelect
           label="Size"
@@ -268,6 +297,7 @@ const PurchaseOrderFilter = () => {
           value={selectedSizeList}
           onChange={handleChangeSize}
           onDropdownClose={handleChangeSizeFilter}
+          onDropdownOpen={openSizeDropdown}
         />
         <Tooltip label="Xóa bộ lọc">
           <ActionIcon
