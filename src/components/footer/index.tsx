@@ -19,7 +19,7 @@ export default function Footer() {
               spacing="xs"
               size="sm"
               center
-              className="w-full text-white text-lg"
+              className="w-full text-white"
               mt={8}
             >
               <List.Item icon={<MapPin className="w-4 h-4" />}>
