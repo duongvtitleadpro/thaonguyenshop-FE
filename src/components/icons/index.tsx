@@ -536,4 +536,18 @@ export const Icons = {
       />
     </svg>
   ),
+  filter: (props: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      id="filter_sorting_sort_filtering_ascending_interface_order_funnel"
+      viewBox="0 0 48 48"
+      {...props}
+    >
+      <circle cx="24" cy="24" r="24" fill="#01579b" />
+      <path
+        d="M34,10H14c-2.83,0-3.79,3.39-2.32,5.19l8.1,9.89c.15,.18,.23,.4,.23,.63v10.42c0,1.61,1.8,2.54,3.11,1.66l4-2.67c.56-.37,.89-.99,.89-1.66v-7.75c0-.23,.08-.46,.23-.63l8.1-9.89c1.48-1.82,.47-5.19-2.32-5.19Z"
+        fill="#e1f5fe"
+      />
+    </svg>
+  ),
 };

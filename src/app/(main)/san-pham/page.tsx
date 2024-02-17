@@ -51,14 +51,14 @@ export default function ProductPage() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex relative">
       <FilterProduct />
       <div className="flex-1 p-4">
         {productListData && (
           <>
             <div>
               <SimpleGrid
-                cols={{ base: 1, sm: 2, md: 4, lg: 5 }}
+                cols={{ base: 1, xs: 2, sm: 3, md: 4, lg: 5 }}
                 spacing="lg"
                 verticalSpacing="xl"
               >

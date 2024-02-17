@@ -15,6 +15,7 @@ import { useRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/product-filter.atom";
 import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
+import { Search } from "lucide-react";
 
 const Header = () => {
   const router = useRouter();
@@ -34,6 +35,7 @@ const Header = () => {
       keyword: keyword,
     }));
     if (pathname !== "/san-pham") router.push(`/san-pham?search=${keyword}`);
+    closeMenu();
   };
 
   return (
@@ -43,7 +45,7 @@ const Header = () => {
           <div>
             <h2 className="text-sm">Tổng kho Thảo Nguyên</h2>
           </div>
-          <LoginModal />
+          <LoginModal onClose={closeMenu} />
         </div>
       </div>
       <div>
@@ -120,16 +122,51 @@ const Header = () => {
             <Drawer
               opened={onpenedMenu}
               onClose={closeMenu}
-              withCloseButton={false}
               overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
               styles={{
                 body: {
-                  height: "100%",
+                  height: "calc(100% - 60px)",
                 },
               }}
             >
-              <div className="flex flex-col py-20 px-4 justify-between h-full">
+              <div className="flex flex-col pt-6 px-4 justify-between h-full">
                 <div className="flex flex-col gap-4 ">
+                  <div className="flex w-full items-center">
+                    <Input
+                      placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
+                      className="flex-1 h-full rounded-none"
+                      radius="xs"
+                      size="lg"
+                      value={keyword}
+                      onChange={(event) =>
+                        setKeyword(event.currentTarget.value)
+                      }
+                      rightSectionPointerEvents="all"
+                      rightSection={
+                        <CloseButton
+                          aria-label="Clear input"
+                          onClick={() => {
+                            setKeyword("");
+                            setProductParam((prev) => ({
+                              ...prev,
+                              keyword: "",
+                            }));
+                          }}
+                          style={{ display: keyword ? undefined : "none" }}
+                        />
+                      }
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") handleChangeKeyword();
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      className="rounded-none bg-[#35A8E0] h-12"
+                      onClick={handleChangeKeyword}
+                    >
+                      <Search />
+                    </Button>
+                  </div>
                   {NavBarRoute.map((item, index) => (
                     <Link
                       key={index}
@@ -143,7 +180,7 @@ const Header = () => {
                     </Link>
                   ))}
                 </div>
-                <LoginModal />
+                <LoginModal onClose={closeMenu} />
               </div>
             </Drawer>
           </div>
