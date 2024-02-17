@@ -177,13 +177,13 @@ const DetailProductPage = ({
     try {
       if (isEditOrder) {
         const lastEditText = "\nLần sửa gần nhất: ";
-        const indexOfNoteEditTime = note.indexOf(lastEditText);
+        const indexOfNoteEditTime = note?.indexOf(lastEditText);
         const oldNoteEditTime =
-          indexOfNoteEditTime !== -1
+          indexOfNoteEditTime !== -1 && indexOfNoteEditTime !== undefined
             ? note.substring(indexOfNoteEditTime + lastEditText.length)
             : "";
         const noteEdit =
-          indexOfNoteEditTime !== -1
+          indexOfNoteEditTime !== -1 && indexOfNoteEditTime !== undefined
             ? note.replace(
                 oldNoteEditTime,
                 format(new Date(), "dd/MM/yyyy HH:mm")
@@ -264,7 +264,7 @@ const DetailProductPage = ({
         }));
         setOrder(order);
         setCart(orderCart);
-        setNote(oldNote);
+        setNote(oldNote ?? "");
       } catch (error) {
         toast("Đã có lỗi xảy ra", {
           description: <p className="text-white">Vui lòng thử lại sau</p>,
