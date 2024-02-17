@@ -19,14 +19,15 @@ import { clearToken, setToken } from "@/utils";
 import { TOKEN_KEY } from "@/constant/auth";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { authState } from "@/store/state/auth.atom";
-import { Settings, LogOut } from "lucide-react";
+import { Settings, LogOut, Settings2, LogOutIcon } from "lucide-react";
 
 interface LoginModalProps {
   customButton?: React.ReactNode;
+  onClose?: () => void;
 }
 
 const LoginModal = (props: LoginModalProps) => {
-  const { customButton } = props;
+  const { customButton, onClose } = props;
   const [{ isAuthenticated, user }, setAuth] = useRecoilState(authState);
   const [onpenedLogin, { open: openLogin, close: closeLogin }] =
     useDisclosure(false);
@@ -71,42 +72,68 @@ const LoginModal = (props: LoginModalProps) => {
       user: null,
     });
     router.refresh();
+    onClose?.();
   };
   return (
     <div className="cursor-pointer">
       {!customButton ? (
         isAuthenticated ? (
-          <div className="flex items-center gap-2">
-            <Menu
-              shadow="md"
-              width={200}
-              trigger="hover"
-              openDelay={100}
-              closeDelay={400}
-            >
-              <Menu.Target>
-                <div className="flex items-center gap-2">
-                  <Avatar src={user?.avatarUrl} color="white" variant="light" />
-                  <div>Xin chào, {user?.name}</div>
-                </div>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>{user?.name}</Menu.Label>
-                <Menu.Item
-                  leftSection={<Settings />}
-                  onClick={() => router.push("/tai-khoan/don-mua")}
-                >
-                  Tài khoản
-                </Menu.Item>
-                <Menu.Item
-                  leftSection={<LogOut />}
+          <>
+            <div className="xl:items-center gap-2 hidden xl:flex">
+              <Menu
+                shadow="md"
+                width={200}
+                trigger="hover"
+                openDelay={100}
+                closeDelay={400}
+              >
+                <Menu.Target>
+                  <div className="flex items-center gap-2">
+                    <Avatar
+                      src={user?.avatarUrl}
+                      color="white"
+                      variant="light"
+                    />
+                    <div>Xin chào, {user?.name}</div>
+                  </div>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>{user?.name}</Menu.Label>
+                  <Menu.Item
+                    leftSection={<Settings />}
+                    onClick={() => router.push("/tai-khoan/don-mua")}
+                  >
+                    Tài khoản
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<LogOut />}
+                    onClick={() => handleLogout()}
+                  >
+                    Đăng xuất
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </div>
+            <div className="flex items-center justify-between xl:hidden">
+              <div className="flex items-center gap-2">
+                <Avatar src={user?.avatarUrl} color="white" variant="light" />
+                <div>Xin chào, {user?.name}</div>
+              </div>
+              <div className="flex gap-4">
+                <Settings
+                  className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
+                  onClick={() => {
+                    router.push("/tai-khoan/don-mua");
+                    onClose?.();
+                  }}
+                />
+                <LogOutIcon
+                  className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
                   onClick={() => handleLogout()}
-                >
-                  Đăng xuất
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </div>
+                />
+              </div>
+            </div>
+          </>
         ) : (
           <div className="flex gap-2" onClick={openLogin}>
             <Icons.user />

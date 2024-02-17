@@ -20,7 +20,7 @@ import {
   OrderStatus,
   SummaryOrderStatus,
 } from "@/types/order";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
@@ -243,22 +243,15 @@ const PurchaseOrderFilter = () => {
 
   return (
     <div className="mb-3 flex gap-4 flex-col">
-      <div className="flex justify-between">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:gap-[400px]">
         <Input
-          className="w-1/3"
           placeholder="Tìm kiếm tên, mã sản phẩm"
+          className="h-full"
           value={keyword}
           onChange={(event) => setKeyword(event.currentTarget.value)}
           rightSectionPointerEvents="all"
           rightSection={
-            <CloseButton
-              aria-label="Clear input"
-              onClick={() => {
-                setKeyword("");
-                setPurchaseOrderFilter((prev) => ({ ...prev, query: "" }));
-              }}
-              style={{ display: keyword ? undefined : "none" }}
-            />
+            <Search onClick={handleSearchKeyword} className="w-5 h-5" />
           }
           onKeyDown={(event) => {
             if (event.key === "Enter") handleSearchKeyword();
@@ -266,7 +259,7 @@ const PurchaseOrderFilter = () => {
         />
         <DatePickerWithRange date={date} onDateChange={setDate} />
       </div>
-      <div className="flex gap-3 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         <MultiSelect
           label="Tình trạng đơn hàng"
           placeholder="Tình trạng"
@@ -304,6 +297,7 @@ const PurchaseOrderFilter = () => {
             variant="transparent"
             color="blue"
             onClick={handleClearFilter}
+            className="my-auto"
           >
             <X />
           </ActionIcon>

@@ -1,6 +1,12 @@
 "use client";
 import React, { useCallback, useEffect } from "react";
-import { Checkbox, Collapse, UnstyledButton } from "@mantine/core";
+import {
+  Checkbox,
+  Collapse,
+  ScrollArea,
+  Tabs,
+  UnstyledButton,
+} from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { Plus, Minus } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -14,6 +20,8 @@ import { filterProductState } from "@/store/state/product-filter.atom";
 import { getAllCategory } from "@/api/category";
 import { WarehouseStatus } from "@/types/product";
 import { ATOM_KEY } from "@/store/key";
+import { Icons } from "../icons";
+import { Drawer, DrawerTrigger, DrawerContent } from "../ui/drawer";
 
 const FilterProduct = () => {
   const [keyword, setKeyword] = React.useState("");
@@ -86,142 +94,293 @@ const FilterProduct = () => {
     });
   };
   return (
-    <div className="w-72 p-4">
-      <div>
+    <>
+      <div className="sm:w-52 lg:w-72 p-4 hidden sm:block ">
         <div>
-          <div
-            className="flex justify-between items-center cursor-pointer"
-            onClick={toggleSize}
-          >
-            <h2 className="text-base uppercase">size</h2>
-            {openedSize ? <Minus /> : <Plus />}
+          <div>
+            <div
+              className="flex justify-between items-center cursor-pointer"
+              onClick={toggleSize}
+            >
+              <h2 className="text-base uppercase">size</h2>
+              {openedSize ? <Minus /> : <Plus />}
+            </div>
+            <Collapse in={openedSize}>
+              {productSizeList && (
+                <div className="flex flex-col gap-2 p-4">
+                  {productSizeList.data.map((item, index) => (
+                    <Checkbox
+                      key={index}
+                      label={item.title}
+                      value={item.id}
+                      checked={productParam.sizes.includes(item.id)}
+                      onChange={handleChangeSizeFilter}
+                      className="text-sm"
+                    />
+                  ))}
+                </div>
+              )}
+            </Collapse>
           </div>
-          <Collapse in={openedSize}>
-            {productSizeList && (
-              <div className="flex flex-col gap-2 p-4">
-                {productSizeList.data.map((item, index) => (
-                  <Checkbox
-                    key={index}
-                    label={item.title}
-                    value={item.id}
-                    checked={productParam.sizes.includes(item.id)}
-                    onChange={handleChangeSizeFilter}
-                    className="text-sm"
-                  />
-                ))}
-              </div>
-            )}
-          </Collapse>
-        </div>
-        <Separator className="my-3" />
-        <UnstyledButton onClick={() => handleChangeCategoryFilter()}>
-          <span
-            className={cn(
-              !productParam?.warehouseStatus &&
-                !productParam.category &&
-                "font-semibold underline text-blue-600"
-            )}
-          >
-            Tất cả sản phẩm
-          </span>
-        </UnstyledButton>
-        <Separator className="my-3" />
-        <div>
-          <div
-            className="flex justify-between items-center cursor-pointer"
-            onClick={toggleOrderProduct}
-          >
-            <h2 className="text-base uppercase">Hàng Order</h2>
-            {openedOrderProduct ? <Minus /> : <Plus />}
-          </div>
-          <Collapse in={openedOrderProduct}>
-            {categoryListData && (
-              <div className="flex flex-col gap-2 p-4">
-                {/* All product */}
-                <UnstyledButton
-                  onClick={() => handleChangeCategoryFilter("ORDER")}
-                >
-                  <span
-                    className={cn(
-                      productParam?.warehouseStatus === "ORDER" &&
-                        !productParam.category &&
-                        "font-semibold underline text-blue-600"
-                    )}
-                  >
-                    Tất cả sản phẩm
-                  </span>
-                </UnstyledButton>
-                {/* Order Catergory */}
-                {categoryListData.data.map((item, index) => (
+          <Separator className="my-3" />
+          <UnstyledButton onClick={() => handleChangeCategoryFilter()}>
+            <span
+              className={cn(
+                !productParam?.warehouseStatus &&
+                  !productParam.category &&
+                  "font-semibold underline text-blue-600"
+              )}
+            >
+              Tất cả sản phẩm
+            </span>
+          </UnstyledButton>
+          <Separator className="my-3" />
+          <div>
+            <div
+              className="flex justify-between items-center cursor-pointer"
+              onClick={toggleOrderProduct}
+            >
+              <h2 className="text-base uppercase">Hàng Order</h2>
+              {openedOrderProduct ? <Minus /> : <Plus />}
+            </div>
+            <Collapse in={openedOrderProduct}>
+              {categoryListData && (
+                <div className="flex flex-col gap-2 p-4">
+                  {/* All product */}
                   <UnstyledButton
-                    key={index}
-                    onClick={() => handleChangeCategoryFilter("ORDER", item.id)}
+                    onClick={() => handleChangeCategoryFilter("ORDER")}
                   >
                     <span
                       className={cn(
-                        productParam.warehouseStatus === "ORDER" &&
-                          productParam.category === item.id &&
+                        productParam?.warehouseStatus === "ORDER" &&
+                          !productParam.category &&
                           "font-semibold underline text-blue-600"
                       )}
                     >
-                      {item.name}
+                      Tất cả sản phẩm
                     </span>
                   </UnstyledButton>
-                ))}
-              </div>
-            )}
-          </Collapse>
-        </div>
+                  {/* Order Catergory */}
+                  {categoryListData.data.map((item, index) => (
+                    <UnstyledButton
+                      key={index}
+                      onClick={() =>
+                        handleChangeCategoryFilter("ORDER", item.id)
+                      }
+                    >
+                      <span
+                        className={cn(
+                          productParam.warehouseStatus === "ORDER" &&
+                            productParam.category === item.id &&
+                            "font-semibold underline text-blue-600"
+                        )}
+                      >
+                        {item.name}
+                      </span>
+                    </UnstyledButton>
+                  ))}
+                </div>
+              )}
+            </Collapse>
+          </div>
 
-        <Separator className="my-3" />
-        <div>
-          <div
-            className="flex justify-between items-center cursor-pointer"
-            onClick={toggleReadyProduct}
-          >
-            <h2 className="text-base uppercase">Hàng Có Sẵn</h2>
-            {openedReadyProduct ? <Minus /> : <Plus />}
-          </div>
-          <Collapse in={openedReadyProduct}>
-            {categoryListData && (
-              <div className="flex flex-col gap-2 p-4">
-                {/* All product */}
-                <UnstyledButton
-                  onClick={() => handleChangeCategoryFilter("READY")}
-                >
-                  <span
-                    className={cn(
-                      productParam?.warehouseStatus === "READY" &&
-                        !productParam.category &&
-                        "font-semibold underline text-blue-600"
-                    )}
-                  >
-                    Tất cả sản phẩm
-                  </span>
-                </UnstyledButton>
-                {/* Ready Catergory */}
-                {categoryListData.data.map((item, index) => (
+          <Separator className="my-3" />
+          <div>
+            <div
+              className="flex justify-between items-center cursor-pointer"
+              onClick={toggleReadyProduct}
+            >
+              <h2 className="text-base uppercase">Hàng Có Sẵn</h2>
+              {openedReadyProduct ? <Minus /> : <Plus />}
+            </div>
+            <Collapse in={openedReadyProduct}>
+              {categoryListData && (
+                <div className="flex flex-col gap-2 p-4">
+                  {/* All product */}
                   <UnstyledButton
-                    key={index}
-                    onClick={() => handleChangeCategoryFilter("READY", item.id)}
+                    onClick={() => handleChangeCategoryFilter("READY")}
                   >
                     <span
                       className={cn(
-                        productParam.warehouseStatus === "READY" &&
-                          productParam.category === item.id &&
+                        productParam?.warehouseStatus === "READY" &&
+                          !productParam.category &&
                           "font-semibold underline text-blue-600"
                       )}
                     >
-                      {item.name}
+                      Tất cả sản phẩm
                     </span>
                   </UnstyledButton>
-                ))}
-              </div>
-            )}
-          </Collapse>
+                  {/* Ready Catergory */}
+                  {categoryListData.data.map((item, index) => (
+                    <UnstyledButton
+                      key={index}
+                      onClick={() =>
+                        handleChangeCategoryFilter("READY", item.id)
+                      }
+                    >
+                      <span
+                        className={cn(
+                          productParam.warehouseStatus === "READY" &&
+                            productParam.category === item.id &&
+                            "font-semibold underline text-blue-600"
+                        )}
+                      >
+                        {item.name}
+                      </span>
+                    </UnstyledButton>
+                  ))}
+                </div>
+              )}
+            </Collapse>
+          </div>
         </div>
       </div>
-    </div>
+      <div className="fixed z-10 bottom-3 right-3">
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Icons.filter className="w-12 h-12 cursor-pointer hover:opacity-80" />
+          </DrawerTrigger>
+          <DrawerContent>
+            <div className="mx-auto w-full max-w-sm">
+              <div className="py-8">
+                <Tabs defaultValue="size">
+                  <Tabs.List>
+                    <Tabs.Tab value="size">Size</Tabs.Tab>
+                    <Tabs.Tab value="all">Tất cả</Tabs.Tab>
+                    <Tabs.Tab value="order">Hàng Order</Tabs.Tab>
+                    <Tabs.Tab value="ready">Hàng Có Sẵn</Tabs.Tab>
+                  </Tabs.List>
+
+                  <Tabs.Panel value="size">
+                    {productSizeList && (
+                      <ScrollArea h={250}>
+                        <div className="flex flex-col gap-2 p-4">
+                          {productSizeList.data.map((item, index) => (
+                            <Checkbox
+                              key={index}
+                              label={item.title}
+                              value={item.id}
+                              checked={productParam.sizes.includes(item.id)}
+                              onChange={handleChangeSizeFilter}
+                              className="text-sm"
+                            />
+                          ))}
+                        </div>
+                      </ScrollArea>
+                    )}
+                  </Tabs.Panel>
+                  <Tabs.Panel value="all">
+                    {productSizeList && (
+                      <ScrollArea h={250}>
+                        <div className="p-4">
+                          <UnstyledButton
+                            onClick={() => handleChangeCategoryFilter()}
+                          >
+                            <span
+                              className={cn(
+                                !productParam?.warehouseStatus &&
+                                  !productParam.category &&
+                                  "font-semibold underline text-blue-600"
+                              )}
+                            >
+                              Tất cả sản phẩm
+                            </span>
+                          </UnstyledButton>
+                        </div>
+                      </ScrollArea>
+                    )}
+                  </Tabs.Panel>
+
+                  <Tabs.Panel value="order">
+                    <ScrollArea h={250}>
+                      {categoryListData && (
+                        <div className="flex flex-col gap-2 p-4">
+                          {/* All product */}
+                          <UnstyledButton
+                            onClick={() => handleChangeCategoryFilter("ORDER")}
+                          >
+                            <span
+                              className={cn(
+                                productParam?.warehouseStatus === "ORDER" &&
+                                  !productParam.category &&
+                                  "font-semibold underline text-blue-600"
+                              )}
+                            >
+                              Tất cả sản phẩm
+                            </span>
+                          </UnstyledButton>
+                          {/* Order Catergory */}
+                          {categoryListData.data.map((item, index) => (
+                            <UnstyledButton
+                              key={index}
+                              onClick={() =>
+                                handleChangeCategoryFilter("ORDER", item.id)
+                              }
+                            >
+                              <span
+                                className={cn(
+                                  productParam.warehouseStatus === "ORDER" &&
+                                    productParam.category === item.id &&
+                                    "font-semibold underline text-blue-600"
+                                )}
+                              >
+                                {item.name}
+                              </span>
+                            </UnstyledButton>
+                          ))}
+                        </div>
+                      )}
+                    </ScrollArea>
+                  </Tabs.Panel>
+
+                  <Tabs.Panel value="ready">
+                    <ScrollArea h={250}>
+                      {categoryListData && (
+                        <div className="flex flex-col gap-2 p-4">
+                          {/* All product */}
+                          <UnstyledButton
+                            onClick={() => handleChangeCategoryFilter("READY")}
+                          >
+                            <span
+                              className={cn(
+                                productParam?.warehouseStatus === "READY" &&
+                                  !productParam.category &&
+                                  "font-semibold underline text-blue-600"
+                              )}
+                            >
+                              Tất cả sản phẩm
+                            </span>
+                          </UnstyledButton>
+                          {/* Ready Catergory */}
+                          {categoryListData.data.map((item, index) => (
+                            <UnstyledButton
+                              key={index}
+                              onClick={() =>
+                                handleChangeCategoryFilter("READY", item.id)
+                              }
+                            >
+                              <span
+                                className={cn(
+                                  productParam.warehouseStatus === "READY" &&
+                                    productParam.category === item.id &&
+                                    "font-semibold underline text-blue-600"
+                                )}
+                              >
+                                {item.name}
+                              </span>
+                            </UnstyledButton>
+                          ))}
+                        </div>
+                      )}
+                    </ScrollArea>
+                  </Tabs.Panel>
+                </Tabs>
+              </div>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    </>
   );
 };
 

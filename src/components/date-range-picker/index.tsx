@@ -30,8 +30,9 @@ export default function DatePickerWithRange(props: DatePickerWithRangeProps) {
           <Button
             id="date"
             variant={"outline"}
+            size={"sm"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
