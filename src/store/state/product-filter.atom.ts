@@ -4,7 +4,7 @@ import { ProductParam } from "@/types/product";
 
 export const FILTER_PRODUCT_DEFAULT: ProductParam = {
   page: 1,
-  limit: 12,
+  limit: 30,
   sizes: [],
   colors: [],
   sort: "createdAt,desc",
