@@ -58,7 +58,7 @@ export default function ProductPage() {
           <>
             <div>
               <SimpleGrid
-                cols={{ base: 1, xs: 2, sm: 3, md: 4, lg: 5 }}
+                cols={{ base: 2, xs: 2, sm: 3, md: 4, lg: 5 }}
                 spacing="lg"
                 verticalSpacing="xl"
               >

@@ -23,16 +23,16 @@ const ProductCard = (props: ProductCardProps) => {
   const router = useRouter();
   const { id, img, name, code, price, status, origin } = props;
   return (
-    <div className="h-full transform overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
+    <div className="h-full transform overflow-hidden rounded-lg border bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
       <Image
-        className="h-56 w-full cursor-pointer"
+        className="h-32 md:h-56 w-full cursor-pointer"
         fit="fill"
         src={img}
         alt={name}
         fallbackSrc="https://www.sennheiser.com/images/placeholder.raw.svg"
         onClick={() => router.push(`/chi-tiet-san-pham/${id}`)}
       />
-      <div className="p-4">
+      <div className="p-2 md:p-4">
         <p className="mb-2 text-sm text-gray-300">{`Mã sản phẩm: ${code}`}</p>
         <h2 className="mb-2 text-lg font-medium dark:text-white text-gray-900 line-clamp-3">
           {name}
