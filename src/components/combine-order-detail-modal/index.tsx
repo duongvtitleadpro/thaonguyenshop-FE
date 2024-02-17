@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Button } from "@/components/ui/button";
 import { FileSearch } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
   const { id } = props;
   const auth = useRecoilValue(authState);
   const [opened, { open, close }] = useDisclosure(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const { data: combineOrderData } = useQuery({
     queryKey: [QueryKey.GET_COMBINE_ORDER_DETAIL, id],
@@ -39,6 +40,7 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
         }
         centered
         size="70%"
+        fullScreen={isMobile}
       >
         {combineOrderData && (
           <div>
