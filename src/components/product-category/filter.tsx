@@ -235,7 +235,7 @@ const FilterProduct = () => {
           </div>
         </div>
       </div>
-      <div className="fixed z-10 bottom-3 right-3">
+      <div className="fixed z-10 bottom-3 right-3 block sm:hidden">
         <Drawer>
           <DrawerTrigger asChild>
             <Icons.filter className="w-12 h-12 cursor-pointer hover:opacity-80" />
