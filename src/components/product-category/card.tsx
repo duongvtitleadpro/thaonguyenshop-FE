@@ -25,7 +25,8 @@ const ProductCard = (props: ProductCardProps) => {
   return (
     <div className="h-full transform overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
       <Image
-        className="h-48 w-full object-cover object-center cursor-pointer"
+        className="h-56 w-full cursor-pointer"
+        fit="fill"
         src={img}
         alt={name}
         fallbackSrc="https://www.sennheiser.com/images/placeholder.raw.svg"
@@ -37,15 +38,18 @@ const ProductCard = (props: ProductCardProps) => {
           {name}
         </h2>
         <p className="mb-2 text-sm text-gray-700">Nguồn gốc: {origin}</p>
-        {status ? (
-          <p className={`text-sm ${ProductStatusColor[status]} italic`}>
-            {ProductStatusTitle[status]}
-          </p>
-        ) : (
-          <p className={`text-sm ${ProductStatusColor["UNPURCHASED"]} italic`}>
-            {ProductStatusTitle["UNPURCHASED"]}
-          </p>
-        )}
+        {auth.isAuthenticated &&
+          (status ? (
+            <p className={`text-sm ${ProductStatusColor[status]} italic`}>
+              {ProductStatusTitle[status]}
+            </p>
+          ) : (
+            <p
+              className={`text-sm ${ProductStatusColor["UNPURCHASED"]} italic`}
+            >
+              {ProductStatusTitle["UNPURCHASED"]}
+            </p>
+          ))}
 
         <div className="flex items-center">
           {auth.isAuthenticated ? (
@@ -54,7 +58,7 @@ const ProductCard = (props: ProductCardProps) => {
             </p>
           ) : (
             <p className="mr-2 text-lg font-semibold text-red-600">
-              Vui lòng đăng nhập để xem giá
+              Đăng nhập để xem
             </p>
           )}
         </div>

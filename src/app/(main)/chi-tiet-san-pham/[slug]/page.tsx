@@ -249,9 +249,10 @@ const DetailProductPage = ({
       try {
         const order = await getOrderDetail(orderId);
         const lastEditText = "\nLần sửa gần nhất: ";
-        const indexOfNoteEditTime = order?.note.indexOf(lastEditText);
+        console.log("😻 ~ fetchOrder ~ lastEditText:", lastEditText);
+        const indexOfNoteEditTime = order?.note?.indexOf(lastEditText);
         const oldNote =
-          indexOfNoteEditTime !== -1
+          indexOfNoteEditTime !== -1 && indexOfNoteEditTime !== undefined
             ? order?.note.slice(0, indexOfNoteEditTime)
             : order?.note;
         const orderCart = order.orderDetails.map((detail) => ({
@@ -316,7 +317,7 @@ const DetailProductPage = ({
                   Nguồn gốc: {productDetailData?.origin}
                 </p>
 
-                {isBoughtStatus && (
+                {auth.isAuthenticated && isBoughtStatus && (
                   <p className="text-blue-600 italic font-semibold mt-4">
                     Đã mua hàng
                   </p>
