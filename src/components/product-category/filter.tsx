@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import {
   Checkbox,
   Collapse,
@@ -42,6 +42,27 @@ const FilterProduct = () => {
     queryFn: getAllCategory,
   });
 
+  const orderCategoryListData = useMemo(() => {
+    if (!categoryListData) return null;
+    return categoryListData.data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      imageUrl: item.categoryImages.find(
+        (item) => item.categoryStatus === "ORDER"
+      )!.imageUrl,
+    }));
+  }, [categoryListData]);
+
+  const readyCategoryListData = useMemo(() => {
+    if (!categoryListData) return null;
+    return categoryListData.data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      imageUrl: item.categoryImages.find(
+        (item) => item.categoryStatus === "READY"
+      )!.imageUrl,
+    }));
+  }, [categoryListData]);
   useEffect(() => {
     setProductParam((prev) => ({
       ...prev,
@@ -144,7 +165,7 @@ const FilterProduct = () => {
               {openedOrderProduct ? <Minus /> : <Plus />}
             </div>
             <Collapse in={openedOrderProduct}>
-              {categoryListData && (
+              {orderCategoryListData && (
                 <div className="flex flex-col gap-2 p-4">
                   {/* All product */}
                   <UnstyledButton
@@ -161,7 +182,7 @@ const FilterProduct = () => {
                     </span>
                   </UnstyledButton>
                   {/* Order Catergory */}
-                  {categoryListData.data.map((item, index) => (
+                  {orderCategoryListData.map((item, index) => (
                     <UnstyledButton
                       key={index}
                       onClick={() =>
@@ -194,7 +215,7 @@ const FilterProduct = () => {
               {openedReadyProduct ? <Minus /> : <Plus />}
             </div>
             <Collapse in={openedReadyProduct}>
-              {categoryListData && (
+              {readyCategoryListData && (
                 <div className="flex flex-col gap-2 p-4">
                   {/* All product */}
                   <UnstyledButton
@@ -211,7 +232,7 @@ const FilterProduct = () => {
                     </span>
                   </UnstyledButton>
                   {/* Ready Catergory */}
-                  {categoryListData.data.map((item, index) => (
+                  {readyCategoryListData.map((item, index) => (
                     <UnstyledButton
                       key={index}
                       onClick={() =>
@@ -293,7 +314,7 @@ const FilterProduct = () => {
 
                   <Tabs.Panel value="order">
                     <ScrollArea h={250}>
-                      {categoryListData && (
+                      {orderCategoryListData && (
                         <div className="flex flex-col gap-2 p-4">
                           {/* All product */}
                           <UnstyledButton
@@ -310,7 +331,7 @@ const FilterProduct = () => {
                             </span>
                           </UnstyledButton>
                           {/* Order Catergory */}
-                          {categoryListData.data.map((item, index) => (
+                          {orderCategoryListData.map((item, index) => (
                             <UnstyledButton
                               key={index}
                               onClick={() =>
@@ -335,7 +356,7 @@ const FilterProduct = () => {
 
                   <Tabs.Panel value="ready">
                     <ScrollArea h={250}>
-                      {categoryListData && (
+                      {readyCategoryListData && (
                         <div className="flex flex-col gap-2 p-4">
                           {/* All product */}
                           <UnstyledButton
@@ -352,7 +373,7 @@ const FilterProduct = () => {
                             </span>
                           </UnstyledButton>
                           {/* Ready Catergory */}
-                          {categoryListData.data.map((item, index) => (
+                          {readyCategoryListData.map((item, index) => (
                             <UnstyledButton
                               key={index}
                               onClick={() =>

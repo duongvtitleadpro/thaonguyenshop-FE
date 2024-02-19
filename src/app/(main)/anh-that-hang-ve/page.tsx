@@ -4,12 +4,35 @@ import { getAllCategory } from "@/api/category";
 import { QueryKey } from "@/constant/query-key";
 import { Image, SimpleGrid } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 const AboutPage = () => {
-  const { data: categoryListData } = useQuery({
+  const { data: category } = useQuery({
     queryKey: [QueryKey.GET_ALL_CATEGORY],
     queryFn: getAllCategory,
   });
+
+  const categoryListData = useMemo(() => {
+    if (!category) return null;
+    const orderData = category.data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      imageUrl: item.categoryImages.find(
+        (item) => item.categoryStatus === "ORDER"
+      )!.imageUrl,
+    }));
+
+    const readyData = category.data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      imageUrl: item.categoryImages.find(
+        (item) => item.categoryStatus === "READY"
+      )!.imageUrl,
+    }));
+
+    return [...orderData, ...readyData];
+  }, [category]);
+
   return (
     <>
       <div className="w-full h-10 bg-slate-300"></div>
@@ -23,7 +46,7 @@ const AboutPage = () => {
             spacing="lg"
             verticalSpacing="xl"
           >
-            {categoryListData.data.map((item, key) => (
+            {categoryListData.map((item, key) => (
               <Image
                 key={key}
                 alt={item.name}
