@@ -13,7 +13,7 @@ export default function Footer() {
         <div>
           <div className={classes.logo}>
             <h1 className="text-[#FFFC00] text-2xl font-bold">
-              TỔNG KHO THẢO NGUYÊN
+              TỔNG KHO THAO NGUYEN
             </h1>
 
             <List
