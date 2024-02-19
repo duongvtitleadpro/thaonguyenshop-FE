@@ -24,7 +24,7 @@ export type OrderResponse = {
   id: number;
   orderDate: string;
   totalPrice: number;
-  note: string | null;
+  note: any;
   location?: string;
   productId: number;
   product: Product;
