@@ -44,7 +44,7 @@ const Header = () => {
       <div className="hidden xl:block h-11 bg-[#35A8E0]">
         <div className="h-full flex max-w-6xl mx-auto items-center justify-between text-white">
           <div>
-            <h2 className="text-sm">Tổng kho Thảo Nguyên</h2>
+            <h2 className="text-sm">Tổng kho Thao Nguyen</h2>
           </div>
           <LoginModal onClose={closeMenu} />
         </div>
