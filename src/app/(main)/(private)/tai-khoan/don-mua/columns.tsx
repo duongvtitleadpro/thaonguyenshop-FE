@@ -252,7 +252,11 @@ export const columns: ColumnDef<OrderResponse>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-32">
-        <p className="whitespace-pre-line">{row.original?.note}</p>
+        <p className="whitespace-pre-line">
+          {row.original?.note?.charCodeAt(0) === 10
+            ? row.original?.note.replace("\n", "")
+            : row.original?.note}
+        </p>
         {row.original?.adminNote && (
           <p className="text-red-600 font-semibold">{`Admin note: ${row.original?.adminNote}`}</p>
         )}
