@@ -8,8 +8,8 @@ import { ColorSchemeScript } from "@mantine/core";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Thảo Nguyên",
-  description: "Tổng kho Thảo Nguyên",
+  title: "Thao Nguyen",
+  description: "Tổng kho Thao Nguyen",
 };
 
 export default function RootLayout({
