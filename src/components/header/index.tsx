@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { Icons } from "../icons";
-import ThaoNguyenLogo from "@images/logo/logo.svg";
+import ThaoNguyenLogo from "@images/logo/thao-nguyen-logo.png";
 import { NavBarRoute } from "@/constant/route";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ import { filterProductState } from "@/store/state/product-filter.atom";
 import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
 import { Search } from "lucide-react";
+import Image from "next/image";
 
 const Header = () => {
   const router = useRouter();
@@ -55,7 +56,7 @@ const Header = () => {
             className="basis-[147px]"
             onClick={() => setKeyword("")}
           >
-            <ThaoNguyenLogo />
+            <Image src={ThaoNguyenLogo} alt="Thao Nguyen" />
           </Link>
           <div className="hidden xl:flex flex-1 flex-col mt-2">
             <div className="flex items-center justify-between gap-20">
