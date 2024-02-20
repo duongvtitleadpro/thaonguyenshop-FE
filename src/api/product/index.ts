@@ -4,6 +4,8 @@ import {
   ProductColor,
   ProductParam,
   ProductSize,
+  StockProductImage,
+  StockProductImageParam,
 } from "@/types/product";
 import { objectToQueryString } from "@/utils";
 import axiosInstance from "@utils/axios";
@@ -28,5 +30,13 @@ export const getProductColor = async (): Promise<Response<ProductColor>> => {
 
 export const getProductDetail = async (id: number): Promise<Product> => {
   const { data } = await axiosInstance.get(`/product/${id}`);
+  return data;
+};
+
+export const getStockProductImage = async (
+  param: StockProductImageParam
+): Promise<Response<StockProductImage>> => {
+  const search = objectToQueryString(param);
+  const { data } = await axiosInstance.get(`/stock-product-image?${search}`);
   return data;
 };
