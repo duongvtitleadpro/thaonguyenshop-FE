@@ -8,7 +8,7 @@ const ContactCard = () => {
       </h1>
       <div className="flex flex-col mx-auto my-2">
         <span className="text-green-700 text-sm">HOTLINE</span>
-        <span className="italic text-xl">0921.367.363</span>
+        <span className="italic text-xl">0xxx.xxx.xxx</span>
       </div>
       <div className="flex items-center justify-around">
         <Icons.facebook />

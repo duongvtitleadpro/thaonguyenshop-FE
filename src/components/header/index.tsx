@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { Icons } from "../icons";
-import ThaoNguyenLogo from "@images/logo/thao-nguyen-logo.png";
+// import ThaoNguyenLogo from "@images/logo/thao-nguyen-logo.png";
+import TwendeeLogo from "@images/logo/twendee-logo.png";
 import { NavBarRoute } from "@/constant/route";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
@@ -44,7 +45,7 @@ const Header = () => {
       <div className="hidden xl:block h-11 bg-[#35A8E0]">
         <div className="h-full flex max-w-6xl mx-auto items-center justify-between text-white">
           <div>
-            <h2 className="text-sm">Tổng kho Thao Nguyen</h2>
+            <h2 className="text-sm">Twendee</h2>
           </div>
           <LoginModal onClose={closeMenu} />
         </div>
@@ -56,7 +57,7 @@ const Header = () => {
             className="basis-[147px]"
             onClick={() => setKeyword("")}
           >
-            <Image src={ThaoNguyenLogo} alt="Thao Nguyen" />
+            <Image src={TwendeeLogo} alt="Twendee" />
           </Link>
           <div className="hidden xl:flex flex-1 flex-col mt-2">
             <div className="flex items-center justify-between gap-20">
@@ -95,7 +96,7 @@ const Header = () => {
                 <div>
                   <h1 className="text-[#35A8E0] font-semibold">HOTLINE</h1>
                   <p className="italic text-[#e02020] font-semibold">
-                    0921.367.363
+                    0xxx.xxx.xxx
                   </p>
                 </div>
               </div>

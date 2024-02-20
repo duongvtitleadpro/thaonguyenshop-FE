@@ -4,62 +4,84 @@ const AboutPage = () => {
     <>
       <div className="w-full h-10 bg-slate-300"></div>
       <div className="w-full max-w-6xl mx-auto mt-12 text-left rtl:text-right tracking-tight flex flex-col gap-4">
-        <h1 className="font-semibold text-2xl">
-          Kính chào Quý khách đến với website của chúng tôi
-        </h1>
         <p>
-          Chúng tôi hy vọng rằng sự bạn sẽ có sự trải nghiệm tuyệt vời khi đến
-          đây.
-        </p>
-        <p>
-          Công ty chúng tôi với 5 năm kinh nghiệm trong lĩnh vực sản xuất và
-          phân phối Thời trang bao gồm cả hàng Việt Nam và Quảng Châu với chất
-          lượng uy tín , chuyên nghiệp và phong phú nhất thị trường. Hiện tại
-          chúng tôi đang cung cấp các dịch vụ sau:
-        </p>
-        <ul className="ps-5 mt-2 space-y-1 list-disc list-inside">
-          <li>
-            Sản xuất và phân phối thời trang trẻ em và bố mẹ cho các đại lý SLL,
-            khách sỉ cửa hàng toàn quốc
-          </li>
-          <li>Bán cộng tác viên và lẻ trên toàn quốc</li>
-          <li>
-            Nhận mua hàng theo link, thanh toán hộ, và kí gửi hàng hóa từ Trung
-            Quốc về Việt Nam.
-          </li>
-          <li>
-            Bạn đã bao giờ mất rất nhiều thời gian để tìm kiếm một nhà cung cấp
-            uy tín?
-          </li>
-        </ul>
-        <p>Bạn đã bao giờ sợ hãi mình bị lừa trong kinh doanh?</p>
-        <p>
-          Bạn đã bao giờ rất muốn kiếm thêm thu nhập nhưng không biết bắt đầu từ
-          đâu?
-        </p>
-        <p>
-          Bạn đã bao giờ muốn mua sắm hàng chất lượng, phong phú mà không cần
-          phải ra đường?
-        </p>
-        <p>
-          <strong>Chúng tôi giải quyết mọi vấn đề bạn đang gặp phải:</strong>
-        </p>
-        <ul className="ps-5 mt-2 space-y-1 list-disc list-inside">
-          <li>
-            Sản phẩm giá vô cùng cạnh tranh, chất lượng, đa dạng và phong phú
-          </li>
-          <li>Nhận lại hàng hoàn về nếu khách không hài lòng về sản phẩm</li>
-          <li>Tư vấn các chiến lược giúp bạn bức phá kinh doanh</li>
-        </ul>
-        <p>
-          Đào tạo biến bạn từ 1 khách hàng lẻ, chuyển đổi sang cộng tác viên và
-          trở thành khách sỉ với tốc độ đi “tên lửa”
-          <br />
-          Khách hàng của chúng tôi có 98% là các chi em bỉm sữa , sứ mệnh của
-          chúng tôi là giúp đỡ được 10.000 chị em có được mức thu nhập từ 5tr
-          đến 100tr/1 tháng từ việc bán các sản phẩm về thời trang và sẽ có
-          5.000.000 các em bé được mặc những bộ quần áo này. Thật quá tuyệt vời
-          phải không ạ ?
+          Bibendum augue tincidunt laoreet auctor nec at class molestie habitant
+          dui letius ultricies odio sem mi pellentesque placerat ad elit velit
+          ut torquent lobortis rhoncus maximus phasellus pretium morbi metus
+          blandit nibh viverra euismod interdum venenatis pede pulvinar ultrices
+          purus cras adipiscing penatibus eros iaculis facilisi neque nam
+          habitasse dapibus hac primis ornare mollis magna amet tristique
+          finibus integer leo commodo ridiculus massa consectetur dictum quam
+          dictumst pharetra proin imperdiet faucibus tortor egestas himenaeos
+          nascetur ante donec semper est scelerisque vel tempus suspendisse
+          aliquet hendrerit duis vitae natoque lacinia arcu malesuada etiam
+          montes non fames consectetuer lacus volutpat orci Ultrices amet mi
+          letius cubilia dolor fames in faucibus at vulputate porta montes elit
+          nullam facilisis dignissim aenean habitant placerat nisl nisi gravida
+          aliquam sed sem efficitur curabitur ac viverra purus consectetur
+          malesuada cras bibendum Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Eget lorem dolor sed viverra. Ullamcorper eget nulla
+          facilisi etiam dignissim diam quis enim lobortis. Eget nullam non nisi
+          est sit amet facilisis magna. Adipiscing bibendum est ultricies
+          integer quis auctor elit sed. Mattis molestie a iaculis at erat.
+          Egestas diam in arcu cursus euismod quis viverra nibh cras. Vel orci
+          porta non pulvinar neque laoreet suspendisse interdum. Cum sociis
+          natoque penatibus et magnis dis parturient montes. Mattis vulputate
+          enim nulla aliquet porttitor lacus luctus. Donec ac odio tempor orci
+          dapibus ultrices in iaculis nunc. Tellus cras adipiscing enim eu
+          turpis egestas pretium aenean pharetra. Gravida cum sociis natoque
+          penatibus. Nunc sed augue lacus viverra vitae congue eu consequat.
+          Maecenas volutpat blandit aliquam etiam erat. Non sodales neque
+          sodales ut etiam sit. Aliquam nulla facilisi cras fermentum odio eu
+          feugiat. Leo in vitae turpis massa sed. Tellus cras adipiscing enim eu
+          turpis egestas pretium. Ultrices mi tempus imperdiet nulla malesuada
+          pellentesque. Cursus risus at ultrices mi tempus imperdiet nulla.
+          Pellentesque habitant morbi tristique senectus et netus et malesuada.
+          Egestas diam in arcu cursus euismod quis viverra nibh cras. In
+          fermentum posuere urna nec tincidunt praesent semper feugiat nibh.
+          Arcu dictum varius duis at consectetur lorem. Diam vulputate ut
+          pharetra sit amet. Lorem dolor sed viverra ipsum nunc. Euismod in
+          pellentesque massa placerat duis ultricies lacus sed. Consequat nisl
+          vel pretium lectus. Cras adipiscing enim eu turpis egestas pretium
+          aenean pharetra magna. Aliquam id diam maecenas ultricies mi eget. Vel
+          quam elementum pulvinar etiam non quam lacus suspendisse. Sed euismod
+          nisi porta lorem mollis aliquam ut. Ornare aenean euismod elementum
+          nisi quis eleifend quam. Eu facilisis sed odio morbi quis commodo
+          odio. Non consectetur a erat nam. Morbi tristique senectus et netus et
+          malesuada fames ac. Nunc sed velit dignissim sodales ut eu sem integer
+          vitae. Id interdum velit laoreet id donec ultrices tincidunt arcu.
+          Tempus imperdiet nulla malesuada pellentesque. Vivamus arcu felis
+          bibendum ut tristique et. Nisl vel pretium lectus quam id. Vitae
+          turpis massa sed elementum. Aenean et tortor at risus. Magna ac
+          placerat vestibulum lectus. Vitae et leo duis ut diam quam. Amet
+          consectetur adipiscing elit ut aliquam purus sit amet. Eu tincidunt
+          tortor aliquam nulla. Amet venenatis urna cursus eget nunc. Pulvinar
+          neque laoreet suspendisse interdum consectetur libero id faucibus.
+          Blandit cursus risus at ultrices mi. Proin fermentum leo vel orci
+          porta non. Cursus vitae congue mauris rhoncus aenean vel. Mi eget
+          mauris pharetra et ultrices neque ornare aenean euismod. Mattis nunc
+          sed blandit libero volutpat sed. Tempor orci dapibus ultrices in
+          iaculis nunc. Et egestas quis ipsum suspendisse. Eu tincidunt tortor
+          aliquam nulla facilisi cras fermentum odio eu. Vulputate mi sit amet
+          mauris commodo quis. Feugiat vivamus at augue eget arcu. Porttitor
+          eget dolor morbi non arcu risus quis varius quam. Id donec ultrices
+          tincidunt arcu non sodales. Phasellus egestas tellus rutrum tellus
+          pellentesque. Amet cursus sit amet dictum. Molestie a iaculis at erat
+          pellentesque adipiscing commodo. Ac tortor vitae purus faucibus
+          ornare. Risus sed vulputate odio ut enim blandit volutpat maecenas.
+          Mauris vitae ultricies leo integer malesuada nunc vel. Id consectetur
+          purus ut faucibus pulvinar elementum. Vel facilisis volutpat est velit
+          egestas dui. Mattis molestie a iaculis at erat pellentesque adipiscing
+          commodo. Ac turpis egestas maecenas pharetra convallis posuere morbi
+          leo. Lobortis scelerisque fermentum dui faucibus in ornare quam. Id
+          diam maecenas ultricies mi eget mauris pharetra. Nec dui nunc mattis
+          enim ut tellus elementum. Tristique risus nec feugiat in fermentum.
+          Hendrerit dolor magna eget est lorem ipsum dolor. A scelerisque purus
+          semper eget duis at tellus at. Semper feugiat nibh sed pulvinar. Sed
+          lectus vestibulum mattis ullamcorper velit sed. Eu nisl nunc mi ipsum
+          faucibus. Fringilla urna porttitor rhoncus dolor purus non enim. In
+          nulla posuere sollicitudin aliquam ultrices sagittis.
         </p>
       </div>
     </>
