@@ -1,7 +1,7 @@
 "use client";
 import DataTable from "@/components/table/data-table";
 import { columns } from "./columns";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getOrder } from "@/api/order";
 import { useMemo } from "react";
 import PurchaseOrderFilter from "./filter";
@@ -19,6 +19,7 @@ const PurchaseOrderPage = () => {
   const { data: purchaseOrderData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
     queryFn: () => getOrder(purchaseOrderFilter),
+    placeholderData: keepPreviousData,
   });
 
   const purchaseOrderFooter = useMemo(() => {

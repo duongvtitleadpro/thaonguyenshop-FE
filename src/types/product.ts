@@ -60,3 +60,14 @@ export type ProductStatus =
   | "CANCELLED"
   | "HANDLE"
   | null;
+
+export type StockProductImageParam = {
+  page: number;
+  size: number;
+};
+
+export type StockProductImage = {
+  id: number;
+  createdAt: string;
+  url: string;
+};

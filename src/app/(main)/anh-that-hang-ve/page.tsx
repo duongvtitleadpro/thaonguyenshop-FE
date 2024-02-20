@@ -1,40 +1,27 @@
 "use client";
 
-import { getAllCategory } from "@/api/category";
+import { getStockProductImage } from "@/api/product";
+import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { placeholderImage } from "@/constant/common";
 import { QueryKey } from "@/constant/query-key";
 import { authState } from "@/store/state/auth.atom";
-import { Image, SimpleGrid } from "@mantine/core";
+import { StockProductImageParam } from "@/types/product";
+import { Button, SimpleGrid, Image, Modal } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 
 const AboutPage = () => {
-  const { data: category } = useQuery({
-    queryKey: [QueryKey.GET_ALL_CATEGORY],
-    queryFn: getAllCategory,
+  // const [opened, { open, close }] = useDisclosure(false);
+  const [stockParam, setStockParam] = useState<StockProductImageParam>({
+    page: 1,
+    size: 50,
   });
-
-  const categoryListData = useMemo(() => {
-    if (!category) return null;
-    const orderData = category.data.map((item) => ({
-      id: item.id,
-      name: item.name,
-      imageUrl: item.categoryImages.find(
-        (item) => item.categoryStatus === "ORDER"
-      )?.imageUrl,
-    }));
-
-    const readyData = category.data.map((item) => ({
-      id: item.id,
-      name: item.name,
-      imageUrl: item.categoryImages.find(
-        (item) => item.categoryStatus === "READY"
-      )?.imageUrl,
-    }));
-
-    return [...orderData, ...readyData];
-  }, [category]);
+  const { data: stockImageList } = useQuery({
+    queryKey: [QueryKey.GET_STOCK_PRODUCT_IMAGE],
+    queryFn: () => getStockProductImage(stockParam),
+  });
 
   const [auth, setAuth] = useRecoilState(authState);
   const [isDisplayed, setIsDisplayed] = useState(false);
@@ -42,6 +29,10 @@ const AboutPage = () => {
     const timeId = setTimeout(() => setIsDisplayed(true), 2000);
     return () => clearTimeout(timeId);
   }, []);
+
+  const getMoreImage = () => {
+    setStockParam({ ...stockParam, page: stockParam.page + 1 });
+  };
 
   return (
     <>
@@ -67,22 +58,47 @@ const AboutPage = () => {
             <h1 className="font-semibold text-3xl text-center mb-10">
               Ảnh thật hàng về
             </h1>
-            {categoryListData && (
-              <SimpleGrid
-                cols={{ base: 2, sm: 4, md: 5, lg: 6 }}
-                spacing="lg"
-                verticalSpacing="xl"
-              >
-                {categoryListData.map((item, key) => (
-                  <Image
-                    key={key}
-                    alt={item.name}
-                    src={item.imageUrl}
-                    fallbackSrc={placeholderImage}
-                    className="w-full h-full hover:scale-110 transition-all duration-300 rounded-sm"
+            {stockImageList && (
+              <>
+                <SimpleGrid
+                  cols={{ base: 2, sm: 4, md: 5, lg: 6 }}
+                  spacing="lg"
+                  verticalSpacing="xl"
+                >
+                  {stockImageList.data.map((item, key) => (
+                    <Image
+                      key={item.id}
+                      alt={item.url}
+                      src={item.url}
+                      fit="contain"
+                      // onClick={open}
+                      className="w-full h-[250px] hover:scale-110 transition-all duration-300 rounded-sm shadow-2xl"
+                    />
+                  ))}
+                </SimpleGrid>
+                {stockParam.page < stockImageList.totalPages && (
+                  <Button onClick={() => getMoreImage()}>Tải thêm</Button>
+                )}
+                {/* <Modal
+                  opened={opened}
+                  onClose={close}
+                  withCloseButton={false}
+                  styles={{
+                    body: {
+                      padding: 0,
+                    },
+                  }}
+                  centered
+                >
+                  <EmblaCarousel
+                    images={
+                      stockImageList.data.length > 0
+                        ? stockImageList.data.map((item) => item.url)
+                        : [""]
+                    }
                   />
-                ))}
-              </SimpleGrid>
+                </Modal> */}
+              </>
             )}
           </div>
         </div>
