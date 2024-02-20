@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllCategory } from "@/api/category";
+import { placeholderImage } from "@/constant/common";
 import { QueryKey } from "@/constant/query-key";
 import { authState } from "@/store/state/auth.atom";
 import { Image, SimpleGrid } from "@mantine/core";
@@ -21,7 +22,7 @@ const AboutPage = () => {
       name: item.name,
       imageUrl: item.categoryImages.find(
         (item) => item.categoryStatus === "ORDER"
-      )!.imageUrl,
+      )?.imageUrl,
     }));
 
     const readyData = category.data.map((item) => ({
@@ -29,7 +30,7 @@ const AboutPage = () => {
       name: item.name,
       imageUrl: item.categoryImages.find(
         (item) => item.categoryStatus === "READY"
-      )!.imageUrl,
+      )?.imageUrl,
     }));
 
     return [...orderData, ...readyData];
@@ -77,6 +78,7 @@ const AboutPage = () => {
                     key={key}
                     alt={item.name}
                     src={item.imageUrl}
+                    fallbackSrc={placeholderImage}
                     className="w-full h-full hover:scale-110 transition-all duration-300 rounded-sm"
                   />
                 ))}

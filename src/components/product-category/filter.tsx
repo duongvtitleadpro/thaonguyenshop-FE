@@ -49,7 +49,7 @@ const FilterProduct = () => {
       name: item.name,
       imageUrl: item.categoryImages.find(
         (item) => item.categoryStatus === "ORDER"
-      )!.imageUrl,
+      )?.imageUrl,
     }));
   }, [categoryListData]);
 
@@ -60,7 +60,7 @@ const FilterProduct = () => {
       name: item.name,
       imageUrl: item.categoryImages.find(
         (item) => item.categoryStatus === "READY"
-      )!.imageUrl,
+      )?.imageUrl,
     }));
   }, [categoryListData]);
   useEffect(() => {
