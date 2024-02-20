@@ -1,5 +1,6 @@
 "use client";
 
+import { placeholderImage } from "@/constant/common";
 import { Image } from "@mantine/core";
 import Link from "next/link";
 
@@ -20,6 +21,7 @@ const WidgetCard = (props: WidgetCardProps) => {
         <Image
           src={imageUrl}
           alt={name}
+          fallbackSrc={placeholderImage}
           className="w-full h-full object-cover hover:scale-105 duration-300"
         />
       </div>

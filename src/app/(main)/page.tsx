@@ -33,8 +33,8 @@ export default function Home() {
       id: item.id,
       name: item.name,
       imageUrl: item.categoryImages.find(
-        (item) => item.categoryStatus === "ORDER"
-      )!.imageUrl,
+        (item) => item?.categoryStatus === "ORDER"
+      )?.imageUrl,
     }));
   }, [categoryListData]);
 
@@ -44,8 +44,8 @@ export default function Home() {
       id: item.id,
       name: item.name,
       imageUrl: item.categoryImages.find(
-        (item) => item.categoryStatus === "READY"
-      )!.imageUrl,
+        (item) => item?.categoryStatus === "READY"
+      )?.imageUrl,
     }));
   }, [categoryListData]);
   return (
@@ -62,7 +62,7 @@ export default function Home() {
                 >
                   <WidgetCard
                     id={item.id}
-                    imageUrl={item.imageUrl}
+                    imageUrl={item.imageUrl || ""}
                     name={item.name}
                   />
                 </UnstyledButton>
@@ -78,7 +78,7 @@ export default function Home() {
                 >
                   <WidgetCard
                     id={item.id}
-                    imageUrl={item.imageUrl}
+                    imageUrl={item.imageUrl || ""}
                     name={item.name}
                   />
                 </UnstyledButton>
