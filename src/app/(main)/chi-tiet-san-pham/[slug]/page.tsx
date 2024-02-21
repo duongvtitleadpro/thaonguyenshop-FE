@@ -302,7 +302,7 @@ const DetailProductPage = ({
 
               {/* Product info */}
               <div className="mx-auto w-full max-w-2xl px-4 pb-16 sm:px-6">
-                <p className="mb-2 text-sm text-gray-300">{`Mã sản phẩm: ${productDetailData.productCode}`}</p>
+                <p className="mb-2 text-sm text-gray-900">{`Mã sản phẩm: ${productDetailData.productCode}`}</p>
                 <div>
                   <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl first-letter:capitalize">
                     {productDetailData.name}
