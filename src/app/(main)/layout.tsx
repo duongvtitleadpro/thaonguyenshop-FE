@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { QueryKey } from "@/constant/query-key";
 import { authState } from "@/store/state/auth.atom";
+import { getToken } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
@@ -21,6 +22,8 @@ const UserManagementLayout = ({ children }: { children: React.ReactNode }) => {
     },
   });
   useEffect(() => {
+    const accessToken = getToken("accessToken");
+    alert("accessToken" + accessToken);
     if (userData) {
       setAuth({
         isAuthenticated: true,
