@@ -53,7 +53,6 @@ const AboutPage = () => {
         )
       ) : (
         <div>
-          <div className="w-full h-10 bg-slate-300"></div>
           <div className="w-full max-w-6xl mx-auto mt-12 p-4">
             <h1 className="font-semibold text-3xl text-center mb-10">
               Ảnh thật hàng về

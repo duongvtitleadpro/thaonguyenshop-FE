@@ -2,8 +2,7 @@
 const AboutPage = () => {
   return (
     <>
-      <div className="w-full h-10 bg-slate-300"></div>
-      <div className="w-full max-w-6xl mx-auto mt-12 text-left rtl:text-right tracking-tight flex flex-col gap-4">
+      <div className="w-full max-w-6xl mx-auto mt-12 text-left rtl:text-right tracking-tight flex flex-col gap-4 p-3">
         <h1 className="font-semibold text-2xl">
           Kính chào Quý khách đến với website của chúng tôi
         </h1>

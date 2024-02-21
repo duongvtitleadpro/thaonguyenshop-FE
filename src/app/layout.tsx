@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
   title: "Thao Nguyen",
   description: "Tổng kho Thao Nguyen",
 };
-
+export const viewport: Viewport = {
+  maximumScale: 1.0,
+};
 export default function RootLayout({
   children,
 }: {

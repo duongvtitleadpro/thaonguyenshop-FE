@@ -1,16 +1,7 @@
 "use client";
 
 import { useRecoilState } from "recoil";
-import {
-  MultiSelect,
-  ActionIcon,
-  Input,
-  CloseButton,
-  Tooltip,
-  OptionsFilter,
-  ComboboxItem,
-  ComboboxOptionsProps,
-} from "@mantine/core";
+import { MultiSelect, ActionIcon, Input, Tooltip } from "@mantine/core";
 import {
   PurchaseOrderFilterDefaultValue,
   purchaseOrderFilterState,
@@ -20,7 +11,7 @@ import {
   OrderStatus,
   SummaryOrderStatus,
 } from "@/types/order";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { QueryKey } from "@/constant/query-key";
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
@@ -28,8 +19,6 @@ import DatePickerWithRange from "@/components/date-range-picker";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { getOrder, getSummaryOrderStatus } from "@/api/order";
-import { ComboboxOptionProps } from "@headlessui/react";
-import { useClickOutside, useDisclosure } from "@mantine/hooks";
 
 type OrderStatusType = {
   value: string;
@@ -243,23 +232,20 @@ const PurchaseOrderFilter = () => {
 
   return (
     <div className="mb-3 flex gap-4 flex-col">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:gap-[400px]">
+      <div className="grid grid-cols-2 gap-4 xl:gap-[400px]">
         <Input
           placeholder="Tìm kiếm tên, mã sản phẩm"
           className="h-full"
           value={keyword}
           onChange={(event) => setKeyword(event.currentTarget.value)}
           rightSectionPointerEvents="all"
-          rightSection={
-            <Search onClick={handleSearchKeyword} className="w-5 h-5" />
-          }
           onKeyDown={(event) => {
             if (event.key === "Enter") handleSearchKeyword();
           }}
         />
         <DatePickerWithRange date={date} onDateChange={setDate} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         <MultiSelect
           label="Tình trạng đơn hàng"
           placeholder="Tình trạng"

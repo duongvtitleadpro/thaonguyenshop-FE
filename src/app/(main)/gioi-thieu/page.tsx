@@ -6,8 +6,7 @@ import Image from "next/image";
 const AboutPage = () => {
   return (
     <>
-      <div className="w-full h-10 bg-slate-300"></div>
-      <div className="w-full max-w-4xl mx-auto mt-12 text-left rtl:text-right tracking-tight flex flex-col gap-4 text-lg text-slate-900">
+      <div className="w-full max-w-4xl mx-auto mt-12 text-left rtl:text-right tracking-tight flex flex-col gap-4 text-lg text-slate-900 p-3">
         <h1 className="font-bold text-3xl ">
           CHÀO MỪNG QUÝ KHÁCH ĐÃ ĐẾN VỚI: TỔNG KHO THAO NGUYEN
         </h1>
