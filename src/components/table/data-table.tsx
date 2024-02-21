@@ -3,17 +3,14 @@ import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
-  OnChangeFn,
   PaginationState,
   SortingState,
-  Updater,
   VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -27,12 +24,12 @@ import {
   TableHeader,
   TableRow,
 } from "@components/ui/table";
+import { cn } from "@/lib/utils";
 
-import DataTablePagination from "./data-table-pagination";
-import DataTableToolbar from "./data-table-toolbar";
 // import { DataTableToolbar } from "../components/data-table-toolbar"
 
 interface DataTableProps<TData, TValue> {
+  className?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   footer?: {
@@ -45,6 +42,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export default function DataTable<TData, TValue>({
+  className,
   columns,
   data,
   footer,
@@ -98,7 +96,7 @@ export default function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 overflow-auto h-full w-full">
+    <div className={cn("space-y-4 overflow-auto h-full w-full", className)}>
       {/* <DataTableToolbar table={table} /> */}
       <div className="rounded-md border shadow-md h-full w-full">
         <div className="h-full relative overflow-auto w-full table-data-wrapper">

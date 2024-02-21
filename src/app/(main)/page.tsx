@@ -50,7 +50,6 @@ export default function Home() {
   }, [categoryListData]);
   return (
     <div>
-      <div className="w-full h-10 bg-slate-300"></div>
       <div className="p-4">
         <div className="w-full max-w-6xl mx-auto mt-12 flex flex-col gap-24">
           {orderCategoryListData && (
