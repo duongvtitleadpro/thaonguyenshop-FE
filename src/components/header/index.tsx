@@ -236,15 +236,7 @@ const Header = () => {
         </div>
       </div>
       <div className="flex flex-col gap-4 items-center">
-        <div
-          className="w-full h-10"
-          style={{
-            backgroundColor: "#cbd5e1",
-            opacity: "0.8",
-            background:
-              "repeating-linear-gradient( -45deg, #cbd5e1, #cbd5e1 12px, #e5e5f7 5px, #e5e5f7 40px )",
-          }}
-        ></div>
+        <div className="w-full h-10 bg-slate-300"></div>
 
         <div className="flex w-full max-w-[450px] items-center md:hidden  ">
           <Input
