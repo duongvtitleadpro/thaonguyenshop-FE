@@ -33,7 +33,7 @@ const ProductCard = (props: ProductCardProps) => {
         onClick={() => router.push(`/chi-tiet-san-pham/${id}`)}
       />
       <div className="p-2 md:p-4">
-        <p className="mb-2 text-sm text-gray-300">{`Mã sản phẩm: ${code}`}</p>
+        <p className="mb-2 text-sm text-gray-900">{`Mã sản phẩm: ${code}`}</p>
         <h2 className="mb-2 text-lg font-medium dark:text-white text-gray-900 line-clamp-3">
           {name}
         </h2>
