@@ -22,8 +22,6 @@ const UserManagementLayout = ({ children }: { children: React.ReactNode }) => {
     },
   });
   useEffect(() => {
-    const accessToken = getToken("accessToken");
-    alert("accessToken" + accessToken);
     if (userData) {
       setAuth({
         isAuthenticated: true,
