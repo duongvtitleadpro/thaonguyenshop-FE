@@ -243,7 +243,7 @@ const PurchaseOrderFilter = () => {
 
   return (
     <div className="mb-3 flex gap-4 flex-col">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:gap-[400px]">
+      <div className="grid grid-cols-2 gap-4 xl:gap-[400px]">
         <Input
           placeholder="Tìm kiếm tên, mã sản phẩm"
           className="h-full"
@@ -259,23 +259,23 @@ const PurchaseOrderFilter = () => {
         />
         <DatePickerWithRange date={date} onDateChange={setDate} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         <MultiSelect
-          label="Tình trạng đơn hàng"
+          label={<p className="line-clamp-1">Tình trạng đơn hàng</p>}
           placeholder="Tình trạng"
           data={OrderStatus}
           value={purchaseOrderFilter.orderStatus}
           onChange={handleChangeOrderStatus}
         />
         <MultiSelect
-          label="Trạng thái đơn hàng"
+          label={<p className="line-clamp-1">Trạng thái đơn hàng</p>}
           placeholder="Trạng thái"
           data={AllocationStatus}
           value={purchaseOrderFilter.allocationStatus}
           onChange={handleChangeAllocationStatus}
         />
         <MultiSelect
-          label="Mẫu"
+          label={<p className="line-clamp-1">Mẫu</p>}
           placeholder="Mẫu"
           data={colorList}
           value={selectedColorList}
@@ -284,7 +284,7 @@ const PurchaseOrderFilter = () => {
           onDropdownOpen={openColorDropdown}
         />
         <MultiSelect
-          label="Size"
+          label={<p className="line-clamp-1">Size</p>}
           placeholder="Size"
           data={sizeList}
           value={selectedSizeList}

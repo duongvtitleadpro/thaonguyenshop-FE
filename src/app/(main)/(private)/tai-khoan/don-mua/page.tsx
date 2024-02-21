@@ -10,6 +10,7 @@ import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.at
 import { QueryKey } from "@/constant/query-key";
 import { currency } from "@/utils/currency";
 import { Pagination, Select } from "@mantine/core";
+import PurchaseOrderTableMobile from "./table-mobile";
 
 const PurchaseOrderPage = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
@@ -68,11 +69,16 @@ const PurchaseOrderPage = () => {
     <div className="flex flex-col h-full">
       <PurchaseOrderFilter />
       {purchaseOrderData && (
-        <div className="h-[550px] w-full">
+        <div className="h-auto sm:h-[550px] w-full">
           <DataTable
+            className="hidden sm:block"
             columns={columns}
             data={purchaseOrderData.data}
             footer={purchaseOrderFooter}
+          />
+          <PurchaseOrderTableMobile
+            className="block sm:hidden"
+            data={purchaseOrderData.data}
           />
           <div className="flex justify-end gap-3 mt-4">
             <Select

@@ -2,14 +2,13 @@
 const AboutPage = () => {
   return (
     <>
-      <div className="w-full h-10 bg-slate-300"></div>
       <div className="w-full max-w-4xl mx-auto mt-12 text-left rtl:text-right tracking-tight flex flex-col gap-4 text-lg text-slate-900">
         <div className="relative mx-auto pt-20 text-center pb-24">
           <h1 className="text-4xl font-extrabold tracking-tight  sm:text-5xl text-center">
             Chính sách bán hàng
           </h1>
         </div>
-        <div>
+        <div className="p-3">
           <h2 className="text-3xl font-bold">Chính sách Cộng tác viên</h2>
           <p className="mt-3">
             Chào mừng quý khách đã quan tâm và ghé thăm gian hàng của{" "}
