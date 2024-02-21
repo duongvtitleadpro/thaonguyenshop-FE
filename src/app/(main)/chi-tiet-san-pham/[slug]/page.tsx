@@ -80,7 +80,8 @@ const DetailProductPage = ({
     }
 
     return listColorData.map((item) => item.color);
-  }, [productDetailData, order]);
+  }, [productDetailData, order, isEditOrder]);
+  console.log("😻 ~ listColor ~ listColor:", listColor);
 
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -107,7 +108,8 @@ const DetailProductPage = ({
           )
         : listSize.size
       : [];
-  }, [productDetailData, color]);
+  }, [productDetailData, color, isEditOrder, order?.orderDetails]);
+  console.log("😻 ~ listSizeByColor ~ listSizeByColor:", listSizeByColor);
 
   const totalItemInCart = useMemo(() => {
     const total: any = {};
