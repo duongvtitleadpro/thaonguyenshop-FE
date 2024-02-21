@@ -33,7 +33,7 @@ const UserManagementLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="h-screen">
         <Header></Header>
         <div>{children}</div>
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </div>
   );

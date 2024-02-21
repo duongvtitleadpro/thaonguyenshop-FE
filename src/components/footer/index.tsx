@@ -13,7 +13,7 @@ export default function Footer() {
         <div>
           <div className={classes.logo}>
             <h1 className="text-[#FFFC00] text-2xl font-bold">
-              TỔNG KHO THAO NGUYEN
+              TWENDEE SOFTWARE
             </h1>
 
             <List
@@ -24,16 +24,16 @@ export default function Footer() {
               mt={8}
             >
               <List.Item icon={<MapPin className="w-4 h-4" />}>
-                Địa chỉ: Huyện Thanh Hà – Tỉnh Hải Dương
+                Địa chỉ: 8 Tôn Thất Thuyết, Mỹ Đình, Nam Từ Liêm, Hà Nội
               </List.Item>
               <List.Item icon={<Phone className="w-4 h-4" />}>
-                0921.367.363
+                0xxx.xxx.xxx
               </List.Item>
               <List.Item icon={<Mail className="w-4 h-4" />}>
-                phuongthaohd2507@gmail.com
+                contact@twendeesoft.com
               </List.Item>
               <List.Item icon={<Globe className="w-4 h-4" />}>
-                Website: https://tongkhothaonguyen.com
+                Website: https://twendeesoft.com/
               </List.Item>
             </List>
           </div>
@@ -50,7 +50,7 @@ export default function Footer() {
         </div>
         <div className="google-map-code">
           <iframe
-            src="https://maps.google.com/maps?q=Huy%E1%BB%87n%20Thanh%20H%C3%A0%20%E2%80%93%20T%E1%BB%89nh%20H%E1%BA%A3i%20D%C6%B0%C6%A1ng&t=m&z=10&output=embed&iwloc=near"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.1030107750353!2d105.78332850000001!3d21.028563899999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab4cdef48301%3A0x9e3f57b9adf0d78!2zOCBUw7RuIFRo4bqldCBUaHV54bq_dCwgTeG7uSDEkMOsbmgsIE5hbSBU4burIExpw6ptLCBIw6AgTuG7mWk!5e0!3m2!1sen!2s!4v1708487337073!5m2!1sen!2s"
             className="w-full h-96"
             style={{ border: 0 }}
           />
@@ -60,7 +60,7 @@ export default function Footer() {
             <h1 className="text-[#FFFC00] text-2xl font-bold">FACEBOOK</h1>
             <div className="mt-3">
               <iframe
-                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D100082873663849&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=false&hide_cover=false&show_facepile=false&appId"
+                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ftwendeesoft%2F&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
                 width="340"
                 height="300"
                 allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
@@ -70,15 +70,9 @@ export default function Footer() {
         </div>
       </div>
       <div className="flex flex-col gap-6 items-center fixed left-4 bottom-6">
-        <Link href="https://www.facebook.com/profile.php?id=100082873663849">
-          <Icons.facebook className="border rounded-full bg-blue-300 hover:animate-pulse cursor-pointer" />
-        </Link>
-        <Link href="tel:0921367363">
-          <Icons.zalo className="border rounded-full bg-blue-300 hover:animate-pulse cursor-pointer" />
-        </Link>
-        <Link href="tel:0921367363">
-          <Icons.phoneLogo className="border rounded-full bg-blue-300 hover:animate-pulse cursor-pointer" />
-        </Link>
+        <Icons.facebook className="border rounded-full bg-blue-300 hover:animate-pulse cursor-pointer" />
+        <Icons.zalo className="border rounded-full bg-blue-300 hover:animate-pulse cursor-pointer" />
+        <Icons.phoneLogo className="border rounded-full bg-blue-300 hover:animate-pulse cursor-pointer" />
       </div>
     </footer>
   );

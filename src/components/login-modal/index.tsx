@@ -55,6 +55,7 @@ const LoginModal = (props: LoginModalProps) => {
       });
       signupForm.reset();
       closeLogin();
+      onClose?.();
     },
     onError: (error) => {
       signupForm.setFieldError(
@@ -79,7 +80,7 @@ const LoginModal = (props: LoginModalProps) => {
       {!customButton ? (
         isAuthenticated ? (
           <>
-            <div className="xl:items-center gap-2 hidden xl:flex">
+            <div className="lg:items-center gap-2 hidden lg:flex">
               <Menu
                 shadow="md"
                 width={200}
@@ -114,19 +115,12 @@ const LoginModal = (props: LoginModalProps) => {
                 </Menu.Dropdown>
               </Menu>
             </div>
-            <div className="flex items-center justify-between xl:hidden">
+            <div className="flex items-center justify-between lg:hidden">
               <div className="flex items-center gap-2">
                 <Avatar src={user?.avatarUrl} color="white" variant="light" />
                 <div>Xin chào, {user?.name}</div>
               </div>
               <div className="flex gap-4">
-                <Settings
-                  className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
-                  onClick={() => {
-                    router.push("/tai-khoan/don-mua");
-                    onClose?.();
-                  }}
-                />
                 <LogOutIcon
                   className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
                   onClick={() => handleLogout()}

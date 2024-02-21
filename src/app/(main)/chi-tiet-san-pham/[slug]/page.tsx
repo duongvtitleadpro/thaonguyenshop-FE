@@ -533,11 +533,7 @@ const DetailProductPage = ({
             Yêu cầu đăng nhập để xem.
           </h1>
           <p className="text-center mt-3">
-            Nếu chưa có tài khoản liên hệ Admin (zalo:{" "}
-            <a href="tel:0921367363" className="text-blue-600">
-              0921.367.363
-            </a>
-            ) để được cấp tài khoản
+            Nếu chưa có tài khoản liên hệ Admin để được cấp tài khoản
           </p>
         </div>
       )}

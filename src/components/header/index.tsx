@@ -16,7 +16,7 @@ import { useRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/product-filter.atom";
 import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
-import { Search } from "lucide-react";
+import { Search, Settings } from "lucide-react";
 import Image from "next/image";
 
 const Header = () => {
@@ -41,27 +41,85 @@ const Header = () => {
   };
 
   return (
-    <div>
-      <div className="hidden xl:block h-11 bg-[#35A8E0]">
-        <div className="h-full flex max-w-6xl mx-auto items-center justify-between text-white">
-          <div>
-            <h2 className="text-sm">Twendee</h2>
-          </div>
-          <LoginModal onClose={closeMenu} />
-        </div>
-      </div>
+    <>
       <div>
-        <div className="h-full  flex gap-11 max-w-6xl mx-auto items-center justify-between">
-          <Link
-            href="/"
-            className="basis-[147px]"
-            onClick={() => setKeyword("")}
-          >
-            <Image src={TwendeeLogo} alt="Twendee" />
-          </Link>
-          <div className="hidden xl:flex flex-1 flex-col mt-2">
-            <div className="flex items-center justify-between gap-20">
-              <div className="flex w-full items-center">
+        <div className="hidden lg:block h-11 bg-[#35A8E0]">
+          <div className="h-full flex max-w-6xl mx-auto items-center justify-between text-white">
+            <div>
+              <h2 className="text-sm">Twendee</h2>
+            </div>
+            <LoginModal onClose={closeMenu} />
+          </div>
+        </div>
+        <div>
+          <div className="h-full  flex gap-11 max-w-6xl mx-auto items-center justify-between">
+            <Link
+              href="/"
+              className="basis-[147px]"
+              onClick={() => setKeyword("")}
+            >
+              <Image src={TwendeeLogo} alt="Thao Nguyen" />
+            </Link>
+            <div className="hidden lg:flex flex-1 flex-col mt-2">
+              <div className="flex items-center justify-between gap-20">
+                <div className="flex w-full items-center">
+                  <Input
+                    placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
+                    className="flex-1 h-full rounded-none"
+                    radius="xs"
+                    value={keyword}
+                    onChange={(event) => setKeyword(event.currentTarget.value)}
+                    rightSectionPointerEvents="all"
+                    rightSection={
+                      <CloseButton
+                        aria-label="Clear input"
+                        onClick={() => {
+                          setKeyword("");
+                          setProductParam((prev) => ({ ...prev, keyword: "" }));
+                        }}
+                        style={{ display: keyword ? undefined : "none" }}
+                      />
+                    }
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") handleChangeKeyword();
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    className="rounded-none bg-[#35A8E0] h-9"
+                    onClick={handleChangeKeyword}
+                  >
+                    TÌM KIẾM
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Icons.phone color="#35A8E0" />
+                  <div>
+                    <h1 className="text-[#35A8E0] font-semibold">HOTLINE</h1>
+                    <p className="italic text-[#e02020] font-semibold">
+                      0xxx.xxx.xxx
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <Separator className="bg-black h-0.5 mt-4" />
+              <div className="flex gap-4">
+                {NavBarRoute.map((item, index) => (
+                  <Link
+                    key={index}
+                    href={item.slug}
+                    className={cn(
+                      "hover:text-[#35A8E0] text-sm leading-[70px] tracking-wide",
+                      path === item.slug.split("/")[1] && "text-[#35A8E0]"
+                    )}
+                  >
+                    {item.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="hidden md:block lg:hidden">
+              <div className="flex w-[450px] items-center">
                 <Input
                   placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
                   className="flex-1 h-full rounded-none"
@@ -91,104 +149,135 @@ const Header = () => {
                   TÌM KIẾM
                 </Button>
               </div>
-              <div className="flex items-center gap-2">
-                <Icons.phone color="#35A8E0" />
-                <div>
-                  <h1 className="text-[#35A8E0] font-semibold">HOTLINE</h1>
-                  <p className="italic text-[#e02020] font-semibold">
-                    0xxx.xxx.xxx
-                  </p>
-                </div>
-              </div>
             </div>
-            <Separator className="bg-black h-0.5 mt-4" />
-            <div className="flex gap-4">
-              {NavBarRoute.map((item, index) => (
-                <Link
-                  key={index}
-                  href={item.slug}
-                  className={cn(
-                    "hover:text-[#35A8E0] text-sm leading-[70px] tracking-wide",
-                    path === item.slug.split("/")[1] && "text-[#35A8E0]"
-                  )}
+            <div className="block lg:hidden">
+              <div className="flex p-3 gap-2">
+                <Settings
+                  className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
+                  onClick={() => {
+                    router.push("/tai-khoan/don-mua");
+                  }}
+                />
+                <UnstyledButton
+                  onClick={openMenu}
+                  className="hover:bg-slate-200 p-2 rounded-md w-10 h-10 flex items-center justify-center"
                 >
-                  {item.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="block xl:hidden">
-            <UnstyledButton onClick={openMenu}>
-              <Icons.menu />
-            </UnstyledButton>
-            <Drawer
-              opened={onpenedMenu}
-              onClose={closeMenu}
-              overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
-              styles={{
-                body: {
-                  height: "calc(100% - 60px)",
-                },
-              }}
-            >
-              <div className="flex flex-col pt-6 px-4 justify-between h-full">
-                <div className="flex flex-col gap-4 ">
-                  <div className="flex w-full items-center">
-                    <Input
-                      placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
-                      className="flex-1 h-full rounded-none"
-                      radius="xs"
-                      size="lg"
-                      value={keyword}
-                      onChange={(event) =>
-                        setKeyword(event.currentTarget.value)
-                      }
-                      rightSectionPointerEvents="all"
-                      rightSection={
-                        <CloseButton
-                          aria-label="Clear input"
-                          onClick={() => {
-                            setKeyword("");
-                            setProductParam((prev) => ({
-                              ...prev,
-                              keyword: "",
-                            }));
-                          }}
-                          style={{ display: keyword ? undefined : "none" }}
-                        />
-                      }
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") handleChangeKeyword();
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      className="rounded-none bg-[#35A8E0] h-12"
-                      onClick={handleChangeKeyword}
-                    >
-                      <Search />
-                    </Button>
-                  </div>
-                  {NavBarRoute.map((item, index) => (
-                    <Link
-                      key={index}
-                      href={item.slug}
-                      className={cn(
-                        "hover:text-[#35A8E0] text-lg tracking-wide text-black",
-                        path === item.slug.split("/")[1] && "text-[#35A8E0]"
-                      )}
-                    >
-                      {item.title}
-                    </Link>
-                  ))}
-                </div>
-                <LoginModal onClose={closeMenu} />
+                  <Icons.menu />
+                </UnstyledButton>
               </div>
-            </Drawer>
+
+              <Drawer
+                opened={onpenedMenu}
+                onClose={closeMenu}
+                overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
+                styles={{
+                  body: {
+                    height: "calc(100% - 60px)",
+                  },
+                }}
+              >
+                <div className="flex flex-col pt-6 px-4 justify-between h-full">
+                  <div className="flex flex-col gap-4 ">
+                    <div className="flex w-full items-center">
+                      <Input
+                        placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
+                        className="flex-1 h-full rounded-none"
+                        radius="xs"
+                        size="lg"
+                        value={keyword}
+                        onChange={(event) =>
+                          setKeyword(event.currentTarget.value)
+                        }
+                        rightSectionPointerEvents="all"
+                        rightSection={
+                          <CloseButton
+                            aria-label="Clear input"
+                            onClick={() => {
+                              setKeyword("");
+                              setProductParam((prev) => ({
+                                ...prev,
+                                keyword: "",
+                              }));
+                            }}
+                            style={{ display: keyword ? undefined : "none" }}
+                          />
+                        }
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") handleChangeKeyword();
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        className="rounded-none bg-[#35A8E0] h-12"
+                        onClick={handleChangeKeyword}
+                      >
+                        <Search />
+                      </Button>
+                    </div>
+                    {NavBarRoute.map((item, index) => (
+                      <Link
+                        key={index}
+                        href={item.slug}
+                        className={cn(
+                          "hover:text-[#35A8E0] text-lg tracking-wide text-black",
+                          path === item.slug.split("/")[1] && "text-[#35A8E0]"
+                        )}
+                        onClick={closeMenu}
+                      >
+                        {item.title}
+                      </Link>
+                    ))}
+                  </div>
+                  <LoginModal onClose={closeMenu} />
+                </div>
+              </Drawer>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="flex flex-col gap-4 items-center">
+        <div
+          className="w-full h-10"
+          style={{
+            backgroundColor: "#cbd5e1",
+            opacity: "0.8",
+            background:
+              "repeating-linear-gradient( -45deg, #cbd5e1, #cbd5e1 12px, #e5e5f7 5px, #e5e5f7 40px )",
+          }}
+        ></div>
+
+        <div className="flex w-full max-w-[450px] items-center md:hidden  ">
+          <Input
+            placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
+            className="flex-1 h-full rounded-none"
+            radius="xs"
+            value={keyword}
+            onChange={(event) => setKeyword(event.currentTarget.value)}
+            rightSectionPointerEvents="all"
+            rightSection={
+              <CloseButton
+                aria-label="Clear input"
+                onClick={() => {
+                  setKeyword("");
+                  setProductParam((prev) => ({ ...prev, keyword: "" }));
+                }}
+                style={{ display: keyword ? undefined : "none" }}
+              />
+            }
+            onKeyDown={(event) => {
+              if (event.key === "Enter") handleChangeKeyword();
+            }}
+          />
+          <Button
+            type="button"
+            className="rounded-none bg-[#35A8E0] h-9"
+            onClick={handleChangeKeyword}
+          >
+            TÌM KIẾM
+          </Button>
+        </div>
+      </div>
+    </>
   );
 };
 
