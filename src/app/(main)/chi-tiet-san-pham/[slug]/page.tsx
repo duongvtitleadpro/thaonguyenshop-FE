@@ -361,9 +361,11 @@ const DetailProductPage = ({
                               return (
                                 <Indicator
                                   inline
+                                  color="rgba(255, 20, 20, 1)"
                                   label={totalItemInCart[color.id]}
                                   size={16}
                                   key={index}
+                                  disabled={totalItemInCart[color.id] === 0}
                                 >
                                   <RadioGroup.Option
                                     value={color.id}
