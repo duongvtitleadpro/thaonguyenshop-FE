@@ -20,14 +20,16 @@ import { TOKEN_KEY } from "@/constant/auth";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { authState } from "@/store/state/auth.atom";
 import { Settings, LogOut, Settings2, LogOutIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LoginModalProps {
   customButton?: React.ReactNode;
   onClose?: () => void;
+  className?: string;
 }
 
 const LoginModal = (props: LoginModalProps) => {
-  const { customButton, onClose } = props;
+  const { customButton, onClose, className } = props;
   const [{ isAuthenticated, user }, setAuth] = useRecoilState(authState);
   const [onpenedLogin, { open: openLogin, close: closeLogin }] =
     useDisclosure(false);
@@ -76,7 +78,7 @@ const LoginModal = (props: LoginModalProps) => {
     onClose?.();
   };
   return (
-    <div className="cursor-pointer">
+    <div className={cn("cursor-pointer", className)}>
       {!customButton ? (
         isAuthenticated ? (
           <>
@@ -117,8 +119,13 @@ const LoginModal = (props: LoginModalProps) => {
             </div>
             <div className="flex items-center justify-between lg:hidden">
               <div className="flex items-center gap-2">
-                <Avatar src={user?.avatarUrl} color="white" variant="light" />
-                <div>Xin chào, {user?.name}</div>
+                <Avatar
+                  src={user?.avatarUrl}
+                  color="white"
+                  variant="light"
+                  size="sm"
+                />
+                <div className="text-sm">{user?.name}</div>
               </div>
               <div className="flex gap-4">
                 <LogOutIcon
