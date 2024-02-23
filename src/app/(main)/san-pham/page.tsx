@@ -10,13 +10,14 @@ import {
   FILTER_PRODUCT_DEFAULT,
   filterProductState,
 } from "@/store/state/product-filter.atom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ATOM_KEY } from "@/store/key";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 
 export default function ProductPage() {
   const [productParam, setProductParam] = useRecoilState(filterProductState);
   const searchParams = useSearchParams();
+  const isRedirectToProduct = useRef(false);
   useEffect(() => {
     const filterProduct = sessionStorage.getItem(ATOM_KEY.FILTER_PRODUCT);
     if (filterProduct) {
@@ -33,6 +34,9 @@ export default function ProductPage() {
 
   useEffect(() => {
     return () => {
+      if (isRedirectToProduct.current) {
+        return;
+      }
       setProductParam(FILTER_PRODUCT_DEFAULT);
       sessionStorage.removeItem(ATOM_KEY.FILTER_PRODUCT);
     };
@@ -56,27 +60,31 @@ export default function ProductPage() {
       <div className="flex-1 p-4">
         {productListData && (
           <>
-            <div>
+            <div className="max-w-[1700px] mx-auto">
               <SimpleGrid
                 cols={{ base: 2, xs: 2, sm: 3, md: 4, lg: 5 }}
                 spacing="lg"
                 verticalSpacing="xl"
               >
                 {productListData.data.map((item) => (
-                  <ProductCard
+                  <div
                     key={item.id}
-                    id={item.id}
-                    img={
-                      item.productImages.length > 0
-                        ? item.productImages[0].imageUrl
-                        : ""
-                    }
-                    code={item.productCode}
-                    name={item.name}
-                    price={item.price}
-                    status={item.productStatus}
-                    origin={item.origin}
-                  />
+                    onClick={() => (isRedirectToProduct.current = true)}
+                  >
+                    <ProductCard
+                      id={item.id}
+                      img={
+                        item.productImages.length > 0
+                          ? item.productImages[0].imageUrl
+                          : ""
+                      }
+                      code={item.productCode}
+                      name={item.name}
+                      price={item.price}
+                      status={item.productStatus}
+                      origin={item.origin}
+                    />
+                  </div>
                 ))}
               </SimpleGrid>
             </div>
