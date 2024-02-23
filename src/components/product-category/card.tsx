@@ -24,14 +24,16 @@ const ProductCard = (props: ProductCardProps) => {
   const { id, img, name, code, price, status, origin } = props;
   return (
     <div className="h-full transform overflow-hidden rounded-lg border bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
-      <Image
-        className="h-32 md:h-56 w-full cursor-pointer"
-        fit="fill"
-        src={img}
-        alt={name}
-        fallbackSrc="https://www.sennheiser.com/images/placeholder.raw.svg"
-        onClick={() => router.push(`/chi-tiet-san-pham/${id}`)}
-      />
+      <div className="h-32 md:h-56 w-full border-b bg-slate-100">
+        <Image
+          className="h-full w-full cursor-pointer"
+          fit="contain"
+          src={img}
+          alt={name}
+          fallbackSrc="https://www.sennheiser.com/images/placeholder.raw.svg"
+          onClick={() => router.push(`/chi-tiet-san-pham/${id}`)}
+        />
+      </div>
       <div className="p-2 md:p-4">
         <p className="mb-2 text-sm text-gray-900">{`Mã sản phẩm: ${code}`}</p>
         <h2 className="mb-2 text-lg font-medium dark:text-white text-gray-900 line-clamp-3">
