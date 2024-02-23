@@ -60,7 +60,7 @@ export default function ProductPage() {
       <div className="flex-1 p-4">
         {productListData && (
           <>
-            <div className="max-w-[1700px] mx-auto">
+            <div className="max-w-[1300px] mx-auto">
               <SimpleGrid
                 cols={{ base: 2, xs: 2, sm: 3, md: 4, lg: 5 }}
                 spacing="lg"
