@@ -54,7 +54,7 @@
   display: block;
   height: var(--slide-height);
   width: 100%;
-  object-fit: fill;
+  object-fit: contain;
 }
 .embla__slide__number {
   width: 4.6rem;
@@ -133,7 +133,7 @@
   display: block;
   height: var(--thumbs-slide-height);
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .embla-thumbs__slide__number {
   width: 3rem;
