@@ -26,7 +26,7 @@ type OrderStatusType = {
   summaryField: keyof SummaryOrderStatus;
 };
 
-const OrderStatus: OrderStatusType[] = [
+const OrderStatusOptions: OrderStatusType[] = [
   {
     value: "PURCHASED",
     label: "Đã mua",
@@ -49,7 +49,7 @@ const OrderStatus: OrderStatusType[] = [
   },
 ];
 
-const AllocationStatus: OrderStatusType[] = [
+const AllocationStatusOptions: OrderStatusType[] = [
   {
     value: "ALLOCATED",
     label: "Đã chia",
@@ -249,14 +249,14 @@ const PurchaseOrderFilter = () => {
         <MultiSelect
           label="Tình trạng đơn hàng"
           placeholder="Tình trạng"
-          data={OrderStatus}
+          data={OrderStatusOptions}
           value={purchaseOrderFilter.orderStatus}
           onChange={handleChangeOrderStatus}
         />
         <MultiSelect
           label="Trạng thái đơn hàng"
           placeholder="Trạng thái"
-          data={AllocationStatus}
+          data={AllocationStatusOptions}
           value={purchaseOrderFilter.allocationStatus}
           onChange={handleChangeAllocationStatus}
         />
