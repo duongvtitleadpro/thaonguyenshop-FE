@@ -9,8 +9,9 @@ import { useRecoilState } from "recoil";
 import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.atom";
 import { QueryKey } from "@/constant/query-key";
 import { currency } from "@/utils/currency";
-import { Pagination, Select } from "@mantine/core";
+import { Select } from "@mantine/core";
 import PurchaseOrderTableMobile from "./table-mobile";
+import PaginationCustom from "@/components/pagination";
 
 const PurchaseOrderPage = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
@@ -88,15 +89,11 @@ const PurchaseOrderPage = () => {
               onChange={handleChangePageSize}
               data={["10", "20", "30", "40", "50"]}
             />
-            <Pagination
+            <PaginationCustom
               value={purchaseOrderData.page}
               onChange={handleGoToPage}
               total={purchaseOrderData.totalPages}
-              styles={{
-                control: {
-                  backgroundColor: "var(--_control-bg-color)",
-                },
-              }}
+              color="blue"
             />
           </div>
         </div>

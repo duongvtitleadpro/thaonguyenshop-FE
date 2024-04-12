@@ -7,7 +7,8 @@ import { combineOrderFilterState } from "@/store/state/combine-order-filter.atom
 import { useQuery } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
 import { getCombineOrder } from "@/api/order";
-import { Pagination, Select } from "@mantine/core";
+import { Select } from "@mantine/core";
+import PaginationCustom from "@/components/pagination";
 
 const ExportOrderPage = () => {
   const [combineOrderFilter, setCombineOrderFilter] = useRecoilState(
@@ -45,15 +46,11 @@ const ExportOrderPage = () => {
               onChange={handleChangePageSize}
               data={["10", "20", "30", "40", "50"]}
             />
-            <Pagination
+            <PaginationCustom
               value={combineOrderData.page}
               onChange={handleGoToPage}
               total={combineOrderData.totalPages}
-              styles={{
-                control: {
-                  backgroundColor: "var(--_control-bg-color)",
-                },
-              }}
+              color="blue"
             />
           </div>
         </div>

@@ -8,7 +8,8 @@ import { QueryKey } from "@/constant/query-key";
 import { useRecoilState } from "recoil";
 import { paymentFilterState } from "@/store/state/payment-filter.atom";
 import { getPaymentList } from "@/api/payment";
-import { CloseButton, Input, Pagination, Select } from "@mantine/core";
+import { CloseButton, Input, Select } from "@mantine/core";
+import PaginationCustom from "@/components/pagination";
 
 const PaymentPage = () => {
   const [keyword, setKeyword] = React.useState("");
@@ -72,15 +73,11 @@ const PaymentPage = () => {
               onChange={handleChangePageSize}
               data={["10", "20", "30", "40", "50"]}
             />
-            <Pagination
+            <PaginationCustom
               value={paymentData.page}
               onChange={handleGoToPage}
               total={paymentData.totalPages}
-              styles={{
-                control: {
-                  backgroundColor: "var(--_control-bg-color)",
-                },
-              }}
+              color="blue"
             />
           </div>
         </div>
