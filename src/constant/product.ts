@@ -22,6 +22,9 @@ export enum ProductStatusTitle {
   BOUGHT = "Đã mua hàng",
   CANCELLED = "Hủy",
   HANDLE = "Đã mua hàng",
+  IN_SHORTAGE = "Đã mua hàng",
+  ENDED = "Đã mua hàng",
+  YET_DELIVERED = "Đã mua hàng",
 }
 
 export enum ProductStatusColor {
@@ -29,4 +32,7 @@ export enum ProductStatusColor {
   BOUGHT = "text-green-500",
   CANCELLED = "text-red-500",
   HANDLE = "text-green-500",
+  IN_SHORTAGE = "text-green-500",
+  ENDED = "text-green-500",
+  YET_DELIVERED = "text-green-500",
 }

@@ -126,7 +126,10 @@ const DetailProductPage = ({
   const isBoughtStatus = useMemo(() => {
     return (
       productDetailData?.productStatus === "BOUGHT" ||
-      productDetailData?.productStatus === "HANDLE"
+      productDetailData?.productStatus === "HANDLE" ||
+      productDetailData?.productStatus === "IN_SHORTAGE" ||
+      productDetailData?.productStatus === "ENDED" ||
+      productDetailData?.productStatus === "YET_DELIVERED"
     );
   }, [productDetailData]);
 

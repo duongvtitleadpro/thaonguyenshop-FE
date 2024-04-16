@@ -59,6 +59,9 @@ export type ProductStatus =
   | "BOUGHT"
   | "CANCELLED"
   | "HANDLE"
+  | "IN_SHORTAGE"
+  | "ENDED"
+  | "YET_DELIVERED"
   | null;
 
 export type StockProductImageParam = {
