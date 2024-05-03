@@ -1,221 +1,116 @@
 "use client";
 
-import { useRecoilState } from "recoil";
-import { MultiSelect, ActionIcon, Input, Tooltip } from "@mantine/core";
 import {
   PurchaseOrderFilterDefaultValue,
   purchaseOrderFilterState,
 } from "@/store/state/purchase-order-filter.atom";
+import { ISummaryOrderFilter } from "@/types/common";
 import {
   AllocationStatus,
   OrderStatus,
   SummaryOrderStatus,
 } from "@/types/order";
+import { ActionIcon, Input, Tooltip } from "@mantine/core";
 import { X } from "lucide-react";
-import { QueryKey } from "@/constant/query-key";
-import { useQuery } from "@tanstack/react-query";
-import React, { useMemo } from "react";
-import DatePickerWithRange from "@/components/date-range-picker";
-import { format } from "date-fns";
-import { DateRange } from "react-day-picker";
-import { getOrder, getSummaryOrderStatus } from "@/api/order";
+import React, { useCallback, useMemo } from "react";
+import { useRecoilState } from "recoil";
 
 type OrderStatusType = {
   value: string;
   label: string;
   summaryField: keyof SummaryOrderStatus;
+  totalQuantity?: number;
 };
 
-const OrderStatusOptions: OrderStatusType[] = [
-  {
-    value: "PURCHASED",
-    label: "Đã mua",
-    summaryField: "totalPurchased",
-  },
-  {
-    value: "NOT_PURCHASED",
-    label: "Chưa mua hàng",
-    summaryField: "totalUnPurchased",
-  },
-  {
-    value: "CANCELLED",
-    label: "Hủy",
-    summaryField: "totalCancelled",
-  },
-  {
-    value: "CUSTOMER_CANCELLED",
-    label: "Khách hủy đơn",
-    summaryField: "totalCustomerCancelled",
-  },
-];
+interface PurchaseOrderFilterProps {
+  summaryOrderFilter?: ISummaryOrderFilter;
+}
 
-const AllocationStatusOptions: OrderStatusType[] = [
-  {
-    value: "ALLOCATED",
-    label: "Đã chia",
-    summaryField: "totalAllocated",
-  },
-  {
-    value: "SENT",
-    label: "Đã xuất",
-    summaryField: "totalSent",
-  },
-];
-
-const PurchaseOrderFilter = () => {
+const PurchaseOrderFilter = ({
+  summaryOrderFilter,
+}: PurchaseOrderFilterProps) => {
   const [keyword, setKeyword] = React.useState("");
-  const [date, setDate] = React.useState<DateRange | undefined>();
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
     purchaseOrderFilterState
   );
-  const [color, setColor] = React.useState<number[]>([]);
-  const [size, setSize] = React.useState<number[]>([]);
 
-  const [colorDropdown, setColorDropdown] = React.useState(false);
-  const [sizeDropdown, setSizeDropdown] = React.useState(false);
-
-  const { data: purchaseOrderData, refetch } = useQuery({
-    queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
-    queryFn: () => getOrder(purchaseOrderFilter),
-  });
-
-  React.useEffect(() => {
-    if (!date?.to || !date.from) {
-      setPurchaseOrderFilter((prev) => {
-        const param = { ...prev };
-        delete param.startDate;
-        delete param.endDate;
-        return {
-          ...param,
-        };
-      });
+  const handleChangeOrderStatus = (value: OrderStatus) => {
+    if (purchaseOrderFilter.orderStatus?.includes(value)) {
       return;
     }
-    const startDate = format(date.from, "yyyy-MM-dd");
-    const endDate = format(date.to, "yyyy-MM-dd");
-
     setPurchaseOrderFilter((prev) => ({
       ...prev,
-      startDate,
-      endDate,
-    }));
-  }, [date, setPurchaseOrderFilter]);
-
-  const handleChangeOrderStatus = (value: string[]) => {
-    setPurchaseOrderFilter((prev) => ({
-      ...prev,
-      orderStatus: value as OrderStatus[],
+      orderStatus: [
+        ...(purchaseOrderFilter.orderStatus || []),
+        value,
+      ] as OrderStatus[],
     }));
   };
 
-  const handleChangeAllocationStatus = (value: string[]) => {
-    setPurchaseOrderFilter((prev) => ({
-      ...prev,
-      allocationStatus: value as AllocationStatus[],
-    }));
-  };
+  const AllocationStatusOptions: OrderStatusType[] = useMemo(
+    () => [
+      {
+        value: "ALLOCATED",
+        label: "Hàng đã về",
+        summaryField: "totalAllocated",
+        totalQuantity: summaryOrderFilter?.totalAllocationStatus,
+      },
+      {
+        value: "SENT",
+        label: "Hàng đã gửi",
+        summaryField: "totalSent",
+        totalQuantity: summaryOrderFilter?.totalSent,
+      },
+    ],
+    [summaryOrderFilter?.totalAllocationStatus, summaryOrderFilter?.totalSent]
+  );
 
-  const handleChangeSize = (value: string[]) => {
-    setSize(value.map((item) => Number(item)));
-    if (!sizeDropdown) {
-      setPurchaseOrderFilter((prev) => ({
-        ...prev,
-        sizeIds: value.map((item) => Number(item)),
-      }));
+  const OrderStatusOptions: OrderStatusType[] = useMemo(
+    () => [
+      {
+        value: "PURCHASED",
+        label: "Đã mua",
+        summaryField: "totalPurchased",
+        totalQuantity: summaryOrderFilter?.totalPurchased,
+      },
+      {
+        value: "NOT_PURCHASED",
+        label: "Chưa mua hàng",
+        summaryField: "totalUnPurchased",
+        totalQuantity: summaryOrderFilter?.totalNotPurchased,
+      },
+      {
+        value: "CANCELLED",
+        label: "Hủy",
+        summaryField: "totalCancelled",
+        totalQuantity: summaryOrderFilter?.totalCancelled,
+      },
+      {
+        value: "CUSTOMER_CANCELLED",
+        label: "Khách hủy đơn",
+        summaryField: "totalCustomerCancelled",
+        totalQuantity: summaryOrderFilter?.totalCustomerCancelled,
+      },
+    ],
+    [
+      summaryOrderFilter?.totalCancelled,
+      summaryOrderFilter?.totalCustomerCancelled,
+      summaryOrderFilter?.totalNotPurchased,
+      summaryOrderFilter?.totalPurchased,
+    ]
+  );
+  const handleChangeAllocationStatus = (value: AllocationStatus) => {
+    if (purchaseOrderFilter.allocationStatus?.includes(value)) {
+      return;
     }
-  };
-
-  const handleChangeSizeFilter = () => {
-    setSizeDropdown(false);
     setPurchaseOrderFilter((prev) => ({
       ...prev,
-      sizeIds: size,
+      allocationStatus: [
+        ...(purchaseOrderFilter.allocationStatus || []),
+        value,
+      ] as AllocationStatus[],
     }));
   };
-
-  const handleChangeColor = (value: string[]) => {
-    setColor(value.map((item) => Number(item)));
-    if (!colorDropdown) {
-      setPurchaseOrderFilter((prev) => ({
-        ...prev,
-        colorIds: value.map((item) => Number(item)),
-      }));
-    }
-  };
-
-  const handleChangeColorFilter = () => {
-    setColorDropdown(false);
-    setPurchaseOrderFilter((prev) => ({
-      ...prev,
-      colorIds: color,
-    }));
-  };
-
-  const openColorDropdown = () => {
-    setColorDropdown(true);
-  };
-
-  const openSizeDropdown = () => {
-    setSizeDropdown(true);
-  };
-
-  const sizeList = useMemo(() => {
-    if (!purchaseOrderData?.size) return [];
-    return purchaseOrderData.size
-      .filter((item) => !!item)
-      .map((item) => ({
-        value: item.id.toString(),
-        label: item.title,
-      }));
-  }, [purchaseOrderData]);
-
-  const colorList = useMemo(() => {
-    if (!purchaseOrderData?.color) return [];
-    return purchaseOrderData.color
-      .filter((item) => !!item)
-      .map((item) => ({
-        value: item.id.toString(),
-        label: item.title,
-      }));
-  }, [purchaseOrderData]);
-
-  const selectedColorList = useMemo(() => {
-    if (!color) return [];
-    return colorList
-      .filter((item) => color && color.includes(Number(item.value)))
-      .map((item) => item.value);
-  }, [colorList, color]);
-
-  const selectedSizeList = useMemo(() => {
-    if (!size) return [];
-    return sizeList
-      .filter((item) => size && size.includes(Number(item.value)))
-      .map((item) => item.value);
-  }, [sizeList, size]);
-
-  // const orderStatusWithSummary = useMemo(() => {
-  //   if (!summaryOrderStatus) return OrderStatus;
-  //   return OrderStatus.map((item) => {
-  //     return {
-  //       ...item,
-  //       label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
-  //         summaryOrderStatus.totalOrder
-  //       })`,
-  //     };
-  //   });
-  // }, [summaryOrderStatus]);
-
-  // const allocationStatusWithSummary = useMemo(() => {
-  //   if (!summaryOrderStatus) return AllocationStatus;
-  //   return AllocationStatus.map((item) => {
-  //     return {
-  //       ...item,
-  //       label: `${item.label} (${summaryOrderStatus[item.summaryField]}/${
-  //         summaryOrderStatus.totalOrderAllocated
-  //       })`,
-  //     };
-  //   });
-  // }, [summaryOrderStatus]);
 
   const handleSearchKeyword = () => {
     setPurchaseOrderFilter((prev) => ({
@@ -225,10 +120,18 @@ const PurchaseOrderFilter = () => {
   };
 
   const handleClearFilter = () => {
-    setColor([]);
-    setSize([]);
     setPurchaseOrderFilter(PurchaseOrderFilterDefaultValue);
   };
+
+  const checkActiveFilterAllocationStatus = useCallback(
+    (value: AllocationStatus) =>
+      purchaseOrderFilter.allocationStatus?.includes(value),
+    [purchaseOrderFilter.allocationStatus]
+  );
+  const checkActiveFilterOrderStatus = useCallback(
+    (value: OrderStatus) => purchaseOrderFilter.orderStatus?.includes(value),
+    [purchaseOrderFilter.orderStatus]
+  );
 
   return (
     <div className="mb-3 flex gap-4 flex-col">
@@ -243,17 +146,55 @@ const PurchaseOrderFilter = () => {
             if (event.key === "Enter") handleSearchKeyword();
           }}
         />
-        <DatePickerWithRange date={date} onDateChange={setDate} />
+        {/* <DatePickerWithRange date={date} onDateChange={setDate} /> */}
       </div>
+      <div className="flex gap-4 flex-wrap justify-center md:justify-start">
+        {AllocationStatusOptions.map((item, index) => (
+          <div
+            onClick={() => {
+              handleChangeAllocationStatus(item.value as AllocationStatus);
+            }}
+            className={`w-fit cursor-pointer ${checkActiveFilterAllocationStatus(item.value as AllocationStatus) && "border-b-[2px] border-red-600 text-red-600"}`}
+            key={index}
+          >
+            <span>{item.label}</span>
+            <span className="ml-1">{`(${item.totalQuantity})`}</span>
+          </div>
+        ))}
+        {OrderStatusOptions.map((item, index) => (
+          <div
+            onClick={() => {
+              handleChangeOrderStatus(item.value as OrderStatus);
+            }}
+            className={`w-fit cursor-pointer ${checkActiveFilterOrderStatus(item.value as OrderStatus) && "border-b-[2px] border-red-600 text-red-600"}`}
+            key={index}
+          >
+            <span>{item.label}</span>
+            <span className="ml-1">{`(${item.totalQuantity})`}</span>
+          </div>
+        ))}
+        <Tooltip label="Xóa bộ lọc">
+          <ActionIcon
+            variant="transparent"
+            color="blue"
+            onClick={handleClearFilter}
+            className="my-auto"
+          >
+            <X />
+          </ActionIcon>
+        </Tooltip>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        <MultiSelect
+        {/* <MultiSelect
           label="Tình trạng đơn hàng"
           placeholder="Tình trạng"
           data={OrderStatusOptions}
           value={purchaseOrderFilter.orderStatus}
           onChange={handleChangeOrderStatus}
-        />
-        <MultiSelect
+        /> */}
+
+        {/* <MultiSelect
           label="Trạng thái đơn hàng"
           placeholder="Trạng thái"
           data={AllocationStatusOptions}
@@ -277,17 +218,7 @@ const PurchaseOrderFilter = () => {
           onChange={handleChangeSize}
           onDropdownClose={handleChangeSizeFilter}
           onDropdownOpen={openSizeDropdown}
-        />
-        <Tooltip label="Xóa bộ lọc">
-          <ActionIcon
-            variant="transparent"
-            color="blue"
-            onClick={handleClearFilter}
-            className="my-auto"
-          >
-            <X />
-          </ActionIcon>
-        </Tooltip>
+        /> */}
       </div>
     </div>
   );
