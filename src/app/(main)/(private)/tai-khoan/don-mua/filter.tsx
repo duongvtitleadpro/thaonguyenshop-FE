@@ -52,12 +52,12 @@ const OrderStatusOptions: OrderStatusType[] = [
 const AllocationStatusOptions: OrderStatusType[] = [
   {
     value: "ALLOCATED",
-    label: "Đã chia",
+    label: "Hàng đã về",
     summaryField: "totalAllocated",
   },
   {
     value: "SENT",
-    label: "Đã xuất",
+    label: "Hàng đã gửi",
     summaryField: "totalSent",
   },
 ];
