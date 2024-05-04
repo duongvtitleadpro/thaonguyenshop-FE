@@ -17,10 +17,14 @@ import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
 import { Search, Settings } from "lucide-react";
 import Image from "next/image";
+import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.atom";
 
 const Header = () => {
   const router = useRouter();
   const [productParam, setProductParam] = useRecoilState(filterProductState);
+  const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
+    purchaseOrderFilterState
+  );
   const keywordIntial =
     typeof window !== "undefined" &&
     JSON.parse(sessionStorage.getItem(ATOM_KEY.FILTER_PRODUCT) || "{}");
@@ -37,6 +41,14 @@ const Header = () => {
     }));
     if (pathname !== "/san-pham") router.push(`/san-pham?search=${keyword}`);
     closeMenu();
+  };
+
+  const handleGotoPurchasedOrder = () => {
+    setPurchaseOrderFilter((prev) => ({
+      ...prev,
+      allocationStatus: ["ALLOCATED"],
+    }));
+    router.push("/tai-khoan/don-mua");
   };
 
   return (
@@ -150,7 +162,13 @@ const Header = () => {
               </div>
             </div>
             <div className="block lg:hidden">
-              <div className="flex p-3 gap-2">
+              <div
+                className="text-red-600 font-semibold px-2 hover:cursor-pointer"
+                onClick={handleGotoPurchasedOrder}
+              >
+                Hàng đã về (10)
+              </div>
+              <div className="flex p-3 gap-2 justify-end">
                 <Settings
                   className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
                   onClick={() => {
