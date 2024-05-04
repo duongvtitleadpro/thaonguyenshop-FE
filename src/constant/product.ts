@@ -13,8 +13,8 @@ export enum OrderStatusColor {
 }
 
 export enum OrderStateTitle {
-  SENT = "Đã xuất",
-  ALLOCATED = "Đã chia",
+  SENT = "Hàng đã gửi",
+  ALLOCATED = "Hàng đã về",
 }
 
 export enum ProductStatusTitle {
