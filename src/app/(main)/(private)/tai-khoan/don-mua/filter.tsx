@@ -60,16 +60,16 @@ const PurchaseOrderFilter = ({
         value: "ALLOCATED",
         label: "Hàng đã về",
         summaryField: "totalAllocated",
-        totalQuantity: summaryOrderFilter?.totalAllocationStatus,
+        totalQuantity: summaryOrderFilter?.totalAllocated || 0,
       },
       {
         value: "SENT",
         label: "Hàng đã gửi",
         summaryField: "totalSent",
-        totalQuantity: summaryOrderFilter?.totalSent,
+        totalQuantity: summaryOrderFilter?.totalSent || 0,
       },
     ],
-    [summaryOrderFilter?.totalAllocationStatus, summaryOrderFilter?.totalSent]
+    [summaryOrderFilter?.totalAllocated, summaryOrderFilter?.totalSent]
   );
 
   const OrderStatusOptions: OrderStatusType[] = useMemo(
@@ -78,25 +78,25 @@ const PurchaseOrderFilter = ({
         value: "PURCHASED",
         label: "Đã mua",
         summaryField: "totalPurchased",
-        totalQuantity: summaryOrderFilter?.totalPurchased,
+        totalQuantity: summaryOrderFilter?.totalPurchased || 0,
       },
       {
         value: "NOT_PURCHASED",
         label: "Chưa mua hàng",
         summaryField: "totalUnPurchased",
-        totalQuantity: summaryOrderFilter?.totalNotPurchased,
+        totalQuantity: summaryOrderFilter?.totalNotPurchased || 0,
       },
       {
         value: "CANCELLED",
         label: "Hủy",
         summaryField: "totalCancelled",
-        totalQuantity: summaryOrderFilter?.totalCancelled,
+        totalQuantity: summaryOrderFilter?.totalCancelled || 0,
       },
       {
         value: "CUSTOMER_CANCELLED",
         label: "Khách hủy đơn",
         summaryField: "totalCustomerCancelled",
-        totalQuantity: summaryOrderFilter?.totalCustomerCancelled,
+        totalQuantity: summaryOrderFilter?.totalCustomerCancelled || 0,
       },
     ],
     [
