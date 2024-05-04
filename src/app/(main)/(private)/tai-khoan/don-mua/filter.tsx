@@ -10,7 +10,8 @@ import {
   OrderStatus,
   SummaryOrderStatus,
 } from "@/types/order";
-import { ActionIcon, Input, Tooltip } from "@mantine/core";
+import { currency } from "@/utils/currency";
+import { ActionIcon, Input, Table, Tooltip } from "@mantine/core";
 import { X } from "lucide-react";
 import React, { useCallback, useMemo } from "react";
 import { useRecoilState } from "recoil";
@@ -24,10 +25,16 @@ type OrderStatusType = {
 
 interface PurchaseOrderFilterProps {
   summaryOrderFilter?: ISummaryOrderFilter;
+  totalQuantity?: number;
+  totalReceivedQuantity?: number;
+  totalReceivedPrice?: number;
 }
 
 const PurchaseOrderFilter = ({
   summaryOrderFilter,
+  totalQuantity,
+  totalReceivedQuantity,
+  totalReceivedPrice,
 }: PurchaseOrderFilterProps) => {
   const [keyword, setKeyword] = React.useState("");
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
@@ -146,7 +153,6 @@ const PurchaseOrderFilter = ({
             if (event.key === "Enter") handleSearchKeyword();
           }}
         />
-        {/* <DatePickerWithRange date={date} onDateChange={setDate} /> */}
       </div>
       <div className="flex gap-4 flex-wrap justify-center md:justify-start">
         {AllocationStatusOptions.map((item, index) => (
@@ -184,41 +190,25 @@ const PurchaseOrderFilter = ({
           </ActionIcon>
         </Tooltip>
       </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {/* <MultiSelect
-          label="Tình trạng đơn hàng"
-          placeholder="Tình trạng"
-          data={OrderStatusOptions}
-          value={purchaseOrderFilter.orderStatus}
-          onChange={handleChangeOrderStatus}
-        /> */}
-
-        {/* <MultiSelect
-          label="Trạng thái đơn hàng"
-          placeholder="Trạng thái"
-          data={AllocationStatusOptions}
-          value={purchaseOrderFilter.allocationStatus}
-          onChange={handleChangeAllocationStatus}
-        />
-        <MultiSelect
-          label="Mẫu"
-          placeholder="Mẫu"
-          data={colorList}
-          value={selectedColorList}
-          onChange={handleChangeColor}
-          onDropdownClose={handleChangeColorFilter}
-          onDropdownOpen={openColorDropdown}
-        />
-        <MultiSelect
-          label="Size"
-          placeholder="Size"
-          data={sizeList}
-          value={selectedSizeList}
-          onChange={handleChangeSize}
-          onDropdownClose={handleChangeSizeFilter}
-          onDropdownOpen={openSizeDropdown}
-        /> */}
+      <div className="w-full md:w-[500px]">
+        <Table striped highlightOnHover withTableBorder withColumnBorders>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th></Table.Th>
+              <Table.Th>SL đặt</Table.Th>
+              <Table.Th>SL về</Table.Th>
+              <Table.Th>Thành tiền</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            <Table.Tr>
+              <Table.Td>Tổng</Table.Td>
+              <Table.Td>{totalQuantity}</Table.Td>
+              <Table.Td>{totalReceivedQuantity}</Table.Td>
+              <Table.Td>{`${currency.format(totalReceivedPrice || 0)}`}</Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
+        </Table>
       </div>
     </div>
   );
