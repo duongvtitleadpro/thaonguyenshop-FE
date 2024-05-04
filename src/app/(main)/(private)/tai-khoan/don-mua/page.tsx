@@ -68,7 +68,12 @@ const PurchaseOrderPage = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <PurchaseOrderFilter />
+      <PurchaseOrderFilter
+        summaryOrderFilter={purchaseOrderData?.summaryOrderFilter}
+        totalQuantity={purchaseOrderData?.totalQuantity}
+        totalReceivedQuantity={purchaseOrderData?.totalReceivedQuantity}
+        totalReceivedPrice={purchaseOrderData?.totalReceivedPrice}
+      />
       {purchaseOrderData && (
         <div className="h-auto sm:h-[550px] w-full">
           <DataTable

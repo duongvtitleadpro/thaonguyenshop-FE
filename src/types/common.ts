@@ -7,4 +7,17 @@ export type Response<T> = {
   totalPage: number;
   total: number;
   totalElement: number;
+  summaryOrderFilter: ISummaryOrderFilter;
 };
+
+export interface ISummaryOrderFilter {
+  totalAllocated: number;
+  totalAllocationStatus: number;
+  totalCancelled: number;
+  totalCustomerCancelled: number;
+  totalNotAllocated: number;
+  totalNotPurchased: number;
+  totalPurchased: number;
+  totalQuantity: number;
+  totalSent: number;
+}
