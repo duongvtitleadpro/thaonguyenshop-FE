@@ -1,0 +1,3 @@
+.control:where([data-active]) {
+  background-color: var(--pagination-active-bg) !important;
+}

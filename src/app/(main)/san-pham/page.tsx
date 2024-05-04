@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { Pagination, SimpleGrid } from "@mantine/core";
+import { SimpleGrid } from "@mantine/core";
 
 import { FilterProduct, ProductCard } from "@/components/product-category";
 import { QueryKey } from "@/constant/query-key";
@@ -13,6 +13,7 @@ import {
 import { useEffect, useRef } from "react";
 import { ATOM_KEY } from "@/store/key";
 import { useSearchParams, usePathname } from "next/navigation";
+import PaginationCustom from "@/components/pagination";
 
 export default function ProductPage() {
   const [productParam, setProductParam] = useRecoilState(filterProductState);
@@ -89,17 +90,12 @@ export default function ProductPage() {
               </SimpleGrid>
             </div>
             {productListData.data.length > 0 ? (
-              <Pagination
+              <PaginationCustom
                 total={productListData.totalPage}
                 value={productListData.page}
                 onChange={handleChangePage}
                 className="mt-4"
                 color="blue"
-                styles={{
-                  control: {
-                    backgroundColor: "var(--_control-bg-color)",
-                  },
-                }}
               />
             ) : (
               <div className="text-center">Không có sản phẩm nào</div>
