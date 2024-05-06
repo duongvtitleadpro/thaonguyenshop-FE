@@ -27,6 +27,7 @@ export type User = {
   totalCost: number;
   debt: number;
   avatarUrl?: string;
+  totalReceivedQuantity: number;
 };
 
 export type ChangePasswordBody = {
