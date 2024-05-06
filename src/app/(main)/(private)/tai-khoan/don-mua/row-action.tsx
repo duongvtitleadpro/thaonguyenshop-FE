@@ -36,7 +36,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
   return (
     <div className="w-16 flex gap-1">
       <Button
-        variant="ghost"
+        variant="subtle"
         p={4}
         c="blue"
         size="sm"
@@ -49,9 +49,9 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         <Pencil className="w-5 h-5" />
       </Button>
       <Button
-        variant="ghost"
+        variant="subtle"
         p={4}
-        c="blue"
+        c="red"
         size="sm"
         disabled={!canDeleteOrder}
         onClick={open}
