@@ -34,7 +34,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
             pathname === item.href
               ? "bg-blue-200 hover:bg-blue-200"
               : "hover:bg-transparent hover:underline",
-            "justify-start"
+            "justify-start px-2"
           )}
         >
           {item.title}

@@ -142,7 +142,7 @@ const PurchaseOrderFilter = ({
 
   return (
     <div className="mb-3 flex gap-4 flex-col">
-      <div className="grid grid-cols-2 gap-4 xl:gap-[400px]">
+      <div className="grid grid-cols-2 gap-4">
         <Input
           placeholder="Tìm kiếm tên, mã sản phẩm"
           className="h-full"
@@ -153,6 +153,16 @@ const PurchaseOrderFilter = ({
             if (event.key === "Enter") handleSearchKeyword();
           }}
         />
+        <Tooltip label="Xóa bộ lọc">
+          <ActionIcon
+            variant="transparent"
+            color="blue"
+            onClick={handleClearFilter}
+            className="my-auto"
+          >
+            <X />
+          </ActionIcon>
+        </Tooltip>
       </div>
       <div className="flex gap-4 flex-wrap justify-center md:justify-start">
         {AllocationStatusOptions.map((item, index) => (
@@ -160,7 +170,11 @@ const PurchaseOrderFilter = ({
             onClick={() => {
               handleChangeAllocationStatus(item.value as AllocationStatus);
             }}
-            className={`w-fit cursor-pointer ${checkActiveFilterAllocationStatus(item.value as AllocationStatus) && "border-b-[2px] border-red-600 text-red-600"}`}
+            className={`w-fit cursor-pointer text-sm ${
+              checkActiveFilterAllocationStatus(
+                item.value as AllocationStatus
+              ) && "border-b-[2px] border-red-600 text-red-600"
+            }`}
             key={index}
           >
             <span>{item.label}</span>
@@ -172,23 +186,16 @@ const PurchaseOrderFilter = ({
             onClick={() => {
               handleChangeOrderStatus(item.value as OrderStatus);
             }}
-            className={`w-fit cursor-pointer ${checkActiveFilterOrderStatus(item.value as OrderStatus) && "border-b-[2px] border-red-600 text-red-600"}`}
+            className={`w-fit cursor-pointer text-sm  ${
+              checkActiveFilterOrderStatus(item.value as OrderStatus) &&
+              "border-b-[2px] border-red-600 text-red-600"
+            }`}
             key={index}
           >
             <span>{item.label}</span>
             <span className="ml-1">{`(${item.totalQuantity})`}</span>
           </div>
         ))}
-        <Tooltip label="Xóa bộ lọc">
-          <ActionIcon
-            variant="transparent"
-            color="blue"
-            onClick={handleClearFilter}
-            className="my-auto"
-          >
-            <X />
-          </ActionIcon>
-        </Tooltip>
       </div>
       <div className="w-full md:w-[500px]">
         <Table striped highlightOnHover withTableBorder withColumnBorders>
@@ -205,7 +212,9 @@ const PurchaseOrderFilter = ({
               <Table.Td>Tổng</Table.Td>
               <Table.Td>{totalQuantity}</Table.Td>
               <Table.Td>{totalReceivedQuantity}</Table.Td>
-              <Table.Td>{`${currency.format(totalReceivedPrice || 0)}`}</Table.Td>
+              <Table.Td>{`${currency.format(
+                totalReceivedPrice || 0
+              )}`}</Table.Td>
             </Table.Tr>
           </Table.Tbody>
         </Table>

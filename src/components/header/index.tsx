@@ -66,13 +66,29 @@ const Header = () => {
         </div>
         <div>
           <div className="h-full  flex gap-11 max-w-6xl mx-auto items-center justify-between relative">
-            <Link
-              href="/"
-              className="basis-[147px]"
-              onClick={() => setKeyword("")}
-            >
-              <Image src={ThaoNguyenLogo} alt="Thao Nguyen" />
-            </Link>
+            <div className="flex basis-[100px] lg:basis-[147px]">
+              <Link
+                href="/"
+                className="w-[100px] lg:w-[147px]"
+                onClick={() => setKeyword("")}
+              >
+                <Image src={ThaoNguyenLogo} alt="Thao Nguyen" />
+              </Link>
+              <div className="flex flex-col px-3 gap-2 justify-center lg:hidden">
+                <Settings
+                  className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
+                  onClick={() => {
+                    router.push("/tai-khoan/don-mua");
+                  }}
+                />
+                <UnstyledButton
+                  onClick={openMenu}
+                  className="hover:bg-slate-200 p-2 rounded-md w-10 h-10 flex items-center justify-center"
+                >
+                  <Icons.menu />
+                </UnstyledButton>
+              </div>
+            </div>
             <div className="hidden lg:flex flex-1 flex-col mt-2">
               <div className="flex items-center justify-between gap-20">
                 <div className="flex w-full items-center">
@@ -164,6 +180,10 @@ const Header = () => {
               </div>
             </div>
             <div className="block lg:hidden">
+              <LoginModal
+                onClose={closeMenu}
+                // className="absolute top-1 right-2"
+              />
               {user && (
                 <div
                   className="text-red-600 font-semibold px-2 hover:cursor-pointer"
@@ -172,25 +192,6 @@ const Header = () => {
                   Hàng đã về ({user?.totalReceivedQuantity})
                 </div>
               )}
-              <div className="flex p-3 gap-2 justify-end">
-                <Settings
-                  className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
-                  onClick={() => {
-                    router.push("/tai-khoan/don-mua");
-                  }}
-                />
-                <UnstyledButton
-                  onClick={openMenu}
-                  className="hover:bg-slate-200 p-2 rounded-md w-10 h-10 flex items-center justify-center"
-                >
-                  <Icons.menu />
-                </UnstyledButton>
-              </div>
-
-              <LoginModal
-                onClose={closeMenu}
-                className="absolute bottom-1 right-2"
-              />
 
               <Drawer
                 opened={onpenedMenu}
