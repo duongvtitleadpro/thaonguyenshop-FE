@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { SimpleGrid } from "@mantine/core";
+import { Button, SimpleGrid } from "@mantine/core";
 
 import { FilterProduct, ProductCard } from "@/components/product-category";
 import { QueryKey } from "@/constant/query-key";
@@ -34,6 +34,7 @@ export default function ProductPage() {
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     return () => {
       if (isRedirectToProduct.current) {
         return;
@@ -41,6 +42,12 @@ export default function ProductPage() {
       setProductParam(FILTER_PRODUCT_DEFAULT);
       sessionStorage.removeItem(ATOM_KEY.FILTER_PRODUCT);
     };
+  }, []);
+
+  useEffect(() => {
+    window.scrollBy({
+      top: 0,
+    });
   }, []);
 
   const { data: productListData } = useQuery({

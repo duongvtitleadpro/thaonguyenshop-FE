@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,14 +9,25 @@ import ThaoNguyenLogo from "@images/logo/thao-nguyen-logo.png";
 import { NavBarRoute } from "@/constant/route";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
-import { useDisclosure } from "@mantine/hooks";
-import { CloseButton, Drawer, Input, UnstyledButton } from "@mantine/core";
+import { useDisclosure, useLocalStorage } from "@mantine/hooks";
+import {
+  Autocomplete,
+  CloseButton,
+  Drawer,
+  Input,
+  UnstyledButton,
+} from "@mantine/core";
 import { useRecoilState } from "recoil";
-import { filterProductState } from "@/store/state/product-filter.atom";
+import {
+  filterProductState,
+  FILTER_PRODUCT_DEFAULT,
+} from "@/store/state/product-filter.atom";
 import LoginModal from "../login-modal";
 import { ATOM_KEY } from "@/store/key";
 import { Search, Settings } from "lucide-react";
 import Image from "next/image";
+
+const HISTORY_SEARCH_KEY = "history_search";
 
 const Header = () => {
   const router = useRouter();
@@ -30,12 +41,46 @@ const Header = () => {
   const [onpenedMenu, { open: openMenu, close: closeMenu }] =
     useDisclosure(false);
 
+  const [historySearchList, setHistorySearchList] = useLocalStorage<string[]>({
+    key: HISTORY_SEARCH_KEY,
+    defaultValue: [],
+  });
+
   const handleChangeKeyword = () => {
     setProductParam((prev) => ({
-      ...prev,
+      ...FILTER_PRODUCT_DEFAULT,
       keyword: keyword,
     }));
+    setHistorySearchList((prev) => {
+      const searchExistIndex = prev.findIndex((item) => item === keyword);
+      if (!keyword) return prev;
+      if (searchExistIndex !== -1) {
+        const list = prev;
+        list.splice(searchExistIndex, 1);
+        return [keyword, ...list];
+      }
+      return [keyword, ...prev];
+    });
     if (pathname !== "/san-pham") router.push(`/san-pham?search=${keyword}`);
+    closeMenu();
+  };
+
+  const handleClickOptions = (searchItem: string) => {
+    setProductParam((prev) => ({
+      ...FILTER_PRODUCT_DEFAULT,
+      keyword: searchItem,
+    }));
+    setHistorySearchList((prev) => {
+      const searchExistIndex = prev.findIndex((item) => item === searchItem);
+      if (!searchItem) return prev;
+      if (searchExistIndex !== -1) {
+        const list = prev;
+        list.splice(searchExistIndex, 1);
+        return [searchItem, ...list];
+      }
+      return [searchItem, ...prev];
+    });
+    if (pathname !== "/san-pham") router.push(`/san-pham?search=${searchItem}`);
     closeMenu();
   };
 
@@ -62,12 +107,14 @@ const Header = () => {
             <div className="hidden lg:flex flex-1 flex-col mt-2">
               <div className="flex items-center justify-between gap-20">
                 <div className="flex w-full items-center">
-                  <Input
+                  <Autocomplete
                     placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
                     className="flex-1 h-full rounded-none"
                     radius="xs"
+                    data={historySearchList}
                     value={keyword}
-                    onChange={(event) => setKeyword(event.currentTarget.value)}
+                    onChange={(event) => setKeyword(event)}
+                    maxDropdownHeight={150}
                     rightSectionPointerEvents="all"
                     rightSection={
                       <CloseButton
@@ -81,6 +128,13 @@ const Header = () => {
                     }
                     onKeyDown={(event) => {
                       if (event.key === "Enter") handleChangeKeyword();
+                    }}
+                    onOptionSubmit={(value) => {
+                      setKeyword(value);
+                      handleClickOptions(value);
+                    }}
+                    comboboxProps={{
+                      transitionProps: { transition: "pop", duration: 200 },
                     }}
                   />
                   <Button
@@ -119,12 +173,14 @@ const Header = () => {
             </div>
             <div className="hidden md:block lg:hidden">
               <div className="flex w-[450px] items-center">
-                <Input
+                <Autocomplete
                   placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
                   className="flex-1 h-full rounded-none"
                   radius="xs"
+                  data={historySearchList}
                   value={keyword}
-                  onChange={(event) => setKeyword(event.currentTarget.value)}
+                  onChange={(event) => setKeyword(event)}
+                  maxDropdownHeight={150}
                   rightSectionPointerEvents="all"
                   rightSection={
                     <CloseButton
@@ -138,6 +194,13 @@ const Header = () => {
                   }
                   onKeyDown={(event) => {
                     if (event.key === "Enter") handleChangeKeyword();
+                  }}
+                  onOptionSubmit={(value) => {
+                    setKeyword(value);
+                    handleClickOptions(value);
+                  }}
+                  comboboxProps={{
+                    transitionProps: { transition: "pop", duration: 200 },
                   }}
                 />
                 <Button
@@ -183,15 +246,15 @@ const Header = () => {
                 <div className="flex flex-col pt-6 px-4 justify-between h-full">
                   <div className="flex flex-col gap-4 ">
                     <div className="flex w-full items-center">
-                      <Input
+                      <Autocomplete
                         placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
                         className="flex-1 h-full rounded-none"
                         radius="xs"
                         size="lg"
+                        data={historySearchList}
                         value={keyword}
-                        onChange={(event) =>
-                          setKeyword(event.currentTarget.value)
-                        }
+                        onChange={(event) => setKeyword(event)}
+                        maxDropdownHeight={150}
                         rightSectionPointerEvents="all"
                         rightSection={
                           <CloseButton
@@ -208,6 +271,13 @@ const Header = () => {
                         }
                         onKeyDown={(event) => {
                           if (event.key === "Enter") handleChangeKeyword();
+                        }}
+                        onOptionSubmit={(value) => {
+                          setKeyword(value);
+                          handleClickOptions(value);
+                        }}
+                        comboboxProps={{
+                          transitionProps: { transition: "pop", duration: 200 },
                         }}
                       />
                       <Button
@@ -242,12 +312,14 @@ const Header = () => {
         <div className="w-full h-10 bg-slate-300"></div>
 
         <div className="flex w-full max-w-[450px] items-center md:hidden  ">
-          <Input
+          <Autocomplete
             placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
             className="flex-1 h-full rounded-none"
             radius="xs"
+            data={historySearchList}
             value={keyword}
-            onChange={(event) => setKeyword(event.currentTarget.value)}
+            onChange={(event) => setKeyword(event)}
+            maxDropdownHeight={150}
             rightSectionPointerEvents="all"
             rightSection={
               <CloseButton
@@ -261,6 +333,13 @@ const Header = () => {
             }
             onKeyDown={(event) => {
               if (event.key === "Enter") handleChangeKeyword();
+            }}
+            onOptionSubmit={(value) => {
+              setKeyword(value);
+              handleClickOptions(value);
+            }}
+            comboboxProps={{
+              transitionProps: { transition: "pop", duration: 200 },
             }}
           />
           <Button
