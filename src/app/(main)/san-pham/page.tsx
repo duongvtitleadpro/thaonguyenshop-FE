@@ -19,6 +19,7 @@ export default function ProductPage() {
   const [productParam, setProductParam] = useRecoilState(filterProductState);
   const searchParams = useSearchParams();
   const isRedirectToProduct = useRef(false);
+  const pageRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const filterProduct = sessionStorage.getItem(ATOM_KEY.FILTER_PRODUCT);
     if (filterProduct) {
@@ -31,10 +32,7 @@ export default function ProductPage() {
         keyword,
       }));
     }
-  }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
     return () => {
       if (isRedirectToProduct.current) {
         return;
@@ -44,13 +42,17 @@ export default function ProductPage() {
     };
   }, []);
 
-  useEffect(() => {
-    window.scrollBy({
-      top: 0,
-    });
-  }, []);
+  // useEffect(() => {
+  //   if (pageRef.current) {
+  //     console.log("window", window);
+  //     window.scrollTo({
+  //       top: 0,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [pageRef]);
 
-  const { data: productListData } = useQuery({
+  const { data: productListData, isFetched } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_LIST, productParam],
     queryFn: () => getProductList(productParam),
   });
@@ -62,12 +64,21 @@ export default function ProductPage() {
     }));
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+      });
+    }, 0);
+  }, []);
+
   return (
     <div className="flex relative">
       <FilterProduct />
       <div className="flex-1 p-4">
         {productListData && (
           <>
+            <span ref={pageRef}></span>
             <div className="max-w-[1300px] mx-auto">
               <SimpleGrid
                 cols={{ base: 2, xs: 2, sm: 3, md: 4, lg: 5 }}
