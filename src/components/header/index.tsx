@@ -26,7 +26,7 @@ const Header = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
     purchaseOrderFilterState
   );
-  const [{ user }, setAuth] = useRecoilState(authState);
+  const [{ user, isAuthenticated }, setAuth] = useRecoilState(authState);
   const keywordIntial =
     typeof window !== "undefined" &&
     JSON.parse(sessionStorage.getItem(ATOM_KEY.FILTER_PRODUCT) || "{}");
@@ -65,8 +65,8 @@ const Header = () => {
           </div>
         </div>
         <div>
-          <div className="h-full  flex gap-11 max-w-6xl mx-auto items-center justify-between relative">
-            <div className="flex basis-[100px] lg:basis-[147px]">
+          <div className="h-full flex lg:gap-11 max-w-6xl mx-auto items-center justify-between relative">
+            <div className="flex">
               <Link
                 href="/"
                 className="w-[100px] lg:w-[147px]"
@@ -74,21 +74,8 @@ const Header = () => {
               >
                 <Image src={ThaoNguyenLogo} alt="Thao Nguyen" />
               </Link>
-              <div className="flex flex-col px-3 gap-2 justify-center lg:hidden">
-                <Settings
-                  className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md "
-                  onClick={() => {
-                    router.push("/tai-khoan/don-mua");
-                  }}
-                />
-                <UnstyledButton
-                  onClick={openMenu}
-                  className="hover:bg-slate-200 p-2 rounded-md w-10 h-10 flex items-center justify-center"
-                >
-                  <Icons.menu />
-                </UnstyledButton>
-              </div>
             </div>
+
             <div className="hidden lg:flex flex-1 flex-col mt-2">
               <div className="flex items-center justify-between gap-20">
                 <div className="flex w-full items-center">
@@ -147,6 +134,7 @@ const Header = () => {
                 ))}
               </div>
             </div>
+
             <div className="hidden md:block lg:hidden">
               <div className="flex w-[450px] items-center">
                 <Input
@@ -179,85 +167,99 @@ const Header = () => {
                 </Button>
               </div>
             </div>
-            <div className="block lg:hidden">
-              <LoginModal
-                onClose={closeMenu}
-                // className="absolute top-1 right-2"
-              />
-              {user && (
-                <div
-                  className="text-red-600 font-semibold px-2 hover:cursor-pointer"
-                  onClick={handleGotoPurchasedOrder}
-                >
-                  Hàng đã về ({user?.totalReceivedQuantity})
-                </div>
-              )}
-
-              <Drawer
-                opened={onpenedMenu}
-                onClose={closeMenu}
-                overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
-                styles={{
-                  body: {
-                    height: "calc(100% - 60px)",
-                  },
+            <div className="flex items-start px-3 gap-2 lg:hidden">
+              <Settings
+                className="text-slate-700 hover:bg-slate-200 p-2 w-10 h-10 rounded-md cursor-pointer"
+                onClick={() => {
+                  router.push("/tai-khoan/don-mua");
                 }}
+              />
+              <UnstyledButton
+                onClick={openMenu}
+                className="hover:bg-slate-200 p-2 rounded-md w-10 h-10 flex items-center justify-center"
               >
-                <div className="flex flex-col pt-6 px-4 justify-between h-full">
-                  <div className="flex flex-col gap-4 ">
-                    <div className="flex w-full items-center">
-                      <Input
-                        placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
-                        className="flex-1 h-full rounded-none"
-                        radius="xs"
-                        size="lg"
-                        value={keyword}
-                        onChange={(event) =>
-                          setKeyword(event.currentTarget.value)
-                        }
-                        rightSectionPointerEvents="all"
-                        rightSection={
-                          <CloseButton
-                            aria-label="Clear input"
-                            onClick={() => {
-                              setKeyword("");
-                              setProductParam((prev) => ({
-                                ...prev,
-                                keyword: "",
-                              }));
-                            }}
-                            style={{ display: keyword ? undefined : "none" }}
-                          />
-                        }
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter") handleChangeKeyword();
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        className="rounded-none bg-[#35A8E0] h-12"
-                        onClick={handleChangeKeyword}
-                      >
-                        <Search />
-                      </Button>
-                    </div>
-                    {NavBarRoute.map((item, index) => (
-                      <Link
-                        key={index}
-                        href={item.slug}
-                        className={cn(
-                          "hover:text-[#35A8E0] text-lg tracking-wide text-black",
-                          path === item.slug.split("/")[1] && "text-[#35A8E0]"
-                        )}
-                        onClick={closeMenu}
-                      >
-                        {item.title}
-                      </Link>
-                    ))}
+                <Icons.menu />
+              </UnstyledButton>
+              <div>
+                <LoginModal
+                  onClose={closeMenu}
+                  className={cn(!isAuthenticated && "p-2")}
+                />
+                {user && (
+                  <div
+                    className="text-red-600 font-semibold px-2 hover:cursor-pointer lg:hidden mt-3"
+                    onClick={handleGotoPurchasedOrder}
+                  >
+                    Hàng đã về ({user?.totalReceivedQuantity})
                   </div>
-                </div>
-              </Drawer>
+                )}
+              </div>
             </div>
+
+            <Drawer
+              opened={onpenedMenu}
+              onClose={closeMenu}
+              overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
+              styles={{
+                body: {
+                  height: "calc(100% - 60px)",
+                },
+              }}
+            >
+              <div className="flex flex-col pt-6 px-4 justify-between h-full">
+                <div className="flex flex-col gap-4 ">
+                  <div className="flex w-full items-center">
+                    <Input
+                      placeholder="Tìm kiếm sản phẩm bạn muốn mua tại đây"
+                      className="flex-1 h-full rounded-none"
+                      radius="xs"
+                      size="lg"
+                      value={keyword}
+                      onChange={(event) =>
+                        setKeyword(event.currentTarget.value)
+                      }
+                      rightSectionPointerEvents="all"
+                      rightSection={
+                        <CloseButton
+                          aria-label="Clear input"
+                          onClick={() => {
+                            setKeyword("");
+                            setProductParam((prev) => ({
+                              ...prev,
+                              keyword: "",
+                            }));
+                          }}
+                          style={{ display: keyword ? undefined : "none" }}
+                        />
+                      }
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") handleChangeKeyword();
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      className="rounded-none bg-[#35A8E0] h-12"
+                      onClick={handleChangeKeyword}
+                    >
+                      <Search />
+                    </Button>
+                  </div>
+                  {NavBarRoute.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={item.slug}
+                      className={cn(
+                        "hover:text-[#35A8E0] text-lg tracking-wide text-black",
+                        path === item.slug.split("/")[1] && "text-[#35A8E0]"
+                      )}
+                      onClick={closeMenu}
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </Drawer>
           </div>
         </div>
       </div>

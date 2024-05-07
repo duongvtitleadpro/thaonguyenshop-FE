@@ -142,17 +142,19 @@ const PurchaseOrderFilter = ({
 
   return (
     <div className="mb-3 flex gap-4 flex-col">
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          placeholder="Tìm kiếm tên, mã sản phẩm"
-          className="h-full"
-          value={keyword}
-          onChange={(event) => setKeyword(event.currentTarget.value)}
-          rightSectionPointerEvents="all"
-          onKeyDown={(event) => {
-            if (event.key === "Enter") handleSearchKeyword();
-          }}
-        />
+      <div className="grid grid-cols-3 md:grid-cols-2 xl:grid-cols-3  gap-4">
+        <div className="col-span-2 md:col-span-1">
+          <Input
+            placeholder="Tìm kiếm tên, mã sản phẩm"
+            className="h-full"
+            value={keyword}
+            onChange={(event) => setKeyword(event.currentTarget.value)}
+            rightSectionPointerEvents="all"
+            onKeyDown={(event) => {
+              if (event.key === "Enter") handleSearchKeyword();
+            }}
+          />
+        </div>
         <Tooltip label="Xóa bộ lọc">
           <ActionIcon
             variant="transparent"
