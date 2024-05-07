@@ -109,7 +109,10 @@ const DetailProductPage = ({
         : listSize.size
       : [];
   }, [productDetailData, color, isEditOrder, order?.orderDetails]);
-  console.log("😻 ~ listSizeByColor ~ listSizeByColor:", listSizeByColor);
+
+  const totalOrderQuantity = useMemo(() => {
+    return cart.reduce((acc, cur) => acc + cur.quantity, 0);
+  }, [cart]);
 
   const totalItemInCart = useMemo(() => {
     const total: any = {};
@@ -470,6 +473,10 @@ const DetailProductPage = ({
                           </div>
                         </div>
                       )}
+
+                      <p className="text-sm mt-6">
+                        Tổng số lượng : {totalOrderQuantity}
+                      </p>
 
                       <Textarea
                         className="mt-6"
