@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { SignInBody } from "@/types/auth";
-import { signinRequest } from "@/api/auth";
+import { signinRequest, getUserProfile } from "@/api/auth";
 import { clearToken, setToken } from "@/utils";
 import { TOKEN_KEY } from "@/constant/auth";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -47,13 +47,14 @@ const LoginModal = (props: LoginModalProps) => {
   });
   const mutation = useMutation({
     mutationFn: async (data: SignInBody) => await signinRequest(data),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setToken(TOKEN_KEY.ACCESS, data.accessToken);
       setToken(TOKEN_KEY.REFRESH, data.refreshToken);
       router.refresh();
+      const user = await getUserProfile();
       setAuth({
         isAuthenticated: true,
-        user: data.user,
+        user: user,
       });
       signupForm.reset();
       closeLogin();
