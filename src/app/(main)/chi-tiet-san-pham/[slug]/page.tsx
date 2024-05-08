@@ -474,10 +474,6 @@ const DetailProductPage = ({
                         </div>
                       )}
 
-                      <p className="text-sm mt-6">
-                        Tổng số lượng : {totalOrderQuantity}
-                      </p>
-
                       <Textarea
                         className="mt-6"
                         label="Ghi chú đơn hàng"
@@ -503,7 +499,10 @@ const DetailProductPage = ({
                   )}
                 </div>
                 {auth.isAuthenticated && (
-                  <div>
+                  <div className="flex justify-between">
+                    <p className="text-2xl  py-4">
+                      Tổng số lượng : {totalOrderQuantity}
+                    </p>
                     <p className="text-2xl tracking-tight text-gray-900 py-4 text-right">
                       Tổng tiền:{" "}
                       {currency.format(
