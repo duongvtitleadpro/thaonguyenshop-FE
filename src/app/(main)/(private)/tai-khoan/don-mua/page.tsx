@@ -3,7 +3,7 @@ import DataTable from "@/components/table/data-table";
 import { columns } from "./columns";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getOrder } from "@/api/order";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import PurchaseOrderFilter from "./filter";
 import { useRecoilState } from "recoil";
 import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.atom";
@@ -65,7 +65,13 @@ const PurchaseOrderPage = () => {
       size: Number(pageSize),
     }));
   };
-
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+      });
+    }, 0);
+  }, []);
   return (
     <div className="flex flex-col h-full">
       <PurchaseOrderFilter />
