@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import DataTable from "@/components/table/data-table";
 import { columns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
@@ -39,6 +39,13 @@ const PaymentPage = () => {
       size: Number(pageSize),
     }));
   };
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+      });
+    }, 0);
+  }, []);
 
   return (
     <div className="flex flex-col h-full gap-3">

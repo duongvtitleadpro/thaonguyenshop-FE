@@ -8,7 +8,7 @@ import { useSetRecoilState } from "recoil";
 import { filterProductState } from "@/store/state/product-filter.atom";
 import { UnstyledButton } from "@mantine/core";
 import { WarehouseStatus } from "@/types/product";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 export default function Home() {
   const setProductParam = useSetRecoilState(filterProductState);
@@ -48,6 +48,14 @@ export default function Home() {
       )?.imageUrl,
     }));
   }, [categoryListData]);
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+      });
+    }, 0);
+  }, []);
+
   return (
     <div>
       <div className="p-4">
