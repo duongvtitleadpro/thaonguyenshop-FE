@@ -38,7 +38,7 @@ const ExportOrderPage = () => {
       window.scrollTo({
         top: 0,
       });
-    }, 1000);
+    }, 0);
   }, []);
 
   return (

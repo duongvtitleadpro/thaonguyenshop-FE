@@ -249,7 +249,13 @@ const DetailProductPage = ({
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+      });
+    }, 0);
+  }, []);
   useEffect(() => {
     if (!isEditOrder) return;
     const orderId = searchParams.order;
