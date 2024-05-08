@@ -47,10 +47,8 @@ const PurchaseOrderFilter = ({
     }
     setPurchaseOrderFilter((prev) => ({
       ...prev,
-      orderStatus: [
-        ...(purchaseOrderFilter.orderStatus || []),
-        value,
-      ] as OrderStatus[],
+      allocationStatus: [],
+      orderStatus: [value] as OrderStatus[],
     }));
   };
 
@@ -60,7 +58,7 @@ const PurchaseOrderFilter = ({
         value: "ALLOCATED",
         label: "Hàng đã về",
         summaryField: "totalAllocated",
-        totalQuantity: summaryOrderFilter?.totalAllocated || 0,
+        totalQuantity: totalReceivedQuantity || 0,
       },
       {
         value: "SENT",
@@ -69,7 +67,7 @@ const PurchaseOrderFilter = ({
         totalQuantity: summaryOrderFilter?.totalSent || 0,
       },
     ],
-    [summaryOrderFilter?.totalAllocated, summaryOrderFilter?.totalSent]
+    [summaryOrderFilter?.totalSent, totalReceivedQuantity]
   );
 
   const OrderStatusOptions: OrderStatusType[] = useMemo(
@@ -112,10 +110,8 @@ const PurchaseOrderFilter = ({
     }
     setPurchaseOrderFilter((prev) => ({
       ...prev,
-      allocationStatus: [
-        ...(purchaseOrderFilter.allocationStatus || []),
-        value,
-      ] as AllocationStatus[],
+      orderStatus: [],
+      allocationStatus: [value] as AllocationStatus[],
     }));
   };
 
@@ -175,7 +171,7 @@ const PurchaseOrderFilter = ({
             className={`w-fit cursor-pointer text-sm ${
               checkActiveFilterAllocationStatus(
                 item.value as AllocationStatus
-              ) && "border-b-[2px] border-red-600 text-red-600"
+              ) && "border-b-[2px] font-bold border-red-600 text-red-600"
             }`}
             key={index}
           >
@@ -190,7 +186,7 @@ const PurchaseOrderFilter = ({
             }}
             className={`w-fit cursor-pointer text-sm  ${
               checkActiveFilterOrderStatus(item.value as OrderStatus) &&
-              "border-b-[2px] border-red-600 text-red-600"
+              "border-b-[2px] font-bold border-red-600 text-red-600"
             }`}
             key={index}
           >
