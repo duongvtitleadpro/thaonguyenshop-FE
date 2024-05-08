@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import DataTable from "@/components/table/data-table";
 import { columns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import PaginationCustom from "@/components/pagination";
 const PaymentPage = () => {
   const [keyword, setKeyword] = React.useState("");
   const [paymentFilter, setPaymentFilter] = useRecoilState(paymentFilterState);
+  const tableRef = useRef<HTMLDivElement | null>(null);
   const { data: paymentData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PAYMENT_LIST, paymentFilter],
     queryFn: () => getPaymentList(paymentFilter),
@@ -38,7 +39,12 @@ const PaymentPage = () => {
       ...prev,
       size: Number(pageSize),
     }));
+    tableRef.current?.scrollTo({
+      top: 0,
+    });
   };
+
+  tableRef;
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo({
@@ -71,7 +77,11 @@ const PaymentPage = () => {
       />
       {paymentData && (
         <div className="w-full">
-          <DataTable data={paymentData?.data} columns={columns} />
+          <DataTable
+            ref={tableRef}
+            data={paymentData?.data}
+            columns={columns}
+          />
           <div className="flex justify-end gap-3 mt-4">
             <Select
               display={paymentData.data.length > 0 ? "flex" : "none"}

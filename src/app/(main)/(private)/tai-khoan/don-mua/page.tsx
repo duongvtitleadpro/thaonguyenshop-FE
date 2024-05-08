@@ -3,7 +3,7 @@ import DataTable from "@/components/table/data-table";
 import { columns } from "./columns";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getOrder } from "@/api/order";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import PurchaseOrderFilter from "./filter";
 import { useRecoilState } from "recoil";
 import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.atom";
@@ -12,11 +12,14 @@ import { currency } from "@/utils/currency";
 import { Select } from "@mantine/core";
 import PurchaseOrderTableMobile from "./table-mobile";
 import PaginationCustom from "@/components/pagination";
+import { useMediaQuery } from "@mantine/hooks";
 
 const PurchaseOrderPage = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
     purchaseOrderFilterState
   );
+  const tableRef = useRef<HTMLDivElement | null>(null);
+  const isMobile = useMediaQuery("(max-width: 640px)");
 
   const { data: purchaseOrderData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
@@ -52,12 +55,23 @@ const PurchaseOrderPage = () => {
     ];
   }, [purchaseOrderData]);
 
-  const handleGoToPage = (pageIndex: number) => {
-    setPurchaseOrderFilter((prev) => ({
-      ...prev,
-      page: pageIndex,
-    }));
-  };
+  const handleGoToPage = useCallback(
+    (pageIndex: number) => {
+      setPurchaseOrderFilter((prev) => ({
+        ...prev,
+        page: pageIndex,
+      }));
+      !isMobile &&
+        tableRef.current?.scrollTo({
+          top: 0,
+        });
+      isMobile &&
+        window.scrollTo({
+          top: 0,
+        });
+    },
+    [isMobile, setPurchaseOrderFilter]
+  );
 
   const handleChangePageSize = (pageSize: string | null) => {
     setPurchaseOrderFilter((prev) => ({
@@ -65,6 +79,7 @@ const PurchaseOrderPage = () => {
       size: Number(pageSize),
     }));
   };
+
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo({
@@ -83,6 +98,7 @@ const PurchaseOrderPage = () => {
       {purchaseOrderData && (
         <div className="h-auto sm:h-[550px] w-full">
           <DataTable
+            ref={tableRef}
             className="hidden sm:block"
             columns={columns}
             data={purchaseOrderData.data}
