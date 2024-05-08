@@ -58,7 +58,7 @@ const PurchaseOrderFilter = ({
         value: "ALLOCATED",
         label: "Hàng đã về",
         summaryField: "totalAllocated",
-        totalQuantity: totalReceivedQuantity || 0,
+        totalQuantity: summaryOrderFilter?.totalAllocated || 0,
       },
       {
         value: "SENT",
@@ -67,7 +67,7 @@ const PurchaseOrderFilter = ({
         totalQuantity: summaryOrderFilter?.totalSent || 0,
       },
     ],
-    [summaryOrderFilter?.totalSent, totalReceivedQuantity]
+    [summaryOrderFilter?.totalAllocated, summaryOrderFilter?.totalSent]
   );
 
   const OrderStatusOptions: OrderStatusType[] = useMemo(
