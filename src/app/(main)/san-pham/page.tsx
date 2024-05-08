@@ -57,19 +57,22 @@ export default function ProductPage() {
     queryFn: () => getProductList(productParam),
   });
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+    });
+  };
+
   const handleChangePage = (page: number) => {
     setProductParam((prev) => ({
       ...prev,
       page: page,
     }));
+    scrollToTop();
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-      });
-    }, 0);
+    setTimeout(() => scrollToTop(), 0);
   }, []);
 
   return (
