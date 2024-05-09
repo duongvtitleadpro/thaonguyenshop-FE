@@ -80,6 +80,7 @@ export default function DataTable<TData, TValue>({
       columnFilters,
       pagination,
     },
+
     // manualPagination: true,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -126,14 +127,23 @@ export default function DataTable<TData, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
+                    {row.getVisibleCells().map((cell) => {
+                      console.log(
+                        "cell:::",
+                        flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
+                        )
+                      );
+                      return (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      );
+                    })}
                   </TableRow>
                 ))
               ) : (

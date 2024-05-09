@@ -12,6 +12,7 @@ import { currency } from "@/utils/currency";
 import { Select } from "@mantine/core";
 import PurchaseOrderTableMobile from "./table-mobile";
 import PaginationCustom from "@/components/pagination";
+import DataTableV2 from "@/components/table/data-table-v2";
 
 const PurchaseOrderPage = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
@@ -66,15 +67,24 @@ const PurchaseOrderPage = () => {
     }));
   };
 
+  const data = useMemo(() => {
+    if (!purchaseOrderData) return [];
+    return purchaseOrderData.data.map((item) => ({
+      ...item,
+      imageUrlId: item.productId,
+      productNameId: item.productId,
+    }));
+  }, [purchaseOrderData]);
+
   return (
     <div className="flex flex-col h-full">
       <PurchaseOrderFilter />
       {purchaseOrderData && (
         <div className="h-auto sm:h-[550px] w-full">
-          <DataTable
+          <DataTableV2
             className="hidden sm:block"
             columns={columns}
-            data={purchaseOrderData.data}
+            data={data}
             footer={purchaseOrderFooter}
           />
           <PurchaseOrderTableMobile
