@@ -80,7 +80,7 @@ const PurchaseOrderPage = () => {
     <div className="flex flex-col h-full">
       <PurchaseOrderFilter />
       {purchaseOrderData && (
-        <div className="h-auto sm:h-[550px] w-full">
+        <div className="h-auto sm:h-[800px] w-full">
           <DataTableV2
             className="hidden sm:block"
             columns={columns}
