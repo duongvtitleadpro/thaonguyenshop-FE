@@ -14,8 +14,6 @@ import {
 } from "@components/ui/table";
 import { cn } from "@/lib/utils";
 
-// import { DataTableToolbar } from "../components/data-table-toolbar"
-
 interface DataTableProps {
   className?: string;
   columns: any;
@@ -25,8 +23,6 @@ interface DataTableProps {
     value?: string;
     className?: string;
   }[];
-  // handleGoToPage: (pageIndex: number) => void;
-  // handleChangePageSize: (pageSize: number) => void;
 }
 
 export const useRowSpan = (instance: TableInstance) => {
@@ -64,23 +60,19 @@ export default function DataTableV2({
     { columns, data: data },
     (hooks) => hooks.useInstance.push(useRowSpan),
     useSortBy
-  );
+  ) as any;
 
   return (
     <div className={cn("space-y-4 overflow-auto h-full w-full", className)}>
-      {/* <DataTableToolbar table={table} /> */}
       <div className="rounded-md border shadow-md h-full w-full">
         <div className="h-full relative overflow-auto w-full table-data-wrapper">
           <Table className="h-full" {...getTableProps()}>
             <TableHeader className="sticky top-0 bg-secondary z-10">
-              {headerGroups.map((headerGroup) => (
+              {headerGroups.map((headerGroup: any) => (
                 <TableRow {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((header) => {
+                  {headerGroup.headers.map((header: any) => {
                     return (
-                      <TableHead
-                        {...header.getHeaderProps()}
-                        // key={`${header.id}_${header.getHeaderProps().key}`}
-                      >
+                      <TableHead {...header.getHeaderProps()}>
                         {header.render("Header")}
                       </TableHead>
                     );
@@ -89,42 +81,7 @@ export default function DataTableV2({
               ))}
             </TableHeader>
             <TableBody {...getTableBodyProps()}>
-              {/* {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      console.log(
-                        "cell:::",
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )
-                      );
-                      return (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    Không có kết quả.
-                  </TableCell>
-                </TableRow>
-              )} */}
-              {rows.map((row, i) => {
+              {rows.map((row: any, i: any) => {
                 prepareRow(row);
 
                 for (let j = 0; j < row.allCells.length; j++) {
@@ -152,7 +109,7 @@ export default function DataTableV2({
                 }
                 return null;
               })}
-              {rows.map((row) => {
+              {rows.map((row: any) => {
                 return (
                   <TableRow {...row.getRowProps()}>
                     {row.cells.map((cell: any) => {
@@ -189,7 +146,6 @@ export default function DataTableV2({
           </Table>
         </div>
       </div>
-      {/* <DataTablePagination table={table} /> */}
     </div>
   );
 }

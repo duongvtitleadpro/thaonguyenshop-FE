@@ -1,29 +1,24 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-
 import DataTableColumnHeader from "@components/table/data-table-column-header";
-import { format } from "date-fns";
 import {
   OrderStateTitle,
   OrderStatusColor,
   OrderStatusTitle,
 } from "@/constant/product";
 import { currency } from "@/utils/currency";
-import { OrderResponse } from "@/types/order";
 import DataTableRowActions from "./row-action";
 import Link from "next/link";
-import { TableCell } from "@/components/ui/table";
-import { Image, Tooltip } from "@mantine/core";
+import { Image } from "@mantine/core";
 import { placeholderImage } from "@/constant/common";
 
 export const columns: any = [
   {
     accessor: "imageUrlId",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Hình ảnh" />
     ),
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       return (
         <div className="w-20">
           <Image
@@ -43,10 +38,10 @@ export const columns: any = [
   },
   {
     accessor: "productId",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Mã sản phẩm" />
     ),
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       return <div>{row.original.product.productCode}</div>;
     },
     enableSorting: false,
@@ -55,10 +50,10 @@ export const columns: any = [
   },
   {
     accessor: "productNameId",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Tên sản phẩm" />
     ),
-    Cell: ({ row }) => (
+    Cell: ({ row }: any) => (
       <div className="w-32 flex">
         <Link
           href={`/chi-tiet-san-pham/${row.original.productId}`}
@@ -74,19 +69,19 @@ export const columns: any = [
   },
   {
     accessor: "color",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Mẫu" />
     ),
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       const colorList = row.original?.orderDetails.map(
-        (detail) => detail.color?.title || "-"
+        (detail: any) => detail.color?.title || "-"
       );
       return (
-        <div role="group" className="flex flex-col hover:cursor-pointer">
-          {colorList.map((item, index) => (
-            <TableCell key={index} className="  border-none">
+        <div className="flex flex-col hover:cursor-pointer">
+          {colorList.map((item: any, index: any) => (
+            <div key={index} className="border-none">
               {item}
-            </TableCell>
+            </div>
           ))}
         </div>
       );
@@ -96,19 +91,19 @@ export const columns: any = [
   },
   {
     accessor: "size",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Size" />
     ),
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       const sizeList = row.original?.orderDetails.map(
-        (detail) => detail.size?.title || "-"
+        (detail: any) => detail.size?.title || "-"
       );
       return (
         <div className="flex flex-col hover:cursor-pointer">
-          {sizeList.map((item, index) => (
-            <TableCell key={index} className=" border-none">
+          {sizeList.map((item: any, index: any) => (
+            <div key={index} className=" border-none">
               {item}
-            </TableCell>
+            </div>
           ))}
         </div>
       );
@@ -118,21 +113,21 @@ export const columns: any = [
   },
   {
     accessor: "orderQuantity",
-    accessorFn: (row) =>
-      row.orderDetails.reduce((acc, cur) => acc + cur.quantity, 0),
-    Header: ({ column }) => (
+    accessorFn: (row: any) =>
+      row.orderDetails.reduce((acc: any, cur: any) => acc + cur.quantity, 0),
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="SL đặt" />
     ),
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       const quantityList = row.original?.orderDetails.map(
-        (detail) => detail.quantity
+        (detail: any) => detail.quantity
       );
       return (
         <div className="flex flex-col hover:cursor-pointer">
-          {quantityList.map((item, index) => (
-            <TableCell key={index} className="text-center  border-none">
+          {quantityList.map((item: any, index: any) => (
+            <div key={index} className="text-center  border-none">
               {item}
-            </TableCell>
+            </div>
           ))}
         </div>
       );
@@ -142,21 +137,24 @@ export const columns: any = [
   },
   {
     accessor: "receivedQuantity",
-    accessorFn: (row) =>
-      row.orderDetails.reduce((acc, cur) => acc + cur.receivedQuantity, 0),
-    Header: ({ column }) => (
+    accessorFn: (row: any) =>
+      row.orderDetails.reduce(
+        (acc: any, cur: any) => acc + cur.receivedQuantity,
+        0
+      ),
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="SL về" />
     ),
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       const receivedQuantityList = row.original?.orderDetails.map(
-        (detail) => detail.receivedQuantity
+        (detail: any) => detail.receivedQuantity
       );
       return (
         <div className="flex flex-col hover:cursor-pointer">
-          {receivedQuantityList.map((item, index) => (
-            <TableCell key={index} className="text-center  border-none">
+          {receivedQuantityList.map((item: any, index: any) => (
+            <div key={index} className="text-center  border-none">
               {item}
-            </TableCell>
+            </div>
           ))}
         </div>
       );
@@ -166,10 +164,10 @@ export const columns: any = [
   },
   {
     accessor: "unitPrice",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Đơn giá" />
     ),
-    Cell: ({ row }) => (
+    Cell: ({ row }: any) => (
       <div className="text-right">{`${currency.format(
         row.original.product.price
       )}`}</div>
@@ -179,22 +177,22 @@ export const columns: any = [
   },
   {
     accessor: "totalCost",
-    accessorFn: (row) =>
+    accessorFn: (row: any) =>
       row.product.price *
-      row.orderDetails.reduce((acc, cur) => acc + cur.quantity, 0),
-    Header: ({ column }) => (
+      row.orderDetails.reduce((acc: any, cur: any) => acc + cur.quantity, 0),
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Thành tiền" />
     ),
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       const quantityList = row.original?.orderDetails.map(
-        (detail) => detail.receivedQuantity
+        (detail: any) => detail.receivedQuantity
       );
       return (
         <div className="flex flex-col hover:cursor-pointer text-right">
-          {quantityList.map((item, index) => (
-            <TableCell key={index} className=" border-none bor">
+          {quantityList.map((item: any, index: any) => (
+            <div key={index} className=" border-none bor">
               {currency.format(row.original.product.price * item)}
-            </TableCell>
+            </div>
           ))}
         </div>
       );
@@ -204,16 +202,22 @@ export const columns: any = [
   },
   {
     accessor: "orderStatus",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Tình trạng đơn hàng" />
     ),
-    Cell: ({ row }) => (
+    Cell: ({ row }: any) => (
       <div
         className={`w-32 font-semibold ${
-          OrderStatusColor[row.original.orderStatus]
+          OrderStatusColor[
+            row.original.orderStatus as keyof typeof OrderStatusColor
+          ]
         }`}
       >
-        {OrderStatusTitle[row.original.orderStatus]}
+        {
+          OrderStatusTitle[
+            row.original.orderStatus as keyof typeof OrderStatusTitle
+          ]
+        }
       </div>
     ),
     enableSorting: false,
@@ -221,39 +225,43 @@ export const columns: any = [
   },
   {
     accessor: "orderState",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Trạng thái đơn hàng" />
     ),
-    Cell: ({ row }) => (
-      <div className="w-24">
-        {OrderStateTitle[row.original.allocationStatus]}
+    Cell: ({ row }: any) => (
+      <div className="w-16">
+        {
+          OrderStateTitle[
+            row.original.allocationStatus as keyof typeof OrderStateTitle
+          ]
+        }
       </div>
     ),
     enableSorting: false,
     enableHiding: false,
   },
 
-  {
-    accessor: "orderDate",
-    Header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ngày đặt hàng" />
-    ),
-    Cell: ({ row }) => (
-      <div>{`${format(
-        new Date(row.original.orderDate),
-        "MM/dd/yyyy HH:mm:ss"
-      )}`}</div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   accessor: "orderDate",
+  //   Header: ({ column }: any) => (
+  //     <DataTableColumnHeader column={column} title="Ngày đặt hàng" />
+  //   ),
+  //   Cell: ({ row }: any) => (
+  //     <div>{`${format(
+  //       new Date(row.original.orderDate),
+  //       "MM/dd/yyyy HH:mm:ss"
+  //     )}`}</div>
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
 
   {
     accessor: "note",
-    Header: ({ column }) => (
+    Header: ({ column }: any) => (
       <DataTableColumnHeader column={column} title="Ghi chú" />
     ),
-    Cell: ({ row }) => (
+    Cell: ({ row }: any) => (
       <div className="w-32">
         <p className="whitespace-pre-line">{row.original?.note}</p>
         {row.original?.adminNote && (
@@ -264,30 +272,9 @@ export const columns: any = [
     enableSorting: false,
     enableHiding: false,
   },
-
-  // {
-  //   accessor: "location",
-  //   Header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Vị trí" />
-  //   ),
-  //   Cell: ({ row }) => <div>{row.original.productId}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-
-  // {
-  //   accessor: "orderPicker",
-  //   Header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Nhân viên chia hàng" />
-  //   ),
-  //   Cell: ({ row }) => <div>{row.original.productId}</div>,
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-
   {
     id: "actions",
-    Cell: ({ row }) => {
+    Cell: ({ row }: any) => {
       const orderId = row.original.id;
       const productId = row.original.productId;
       const canEditOrder = row.original.orderStatus === "NOT_PURCHASED";
