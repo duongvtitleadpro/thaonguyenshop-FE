@@ -108,6 +108,7 @@ const PurchaseOrderPage = () => {
       {purchaseOrderData && (
         <div className="h-auto sm:h-[550px] w-full">
           <DataTableV2
+            ref={tableRef}
             className="hidden sm:block"
             columns={columns}
             data={data}
