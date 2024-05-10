@@ -49,15 +49,15 @@ export type OrderParam = {
 };
 
 export type OrderDetailRespose = {
-  id?: number;
+  id: number;
   size: {
     title: string;
     id: number;
-  };
+  } | null;
   color: {
     title: string;
     id: number;
-  };
+  } | null;
   quantity: number;
   receivedQuantity: number;
 };
@@ -123,4 +123,18 @@ export type SummaryOrderStatus = {
   totalOrderAllocated: number;
   totalAllocated: number;
   totalSent: number;
+};
+
+export type EditOrderDetail = {
+  id: number;
+  productId: number;
+  colorId: number | null;
+  sizeId: number | null;
+  quantity: number;
+};
+
+export type EditOrderBody = {
+  orderId: number;
+  note: string;
+  orderDetails: EditOrderDetail[];
 };

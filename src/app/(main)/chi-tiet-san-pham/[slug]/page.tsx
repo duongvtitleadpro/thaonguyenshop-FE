@@ -197,11 +197,11 @@ const DetailProductPage = ({
                 format(new Date(), "dd/MM/yyyy HH:mm")
               )
             : note + lastEditText + format(new Date(), "dd/MM/yyyy HH:mm");
-        const order = await editOrder({
-          orderId: Number(searchParams?.order),
-          note: noteEdit,
-          orderDetails: cart,
-        });
+        // const order = await editOrder({
+        //   orderId: Number(searchParams?.order),
+        //   note: noteEdit,
+        //   orderDetails: cart,
+        // });
         toast("Sửa đơn hàng thành công", {
           description: (
             <div className="w-full">

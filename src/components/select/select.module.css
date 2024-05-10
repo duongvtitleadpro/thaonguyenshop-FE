@@ -1,0 +1,3 @@
+.option:where([data-checked]) {
+  background-color: #ccc !important;
+}
