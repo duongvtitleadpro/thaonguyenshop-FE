@@ -33,7 +33,14 @@ export type OrderResponse = {
   allocationStatus: AllocationStatus;
   allocatedDate: string;
   orderDetails: OrderDetailRespose[];
+  orderImages: OrderImage[];
   user: User;
+};
+
+export type OrderImage = {
+  id: number;
+  orderId: number;
+  url: string;
 };
 
 export type OrderParam = {
@@ -137,4 +144,6 @@ export type EditOrderBody = {
   orderId: number;
   note: string;
   orderDetails: EditOrderDetail[];
+  orderImages: string[];
+  orderFileNote?: File | null;
 };

@@ -9,13 +9,14 @@ import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.at
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Modal, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { EditOrderDetail } from "@/types/order";
+import { EditOrderBody, EditOrderDetail, OrderImage } from "@/types/order";
 import {
   editOrderDefaultValue,
   editOrderState,
 } from "@/store/state/edit-order.atom";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { uploadFileRequest } from "@/api/file";
 
 interface DataTableRowActionsProps {
   orderId: number;
@@ -24,6 +25,7 @@ interface DataTableRowActionsProps {
   canDeleteOrder: boolean;
   editOrderNote: string;
   editOrderDetail: EditOrderDetail;
+  orderNoteFile: OrderImage[];
 }
 
 const DataTableRowActions = (props: DataTableRowActionsProps) => {
@@ -41,6 +43,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
     canDeleteOrder,
     editOrderNote,
     editOrderDetail,
+    orderNoteFile,
   } = props;
   const router = useRouter();
 
@@ -57,11 +60,12 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
       indexOfNoteEditTime !== -1 && indexOfNoteEditTime !== undefined
         ? editOrderNote.slice(0, indexOfNoteEditTime)
         : editOrderNote;
-
+    const orderImages = orderNoteFile.map((item) => item.url);
     setEditOrderValue({
       orderId,
       note: oldNote,
       orderDetails: [editOrderDetail],
+      orderImages: orderImages,
     });
   };
 
@@ -89,8 +93,29 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
           lastEditText +
           format(new Date(), "dd/MM/yyyy HH:mm");
 
+    const file = editOrderValue?.orderFileNote;
+    let fileImageUrl = null;
+    if (file) {
+      const formData = new FormData();
+      formData.append("fileType", "ORDER_IMAGE");
+      formData.append("file", file);
+      try {
+        fileImageUrl = await uploadFileRequest(formData);
+      } catch (error) {
+        toast("Đã có lỗi xảy ra", {
+          description: "Vui lòng thử lại sau",
+        });
+      }
+    }
+
     try {
-      const order = await editOrder({ ...editOrderValue, note: noteEdit });
+      const body: EditOrderBody = {
+        orderId: editOrderValue.orderId,
+        orderDetails: editOrderValue.orderDetails,
+        note: noteEdit,
+        orderImages: fileImageUrl ? [fileImageUrl] : [],
+      };
+      const order = await editOrder(body);
       toast("Sửa đơn hàng thành công");
       setEditOrderValue(editOrderDefaultValue);
       refetch();
