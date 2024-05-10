@@ -104,7 +104,11 @@ const DataTable = React.forwardRef<HTMLDivElement, DataTableProps<any, any>>(
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
+                        <TableHead
+                          key={header.id}
+                          colSpan={header.colSpan}
+                          className="p-0"
+                        >
                           {header.isPlaceholder
                             ? null
                             : flexRender(
