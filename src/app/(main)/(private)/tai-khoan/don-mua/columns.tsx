@@ -33,7 +33,7 @@ import { uniqBy, first } from "lodash";
 import SelectCustom from "@/components/select";
 import { useMemo, useState } from "react";
 import { Icons } from "@/components/icons";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { deleteFileRequest } from "@/api/file";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
@@ -266,6 +266,7 @@ export const EditOrderQuantityRow = (props: EditOrderQuantityRowProps) => {
 export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
   const { orderData } = props;
   const queryClient = useQueryClient();
+  const isMobile = useMediaQuery("(max-width: 640px)");
   const [opened, { open, close }] = useDisclosure(false);
   const [editOrderValue, setEditOrderValue] = useRecoilState(editOrderState);
   const isEditOrder = editOrderValue.orderId === orderData.id;
@@ -365,12 +366,15 @@ export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
                   </Button>
                 </div>
               </Modal>
-              <div className="relative">
+              <div className="relative w-[150px] sm:w-full">
                 <Image
                   src={loadedAvatarUrl}
                   alt="note-img"
-                  className="p-3 w-full object-cover"
+                  className="p-3 object-cover"
                   onClick={open}
+                  style={{
+                    width: isMobile ? "150px" : "100%",
+                  }}
                 />
                 <Button
                   variant="subtle"

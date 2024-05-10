@@ -9,9 +9,9 @@ import {
 } from "@/constant/product";
 import { cn } from "@/lib/utils";
 import { editOrderState } from "@/store/state/edit-order.atom";
-import { EditOrderDetail, OrderResponse } from "@/types/order";
+import { EditOrderDetail, OrderImage, OrderResponse } from "@/types/order";
 import { currency } from "@/utils/currency";
-import { Image, Table } from "@mantine/core";
+import { Button, Image, Modal, Table } from "@mantine/core";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useRecoilState } from "recoil";
@@ -21,15 +21,70 @@ import {
   EditOrderQuantityRow,
   EditOrderSizeRow,
 } from "./columns";
+import { useDisclosure } from "@mantine/hooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { QueryKey } from "@/constant/query-key";
 
 type PurchaseOrderTableMobileProps = {
   className?: string;
   data: OrderResponse[];
 };
+type ViewImageModalProps = {
+  orderImage: OrderImage;
+};
+const ViewImageModal = (props: ViewImageModalProps) => {
+  const { orderImage } = props;
+  const [opened, { open, close }] = useDisclosure(false);
+  async function toDataURL(url: string) {
+    const blob = await fetch(url).then((res) => res.blob());
+    return URL.createObjectURL(blob);
+  }
+
+  const handleDownloadFile = async (url: string) => {
+    const a = document.createElement("a");
+    a.href = await toDataURL(url);
+    a.download = "note-image.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+  return (
+    <div>
+      <Modal
+        centered
+        opened={opened}
+        onClose={close}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+        size="100%"
+      >
+        <div>
+          <Image src={orderImage.url} alt="note-img" />
+          <Button
+            className="mt-2 ml-auto"
+            onClick={() => handleDownloadFile(orderImage.url)}
+          >
+            Tải về
+          </Button>
+        </div>
+      </Modal>
+      <Image
+        src={orderImage.url}
+        alt="note-img"
+        w={150}
+        className="w-32"
+        onClick={open}
+      />
+    </div>
+  );
+};
 
 const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
   const { data, className } = props;
   const [editOrderValue, setEditOrderValue] = useRecoilState(editOrderState);
+
   return (
     <div className={cn("w-full flex flex-col gap-2", className)}>
       {data.map((order) => {
@@ -46,7 +101,9 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
           sizeId: orderDetailClone.size?.id || null,
           quantity: orderDetailClone.quantity,
         };
+        const orderNoteFile = order.orderImages;
         const isEditOrder = editOrderValue.orderId === order.id;
+
         return (
           <div
             key={order.id}
@@ -168,6 +225,10 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                 ) : (
                   <span>
                     <p className="whitespace-pre-line">{order?.note}</p>
+                    {order?.orderImages?.length > 0 &&
+                      order?.orderImages.map((item) => (
+                        <ViewImageModal key={item.id} orderImage={item} />
+                      ))}
                   </span>
                 )}
               </div>
@@ -187,6 +248,7 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                   canDeleteOrder={canDeleteOrder}
                   editOrderNote={orderNote}
                   editOrderDetail={orderDetail}
+                  orderNoteFile={orderNoteFile}
                 />
               </div>
             </div>

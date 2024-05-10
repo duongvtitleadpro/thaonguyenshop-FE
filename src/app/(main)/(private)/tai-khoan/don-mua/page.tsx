@@ -18,11 +18,20 @@ const PurchaseOrderPage = () => {
     purchaseOrderFilterState
   );
 
-  const { data: purchaseOrderData, refetch } = useQuery({
+  const {
+    data: purchaseOrderData,
+    refetch,
+    error,
+    isError,
+  } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
     queryFn: () => getOrder(purchaseOrderFilter),
     placeholderData: keepPreviousData,
   });
+
+  if (isError) {
+    alert(error);
+  }
 
   const purchaseOrderFooter = useMemo(() => {
     if (!purchaseOrderData) return [];
@@ -59,15 +68,21 @@ const PurchaseOrderPage = () => {
     }));
   };
 
-  const handleChangePageSize = (pageSize: string | null) => {
-    setPurchaseOrderFilter((prev) => ({
-      ...prev,
-      size: Number(pageSize),
-    }));
-  };
+  // const handleChangePageSize = (pageSize: string | null) => {
+  //   setPurchaseOrderFilter((prev) => ({
+  //     ...prev,
+  //     size: Number(pageSize),
+  //   }));
+  // };
 
   return (
     <div className="flex flex-col h-full">
+      {
+        <p>
+          {"error?.message"}
+          {error?.message}
+        </p>
+      }
       <PurchaseOrderFilter />
       {purchaseOrderData && (
         <div className="h-auto sm:h-[550px] w-full">
@@ -82,13 +97,13 @@ const PurchaseOrderPage = () => {
             data={purchaseOrderData.data}
           />
           <div className="flex justify-end gap-3 mt-4">
-            <Select
+            {/* <Select
               display={purchaseOrderData.data.length > 0 ? "flex" : "none"}
               w={70}
               value={purchaseOrderFilter.size?.toString()}
               onChange={handleChangePageSize}
               data={["10", "20", "30", "40", "50"]}
-            />
+            /> */}
             <PaginationCustom
               value={purchaseOrderData.page}
               onChange={handleGoToPage}
