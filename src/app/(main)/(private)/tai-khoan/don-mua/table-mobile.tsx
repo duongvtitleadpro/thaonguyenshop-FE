@@ -48,6 +48,7 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
           sizeId: orderDetailClone.size?.id || null,
           quantity: orderDetailClone.quantity,
         };
+        const orderNoteFile = order.orderImages;
         const isEditOrder = editOrderValue.orderId === order.id;
         return (
           <div
@@ -187,6 +188,7 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                   canDeleteOrder={canDeleteOrder}
                   editOrderNote={orderNote}
                   editOrderDetail={orderDetail}
+                  orderNoteFile={orderNoteFile}
                 />
               </div>
             </div>
