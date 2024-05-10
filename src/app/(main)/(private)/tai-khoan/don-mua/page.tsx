@@ -104,6 +104,7 @@ const PurchaseOrderPage = () => {
               onChange={handleGoToPage}
               total={purchaseOrderData.totalPages}
               color="blue"
+              siblings={1}
             />
           </div>
         </div>
