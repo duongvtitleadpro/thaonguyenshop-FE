@@ -15,8 +15,12 @@ import DataTableRowActions from "./row-action";
 import Link from "next/link";
 import { TableCell } from "@/components/ui/table";
 import {
+  ActionIcon,
+  Button,
   ComboboxItem,
+  FileButton,
   Image,
+  Modal,
   NumberInput,
   Select,
   Textarea,
@@ -27,6 +31,13 @@ import { useRecoilState } from "recoil";
 import { editOrderState } from "@/store/state/edit-order.atom";
 import { uniqBy, first } from "lodash";
 import SelectCustom from "@/components/select";
+import { useMemo, useState } from "react";
+import { Icons } from "@/components/icons";
+import { useDisclosure } from "@mantine/hooks";
+import { deleteFileRequest } from "@/api/file";
+import { useQueryClient } from "@tanstack/react-query";
+import { QueryKey } from "@/constant/query-key";
+import { X } from "lucide-react";
 
 type EditOrderColorRowProps = {
   orderData: OrderResponse;
@@ -254,23 +265,133 @@ export const EditOrderQuantityRow = (props: EditOrderQuantityRowProps) => {
 
 export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
   const { orderData } = props;
+  const queryClient = useQueryClient();
+  const [opened, { open, close }] = useDisclosure(false);
   const [editOrderValue, setEditOrderValue] = useRecoilState(editOrderState);
   const isEditOrder = editOrderValue.orderId === orderData.id;
+  const loadedAvatarUrl = useMemo(() => {
+    if (editOrderValue?.orderFileNote) {
+      return URL.createObjectURL(editOrderValue?.orderFileNote);
+    }
+    if (orderData.orderImages.length > 0) {
+      return orderData.orderImages[0].url;
+    }
+    return "";
+  }, [editOrderValue.orderFileNote, orderData.orderImages]);
+
+  const handleChangeFile = (file: File | null) => {
+    handleDeleteFile();
+    setEditOrderValue((prev) => ({
+      ...prev,
+      orderFileNote: file,
+    }));
+  };
+
+  const handleDeleteFile = () => {
+    setEditOrderValue((prev) => ({
+      ...prev,
+      orderFileNote: null,
+    }));
+    if (orderData.orderImages.length > 0) {
+      deleteFileRequest({
+        id: orderData.orderImages[0].id,
+        fileType: "ORDER_IMAGE",
+      });
+    }
+    queryClient.refetchQueries({
+      queryKey: [QueryKey.GET_PURCHASE_ORDER],
+    });
+  };
+  async function toDataURL(url: string) {
+    const blob = await fetch(url).then((res) => res.blob());
+    return URL.createObjectURL(blob);
+  }
+
+  const handleDownloadFile = async (url: string) => {
+    const a = document.createElement("a");
+    a.href = await toDataURL(url);
+    a.download = "note-image.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <>
       {isEditOrder ? (
         <div role="group">
-          <Textarea
-            minRows={3}
-            maxRows={4}
-            value={editOrderValue.note}
-            onChange={(event) =>
-              setEditOrderValue((prev) => ({
-                ...prev,
-                note: event.currentTarget.value,
-              }))
-            }
-          />
+          <div className="flex items-center gap-2 p-2">
+            <Textarea
+              minRows={3}
+              maxRows={4}
+              value={editOrderValue.note}
+              onChange={(event) =>
+                setEditOrderValue((prev) => ({
+                  ...prev,
+                  note: event.currentTarget.value,
+                }))
+              }
+            />
+            <FileButton
+              onChange={handleChangeFile}
+              accept="image/png,image/jpeg"
+            >
+              {(props) => (
+                <ActionIcon variant="light" aria-label="Upload" {...props}>
+                  <Icons.fileUpload />
+                </ActionIcon>
+              )}
+            </FileButton>
+          </div>
+          {loadedAvatarUrl && (
+            <>
+              <Modal
+                centered
+                opened={opened}
+                onClose={close}
+                size="70%"
+                overlayProps={{
+                  backgroundOpacity: 0.55,
+                  blur: 3,
+                }}
+              >
+                <div>
+                  <Image src={loadedAvatarUrl} alt="note-img" />
+                  <Button
+                    className="mt-2 ml-auto"
+                    onClick={() => handleDownloadFile(loadedAvatarUrl)}
+                  >
+                    Tải về
+                  </Button>
+                </div>
+              </Modal>
+              <div className="relative">
+                <Image
+                  src={loadedAvatarUrl}
+                  alt="note-img"
+                  className="p-3 w-full object-cover"
+                  onClick={open}
+                />
+                <Button
+                  variant="subtle"
+                  p={4}
+                  c="red"
+                  size="sm"
+                  radius="100"
+                  onClick={handleDeleteFile}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    transform: "translate(6px, -6px)",
+                  }}
+                  className="absolute top-1 right-1"
+                >
+                  <X className="w-5 h-5 text-red-700" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       ) : (
         <div className="w-32">
@@ -278,6 +399,39 @@ export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
           {orderData?.adminNote && (
             <p className="text-red-600 font-semibold">{`Admin note: ${orderData?.adminNote}`}</p>
           )}
+          {orderData?.orderImages?.length > 0 &&
+            orderData?.orderImages.map((item) => (
+              <div key={item.id}>
+                <Modal
+                  centered
+                  opened={opened}
+                  onClose={close}
+                  size="70%"
+                  overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3,
+                  }}
+                >
+                  <div>
+                    <Image src={item.url} alt="note-img" />
+                    <Button
+                      className="mt-2 ml-auto"
+                      onClick={() => handleDownloadFile(item.url)}
+                    >
+                      Tải về
+                    </Button>
+                  </div>
+                </Modal>
+                <div className="relative">
+                  <Image
+                    src={item.url}
+                    alt="note-img"
+                    className="p-3"
+                    onClick={open}
+                  />
+                </div>
+              </div>
+            ))}
         </div>
       )}
     </>
@@ -498,6 +652,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
         sizeId: orderDetailClone.size?.id || null,
         quantity: orderDetailClone.quantity,
       };
+      const orderNoteFile = row.original.orderImages;
       return (
         <DataTableRowActions
           orderId={orderId}
@@ -506,6 +661,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
           canDeleteOrder={canDeleteOrder}
           editOrderNote={orderNote}
           editOrderDetail={orderDetail}
+          orderNoteFile={orderNoteFile}
         />
       );
     },

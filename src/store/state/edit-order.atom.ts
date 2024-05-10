@@ -6,6 +6,8 @@ export const editOrderDefaultValue: EditOrderBody = {
   orderId: 0,
   note: "",
   orderDetails: [],
+  orderImages: [],
+  orderFileNote: null,
 };
 
 export const editOrderState = atom<EditOrderBody>({
