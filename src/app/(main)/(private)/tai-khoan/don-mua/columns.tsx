@@ -306,12 +306,13 @@ export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
   }
 
   const handleDownloadFile = async (url: string) => {
-    const a = document.createElement("a");
-    a.href = await toDataURL(url);
-    a.download = "note-image.png";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    // const a = document.createElement("a");
+    // a.href = await toDataURL(url);
+    // a.download = "note-image.png";
+    // document.body.appendChild(a);
+    // a.click();
+    // document.body.removeChild(a);\
+    window.open(url);
   };
 
   return (
