@@ -5,10 +5,10 @@ import {
   OrderResponse,
   OrderCombineParam,
   OrderCombineResponse,
-  ResponseWithTotal,
   EditOrder,
   SummaryOrderStatus,
   PurchasedOrder,
+  IDownloadFileExport,
 } from "@/types/order";
 import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
@@ -57,4 +57,12 @@ export const cancelOrder = async (id: number) => {
 export const getSummaryOrderStatus = async (): Promise<SummaryOrderStatus> => {
   const { data } = await axiosInstance.get(`/order/summary-order-status`);
   return data;
+};
+
+export const exportOrder = async (
+  params: IDownloadFileExport
+): Promise<any> => {
+  return axiosInstance.get(`/order/export/${params.id}`, {
+    responseType: "blob",
+  });
 };

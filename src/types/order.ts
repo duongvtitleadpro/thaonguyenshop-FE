@@ -124,3 +124,7 @@ export type SummaryOrderStatus = {
   totalAllocated: number;
   totalSent: number;
 };
+
+export interface IDownloadFileExport {
+  id: number;
+}
