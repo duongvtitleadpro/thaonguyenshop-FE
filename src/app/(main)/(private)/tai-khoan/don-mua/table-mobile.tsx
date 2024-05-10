@@ -8,11 +8,19 @@ import {
   OrderStatusTitle,
 } from "@/constant/product";
 import { cn } from "@/lib/utils";
-import { OrderResponse } from "@/types/order";
+import { editOrderState } from "@/store/state/edit-order.atom";
+import { EditOrderDetail, OrderResponse } from "@/types/order";
 import { currency } from "@/utils/currency";
 import { Image, Table } from "@mantine/core";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useRecoilState } from "recoil";
+import {
+  EditOrderColorRow,
+  EditOrderNoteRow,
+  EditOrderQuantityRow,
+  EditOrderSizeRow,
+} from "./columns";
 
 type PurchaseOrderTableMobileProps = {
   className?: string;
@@ -21,46 +29,56 @@ type PurchaseOrderTableMobileProps = {
 
 const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
   const { data, className } = props;
-
+  const [editOrderValue, setEditOrderValue] = useRecoilState(editOrderState);
   return (
     <div className={cn("w-full flex flex-col gap-2", className)}>
-      {data.map((order) => {
+      {data.map((order, index) => {
         const orderId = order.id;
         const productId = order.productId;
         const canEditOrder = order.orderStatus === "NOT_PURCHASED";
         const canDeleteOrder = order.orderStatus === "NOT_PURCHASED";
+        const isSamePreviousOrder =
+          order.productId === data[index - 1]?.productId;
+        const orderDetailClone = order.orderDetails[0];
+        const orderNote = order.note;
+        const orderDetail: EditOrderDetail = {
+          id: orderDetailClone.id,
+          productId: productId,
+          colorId: orderDetailClone.color?.id || null,
+          sizeId: orderDetailClone.size?.id || null,
+          quantity: orderDetailClone.quantity,
+        };
+        const isEditOrder = editOrderValue.orderId === order.id;
         return (
           <div
             key={order.id}
-            className="relative py-3 border-b border-slate-700"
+            className={cn(
+              "relative py-3",
+              !isSamePreviousOrder && index && "border-t border-slate-700"
+            )}
           >
             <div>
-              <div>
-                <strong>Ngày đặt hàng:</strong>{" "}
-                <span>
-                  {`${format(
-                    new Date(order.orderDate),
-                    "MM/dd/yyyy HH:mm:ss"
-                  )}`}
-                </span>
-              </div>
-              <div>
-                <strong>Mã sản phẩm:</strong>{" "}
-                <span>{order.product.productCode}</span>
-              </div>
-              <div>
-                <strong>Tên sản phẩm:</strong>{" "}
-                <Link
-                  href={`/chi-tiet-san-pham/${order.productId}`}
-                  className="text-base font-semibold text-blue-600 hover:underline cursor-pointer"
-                >
-                  {order.product.name}
-                </Link>
-              </div>
-              <div>
-                <strong>Đơn giá:</strong>{" "}
-                <span>{currency.format(order.product.price)}</span>
-              </div>
+              {!isSamePreviousOrder && (
+                <div>
+                  <div>
+                    <strong>Mã sản phẩm:</strong>{" "}
+                    <span>{order.product.productCode}</span>
+                  </div>
+                  <div>
+                    <strong>Tên sản phẩm:</strong>{" "}
+                    <Link
+                      href={`/chi-tiet-san-pham/${order.productId}`}
+                      className="text-base font-semibold text-blue-600 hover:underline cursor-pointer"
+                    >
+                      {order.product.name}
+                    </Link>
+                  </div>
+                  <div>
+                    <strong>Đơn giá:</strong>{" "}
+                    <span>{currency.format(order.product.price)}</span>
+                  </div>
+                </div>
+              )}
               <div>
                 <strong>Chi tiết: </strong>
                 <Table
@@ -94,12 +112,30 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                         />
                       </Table.Td>
                       <Table.Td>
-                        {order?.orderDetails[0]?.color?.title || "-"}
+                        {isEditOrder ? (
+                          <EditOrderColorRow orderData={order} />
+                        ) : (
+                          <span>
+                            {order?.orderDetails[0]?.color?.title || "-"}
+                          </span>
+                        )}
                       </Table.Td>
                       <Table.Td>
-                        {order?.orderDetails[0]?.size?.title || "-"}
+                        {isEditOrder ? (
+                          <EditOrderSizeRow orderData={order} />
+                        ) : (
+                          <span>
+                            {order?.orderDetails[0]?.size?.title || "-"}
+                          </span>
+                        )}
                       </Table.Td>
-                      <Table.Td>{order?.orderDetails[0]?.quantity}</Table.Td>
+                      <Table.Td>
+                        {isEditOrder ? (
+                          <EditOrderQuantityRow orderData={order} />
+                        ) : (
+                          <span>{order?.orderDetails[0]?.quantity}</span>
+                        )}
+                      </Table.Td>
                       <Table.Td>
                         {order?.orderDetails[0]?.receivedQuantity}
                       </Table.Td>
@@ -127,9 +163,13 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
               </div>
               <div className="mt-2">
                 <strong>Ghi chú:</strong>{" "}
-                <span>
-                  <p className="whitespace-pre-line">{order?.note}</p>
-                </span>
+                {isEditOrder ? (
+                  <EditOrderNoteRow orderData={order} />
+                ) : (
+                  <span>
+                    <p className="whitespace-pre-line">{order?.note}</p>
+                  </span>
+                )}
               </div>
               <div>
                 <strong>Admin note:</strong>{" "}
@@ -145,6 +185,8 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                   productId={productId}
                   canEditOrder={canEditOrder}
                   canDeleteOrder={canDeleteOrder}
+                  editOrderNote={orderNote}
+                  editOrderDetail={orderDetail}
                 />
               </div>
             </div>

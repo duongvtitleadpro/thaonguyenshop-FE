@@ -13,6 +13,7 @@ import { Select } from "@mantine/core";
 import PurchaseOrderTableMobile from "./table-mobile";
 import PaginationCustom from "@/components/pagination";
 import { useMediaQuery } from "@mantine/hooks";
+import DataTableV2 from "@/components/table/data-table-v2";
 
 const PurchaseOrderPage = () => {
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
@@ -87,6 +88,15 @@ const PurchaseOrderPage = () => {
       });
     }, 0);
   }, []);
+  const data = useMemo(() => {
+    if (!purchaseOrderData) return [];
+    return purchaseOrderData.data.map((item) => ({
+      ...item,
+      imageUrlId: item.productId,
+      productNameId: item.productId,
+    }));
+  }, [purchaseOrderData]);
+
   return (
     <div className="flex flex-col h-full">
       <PurchaseOrderFilter
@@ -96,12 +106,12 @@ const PurchaseOrderPage = () => {
         totalReceivedPrice={purchaseOrderData?.totalReceivedPrice}
       />
       {purchaseOrderData && (
-        <div className="h-auto sm:h-[550px] w-full">
-          <DataTable
+        <div className="h-auto sm:h-[800px] w-full">
+          <DataTableV2
             ref={tableRef}
             className="hidden sm:block"
             columns={columns}
-            data={purchaseOrderData.data}
+            data={data}
             footer={purchaseOrderFooter}
           />
           <PurchaseOrderTableMobile
@@ -121,6 +131,7 @@ const PurchaseOrderPage = () => {
               onChange={handleGoToPage}
               total={purchaseOrderData.totalPages}
               color="blue"
+              siblings={1}
             />
           </div>
         </div>

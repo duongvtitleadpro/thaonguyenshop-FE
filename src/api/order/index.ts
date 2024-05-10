@@ -1,14 +1,14 @@
 import { Response } from "@/types/common";
 import {
+  EditOrderBody,
+  IDownloadFileExport,
   Order,
-  OrderParam,
-  OrderResponse,
   OrderCombineParam,
   OrderCombineResponse,
-  EditOrder,
-  SummaryOrderStatus,
+  OrderParam,
+  OrderResponse,
   PurchasedOrder,
-  IDownloadFileExport,
+  SummaryOrderStatus,
 } from "@/types/order";
 import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
@@ -18,7 +18,9 @@ export const addOrder = async (order: Order): Promise<OrderResponse[]> => {
   return data;
 };
 
-export const editOrder = async (order: EditOrder): Promise<OrderResponse> => {
+export const editOrder = async (
+  order: EditOrderBody
+): Promise<OrderResponse> => {
   const { data } = await axiosInstance.put(`/order/customer`, order);
   return data;
 };
