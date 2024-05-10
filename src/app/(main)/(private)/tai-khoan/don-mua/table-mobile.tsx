@@ -59,7 +59,7 @@ const ViewImageModal = (props: ViewImageModalProps) => {
           backgroundOpacity: 0.55,
           blur: 3,
         }}
-        size="100%"
+        size="80%"
       >
         <div>
           <Image src={orderImage.url} alt="note-img" />
