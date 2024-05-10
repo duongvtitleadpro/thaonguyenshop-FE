@@ -106,7 +106,7 @@ const PurchaseOrderPage = () => {
         totalReceivedPrice={purchaseOrderData?.totalReceivedPrice}
       />
       {purchaseOrderData && (
-        <div className="h-auto sm:h-[550px] w-full">
+        <div className="h-auto sm:h-[800px] w-full">
           <DataTableV2
             ref={tableRef}
             className="hidden sm:block"
@@ -131,6 +131,7 @@ const PurchaseOrderPage = () => {
               onChange={handleGoToPage}
               total={purchaseOrderData.totalPages}
               color="blue"
+              siblings={1}
             />
           </div>
         </div>

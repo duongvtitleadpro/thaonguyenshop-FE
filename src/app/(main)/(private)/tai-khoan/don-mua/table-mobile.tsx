@@ -24,43 +24,43 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
 
   return (
     <div className={cn("w-full flex flex-col gap-2", className)}>
-      {data.map((order) => {
+      {data.map((order, index) => {
         const orderId = order.id;
         const productId = order.productId;
         const canEditOrder = order.orderStatus === "NOT_PURCHASED";
         const canDeleteOrder = order.orderStatus === "NOT_PURCHASED";
+        const isSamePreviousOrder =
+          order.productId === data[index - 1]?.productId;
         return (
           <div
             key={order.id}
-            className="relative py-3 border-b border-slate-700"
+            className={cn(
+              "relative py-3",
+              !isSamePreviousOrder && index && "border-t border-slate-700"
+            )}
           >
             <div>
-              <div>
-                <strong>Ngày đặt hàng:</strong>{" "}
-                <span>
-                  {`${format(
-                    new Date(order.orderDate),
-                    "MM/dd/yyyy HH:mm:ss"
-                  )}`}
-                </span>
-              </div>
-              <div>
-                <strong>Mã sản phẩm:</strong>{" "}
-                <span>{order.product.productCode}</span>
-              </div>
-              <div>
-                <strong>Tên sản phẩm:</strong>{" "}
-                <Link
-                  href={`/chi-tiet-san-pham/${order.productId}`}
-                  className="text-base font-semibold text-blue-600 hover:underline cursor-pointer"
-                >
-                  {order.product.name}
-                </Link>
-              </div>
-              <div>
-                <strong>Đơn giá:</strong>{" "}
-                <span>{currency.format(order.product.price)}</span>
-              </div>
+              {!isSamePreviousOrder && (
+                <div>
+                  <div>
+                    <strong>Mã sản phẩm:</strong>{" "}
+                    <span>{order.product.productCode}</span>
+                  </div>
+                  <div>
+                    <strong>Tên sản phẩm:</strong>{" "}
+                    <Link
+                      href={`/chi-tiet-san-pham/${order.productId}`}
+                      className="text-base font-semibold text-blue-600 hover:underline cursor-pointer"
+                    >
+                      {order.product.name}
+                    </Link>
+                  </div>
+                  <div>
+                    <strong>Đơn giá:</strong>{" "}
+                    <span>{currency.format(order.product.price)}</span>
+                  </div>
+                </div>
+              )}
               <div>
                 <strong>Chi tiết: </strong>
                 <Table
