@@ -34,9 +34,9 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
     mutationFn: exportOrder,
     onSuccess: (data) => {
       saveFile({
-        fileName: `Chi tiết đơn xuất #` + id,
-        format: "xls",
-        response: data,
+        fileName: `Chi tiết đơn xuất #` + combineOrderData?.code,
+        format: "xlsx",
+        response: data.data,
       });
     },
   });
