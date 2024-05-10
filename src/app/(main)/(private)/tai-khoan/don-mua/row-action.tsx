@@ -78,15 +78,17 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
             indexOfNoteEditTime + lastEditText.length
           )
         : "";
+
     const noteEdit =
       indexOfNoteEditTime !== -1 && indexOfNoteEditTime !== undefined
         ? editOrderValue?.note?.replace(
             oldNoteEditTime,
             format(new Date(), "dd/MM/yyyy HH:mm")
           )
-        : editOrderValue?.note +
+        : (editOrderValue?.note || "") +
           lastEditText +
           format(new Date(), "dd/MM/yyyy HH:mm");
+
     try {
       const order = await editOrder({ ...editOrderValue, note: noteEdit });
       toast("Sửa đơn hàng thành công");

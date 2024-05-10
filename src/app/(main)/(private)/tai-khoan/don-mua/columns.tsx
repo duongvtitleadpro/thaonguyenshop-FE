@@ -58,10 +58,6 @@ export const EditOrderColorRow = (props: EditOrderColorRowProps) => {
   if (isEditOrder) {
     const colorCurrentInNoLongerList =
       !!first(orderData.orderDetails)?.color && !isExistColorList;
-    console.log(
-      "😻 ~ EditOrderColorRow ~ colorCurrentInNoLongerList:",
-      colorCurrentInNoLongerList
-    );
     if (colorCurrentInNoLongerList) {
       return <span></span>;
     }
@@ -165,18 +161,15 @@ export const EditOrderSizeRow = (props: EditOrderSizeRowProps) => {
       : null;
 
     const detailsListRaw = orderData?.product?.details;
-    console.log("😻 ~ EditOrderSizeRow ~ detailsListRaw:", detailsListRaw);
     const sizeListRaw: any = detailsListRaw
       .filter((item) => item?.color?.id === colorSelected?.colorId)
       .map((item) => item.size);
     const sizeList = uniqBy(sizeListRaw, (item: any) => item?.id);
-    console.log("😻 ~ sizeList ~ sizeList::::", sizeList);
 
     const sizeOptions = sizeList.map((item) => ({
       label: item.title,
       value: item.id.toString(),
     }));
-    console.log("😻 ~ sizeOptions ~ sizeOptions::::", sizeOptions);
 
     const handleChangeSize = (
       selectSizeId: string | null,
