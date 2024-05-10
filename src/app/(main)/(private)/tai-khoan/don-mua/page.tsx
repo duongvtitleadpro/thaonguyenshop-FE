@@ -18,20 +18,11 @@ const PurchaseOrderPage = () => {
     purchaseOrderFilterState
   );
 
-  const {
-    data: purchaseOrderData,
-    refetch,
-    error,
-    isError,
-  } = useQuery({
+  const { data: purchaseOrderData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PURCHASE_ORDER, purchaseOrderFilter],
     queryFn: () => getOrder(purchaseOrderFilter),
     placeholderData: keepPreviousData,
   });
-
-  if (isError) {
-    alert(error);
-  }
 
   const purchaseOrderFooter = useMemo(() => {
     if (!purchaseOrderData) return [];
@@ -77,12 +68,6 @@ const PurchaseOrderPage = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {
-        <p>
-          {"error?.message"}
-          {error?.message}
-        </p>
-      }
       <PurchaseOrderFilter />
       {purchaseOrderData && (
         <div className="h-auto sm:h-[550px] w-full">
