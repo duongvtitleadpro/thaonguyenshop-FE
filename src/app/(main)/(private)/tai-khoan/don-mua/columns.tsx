@@ -356,6 +356,7 @@ export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
                 <div>
                   <Image src={loadedAvatarUrl} alt="note-img" />
                   <Button
+                    bg="blue"
                     className="mt-2 ml-auto"
                     onClick={() => handleDownloadFile(loadedAvatarUrl)}
                   >
@@ -416,6 +417,7 @@ export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
                   <div>
                     <Image src={item.url} alt="note-img" />
                     <Button
+                      bg="blue"
                       className="mt-2 ml-auto"
                       onClick={() => handleDownloadFile(item.url)}
                     >
