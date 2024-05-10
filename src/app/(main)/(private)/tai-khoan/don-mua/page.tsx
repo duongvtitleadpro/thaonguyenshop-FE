@@ -74,12 +74,12 @@ const PurchaseOrderPage = () => {
     [isMobile, setPurchaseOrderFilter]
   );
 
-  const handleChangePageSize = (pageSize: string | null) => {
-    setPurchaseOrderFilter((prev) => ({
-      ...prev,
-      size: Number(pageSize),
-    }));
-  };
+  // const handleChangePageSize = (pageSize: string | null) => {
+  //   setPurchaseOrderFilter((prev) => ({
+  //     ...prev,
+  //     size: Number(pageSize),
+  //   }));
+  // };
 
   useEffect(() => {
     setTimeout(() => {
@@ -119,13 +119,13 @@ const PurchaseOrderPage = () => {
             data={purchaseOrderData.data}
           />
           <div className="flex justify-end gap-3 mt-4">
-            <Select
+            {/* <Select
               display={purchaseOrderData.data.length > 0 ? "flex" : "none"}
               w={70}
               value={purchaseOrderFilter.size?.toString()}
               onChange={handleChangePageSize}
               data={["10", "20", "30", "40", "50"]}
-            />
+            /> */}
             <PaginationCustom
               value={purchaseOrderData.page}
               onChange={handleGoToPage}
