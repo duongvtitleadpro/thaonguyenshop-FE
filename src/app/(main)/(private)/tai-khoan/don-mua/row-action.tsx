@@ -2,12 +2,12 @@
 
 import { cancelOrder, editOrder, getOrder } from "@/api/order";
 import { QueryKey } from "@/constant/query-key";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AlertCircle, Pencil, Trash2, Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { purchaseOrderFilterState } from "@/store/state/purchase-order-filter.atom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Modal, Button } from "@mantine/core";
+import { Modal, Button, Loader } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { EditOrderBody, EditOrderDetail, OrderImage } from "@/types/order";
 import {
@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { uploadFileRequest } from "@/api/file";
+import { useMemo, useState } from "react";
 
 interface DataTableRowActionsProps {
   orderId: number;
@@ -53,6 +54,17 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
     refetch();
   };
 
+  const uploadImageMutation = useMutation({
+    mutationFn: uploadFileRequest,
+  });
+  const editOrderMutation = useMutation({
+    mutationFn: editOrder,
+  });
+
+  const isLoading = useMemo(() => {
+    return uploadImageMutation.isPending || editOrderMutation.isPending;
+  }, [uploadImageMutation.isPending, editOrderMutation.isPending]);
+
   const handleFillEditOrder = () => {
     const lastEditText = "\nLần sửa gần nhất: ";
     const indexOfNoteEditTime = editOrderNote?.indexOf(lastEditText);
@@ -74,6 +86,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
   };
 
   const handleConfirmEditOrder = async () => {
+    if (uploadImageMutation.isPending || editOrderMutation.isPending) return;
     const lastEditText = "\nLần sửa gần nhất: ";
     const indexOfNoteEditTime = editOrderValue?.note?.indexOf(lastEditText);
     const oldNoteEditTime =
@@ -100,7 +113,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         const formData = new FormData();
         formData.append("fileType", "ORDER_IMAGE");
         formData.append("file", file);
-        fileImageUrl = await uploadFileRequest(formData);
+        fileImageUrl = await uploadImageMutation.mutateAsync(formData);
       }
 
       const body: EditOrderBody = {
@@ -109,7 +122,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
         note: noteEdit,
         orderImages: fileImageUrl ? [fileImageUrl] : [],
       };
-      const order = await editOrder(body);
+      const order = await editOrderMutation.mutateAsync(body);
       toast("Sửa đơn hàng thành công");
       setEditOrderValue(editOrderDefaultValue);
       refetch();
@@ -130,26 +143,32 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
     <div className="w-16 flex gap-1">
       {editOrderValue.orderId === orderId ? (
         <>
-          <Button
-            variant="subtle"
-            p={4}
-            c="blue"
-            size="sm"
-            onClick={handleConfirmEditOrder}
-            className="disabled:cursor-not-allowed disabled:opacity-25"
-          >
-            <Check className="w-5 h-5" />
-          </Button>
-          <Button
-            variant="subtle"
-            p={4}
-            c="red"
-            size="sm"
-            onClick={handleCancelEditOrder}
-            className="disabled:cursor-not-allowed disabled:opacity-25"
-          >
-            <X className="w-5 h-5 text-red-700" />
-          </Button>
+          {isLoading && <Loader color="blue" size="sm" mb={4} />}
+
+          {!isLoading && (
+            <Button
+              variant="subtle"
+              p={4}
+              c="blue"
+              size="sm"
+              onClick={handleConfirmEditOrder}
+              className="disabled:cursor-not-allowed disabled:opacity-25"
+            >
+              <Check className="w-5 h-5" />
+            </Button>
+          )}
+          {!isLoading && (
+            <Button
+              variant="subtle"
+              p={4}
+              c="red"
+              size="sm"
+              onClick={handleCancelEditOrder}
+              className="disabled:cursor-not-allowed disabled:opacity-25"
+            >
+              <X className="w-5 h-5 text-red-700" />
+            </Button>
+          )}
         </>
       ) : (
         <>
