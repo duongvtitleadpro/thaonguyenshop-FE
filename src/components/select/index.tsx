@@ -5,9 +5,6 @@ const SelectCustom = (props: SelectProps) => {
   return (
     <Select
       styles={{
-        options: {
-          width: "max-content",
-        },
         section: {
           display: "none",
         },

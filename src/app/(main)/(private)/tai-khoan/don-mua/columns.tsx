@@ -115,7 +115,7 @@ export const EditOrderColorRow = (props: EditOrderColorRowProps) => {
       });
     };
     return (
-      <div className="w-14 sm:w-20">
+      <div className="w-20">
         <SelectCustom
           data={colorOptions}
           value={editOrderValue.orderDetails[0].colorId?.toString() || ""}
@@ -201,7 +201,7 @@ export const EditOrderSizeRow = (props: EditOrderSizeRowProps) => {
     };
 
     return (
-      <div className="w-14 sm:w-20 ">
+      <div className="w-20">
         <SelectCustom
           data={sizeOptions}
           value={editOrderValue.orderDetails[0].sizeId?.toString() || ""}
@@ -232,7 +232,7 @@ export const EditOrderQuantityRow = (props: EditOrderQuantityRowProps) => {
   return (
     <>
       {isEditOrder ? (
-        <div className="w-14 sm:w-16">
+        <div className="w-16">
           <NumberInput
             value={editOrderValue.orderDetails[0].quantity}
             onChange={(event) =>
