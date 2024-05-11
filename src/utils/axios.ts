@@ -26,6 +26,15 @@ axiosRetry(axiosInstance, {
   },
 });
 
+axiosInstance.request({
+  headers: {
+    "Access-Control-Allow-Methods": "PUT, GET, HEAD, POST, DELETE, OPTIONS",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Credentials": "true",
+  },
+});
+
 axiosInstance.interceptors.request.use((config) => {
   const accessToken = getToken("accessToken");
   if (accessToken) {

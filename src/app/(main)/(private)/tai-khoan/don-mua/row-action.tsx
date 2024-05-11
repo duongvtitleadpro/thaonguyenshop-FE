@@ -127,7 +127,7 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
       setEditOrderValue(editOrderDefaultValue);
       refetch();
     } catch (error) {
-      if ((error as any).response.status === 413) {
+      if ((error as any)?.response?.status === 413) {
         toast("Ảnh dung lượng lớn", {
           description: "Vui lòng up ảnh dung lượng nhỏ hơn",
         });
