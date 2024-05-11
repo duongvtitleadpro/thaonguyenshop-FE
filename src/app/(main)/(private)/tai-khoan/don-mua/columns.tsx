@@ -35,6 +35,7 @@ import { deleteFileRequest } from "@/api/file";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
 import { X } from "lucide-react";
+import { toast } from "sonner";
 
 type EditOrderColorRowProps = {
   orderData: OrderResponse;
@@ -51,6 +52,8 @@ type EditOrderQuantityRowProps = {
 type EditOrderNoteRowProps = {
   orderData: OrderResponse;
 };
+
+const MAX_SIZE_FILE = 4194304;
 
 export const EditOrderColorRow = (props: EditOrderColorRowProps) => {
   const { orderData } = props;
@@ -278,6 +281,13 @@ export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
   }, [editOrderValue.orderFileNote, orderData.orderImages]);
 
   const handleChangeFile = (file: File | null) => {
+    console.log("😻 ~ handleChangeFile ~ file:", file);
+    if ((file?.size || 0) >= MAX_SIZE_FILE) {
+      toast("Ảnh dung lượng lớn", {
+        description: "Vui lòng up ảnh dung lượng nhỏ hơn",
+      });
+      return;
+    }
     handleDeleteFile();
     setEditOrderValue((prev) => ({
       ...prev,

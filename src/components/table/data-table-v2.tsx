@@ -32,7 +32,6 @@ export const useRowSpan = (instance: TableInstance) => {
   allColumns.forEach((column: any) => {
     const { id, enableRowSpan } = column;
     if (enableRowSpan) {
-      console.log("allColumns::::", id, enableRowSpan);
       rowSpanHeaders = [
         ...rowSpanHeaders,
         { id, topCellValue: null, topCellIndex: 0 },
@@ -88,7 +87,6 @@ const DataTableV2 = React.forwardRef<HTMLDivElement, DataTableProps>(
                     let rowSpanHeader = rowSpanHeaders.find(
                       (x: any) => x.id === cell.column.id
                     );
-                    console.log("rowSpanHeader:", rowSpanHeader, cell.value);
 
                     if (rowSpanHeader) {
                       if (

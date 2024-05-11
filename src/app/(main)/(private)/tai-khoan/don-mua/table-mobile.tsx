@@ -102,7 +102,6 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
     }
     return result;
   }, [data]);
-  console.log("😻 ~ dataMerge ~ dataMerge:", dataMerge);
 
   return (
     <div className={cn("w-full flex flex-col gap-2", className)}>

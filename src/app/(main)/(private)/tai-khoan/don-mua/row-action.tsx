@@ -95,20 +95,14 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
 
     const file = editOrderValue?.orderFileNote;
     let fileImageUrl = null;
-    if (file) {
-      const formData = new FormData();
-      formData.append("fileType", "ORDER_IMAGE");
-      formData.append("file", file);
-      try {
-        fileImageUrl = await uploadFileRequest(formData);
-      } catch (error) {
-        toast("Đã có lỗi xảy ra", {
-          description: "Vui lòng thử lại sau",
-        });
-      }
-    }
-
     try {
+      if (file) {
+        const formData = new FormData();
+        formData.append("fileType", "ORDER_IMAGE");
+        formData.append("file", file);
+        fileImageUrl = await uploadFileRequest(formData);
+      }
+
       const body: EditOrderBody = {
         orderId: editOrderValue.orderId,
         orderDetails: editOrderValue.orderDetails,
@@ -120,9 +114,15 @@ const DataTableRowActions = (props: DataTableRowActionsProps) => {
       setEditOrderValue(editOrderDefaultValue);
       refetch();
     } catch (error) {
-      toast("Đã có lỗi xảy ra", {
-        description: "Vui lòng thử lại sau",
-      });
+      if ((error as any).response.status === 413) {
+        toast("Ảnh dung lượng lớn", {
+          description: "Vui lòng up ảnh dung lượng nhỏ hơn",
+        });
+      } else {
+        toast("Đã có lỗi xảy ra", {
+          description: "Vui lòng thử lại sau",
+        });
+      }
     }
   };
 

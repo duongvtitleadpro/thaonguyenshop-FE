@@ -81,7 +81,6 @@ const DetailProductPage = ({
 
     return listColorData.map((item) => item.color);
   }, [productDetailData, order, isEditOrder]);
-  console.log("😻 ~ listColor ~ listColor:", listColor);
 
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -263,7 +262,6 @@ const DetailProductPage = ({
       try {
         const order = await getOrderDetail(orderId);
         const lastEditText = "\nLần sửa gần nhất: ";
-        console.log("😻 ~ fetchOrder ~ lastEditText:", lastEditText);
         const indexOfNoteEditTime = order?.note?.indexOf(lastEditText);
         const oldNote =
           indexOfNoteEditTime !== -1 && indexOfNoteEditTime !== undefined
