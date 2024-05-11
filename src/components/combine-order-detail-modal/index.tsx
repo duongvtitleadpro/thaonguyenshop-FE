@@ -14,6 +14,7 @@ import DataTable from "../table/data-table";
 import { columns } from "./columns";
 import saveFile from "@/utils/common";
 import Print from "../widget/Print";
+import { useMemo } from "react";
 
 interface CombineOrderDetailModalProps {
   id: number;
@@ -30,6 +31,26 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
     queryFn: () => getCombineOrderDetail(id),
   });
 
+  const productSort = useMemo(() => {
+    {
+      return combineOrderData?.combinedOrderDetails.sort((a, b) => {
+        let nameA = a.order.product.name.toLocaleLowerCase();
+        let nameB = b.order.product.name.toLowerCase();
+
+        if (nameA > nameB) {
+          return 1;
+        }
+        if (nameA < nameB) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+  }, [combineOrderData?.combinedOrderDetails]);
+
+  console.log("productSort", productSort);
+
+  console.log("combineOrderData", combineOrderData);
   const { mutate: exportOrderMutate } = useMutation({
     mutationFn: exportOrder,
     onSuccess: (data) => {
@@ -68,10 +89,7 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
               <div className="flex gap-4">
                 <Print
                   content={
-                    <DataTable
-                      columns={columns}
-                      data={combineOrderData.combinedOrderDetails}
-                    />
+                    <DataTable columns={columns} data={productSort || []} />
                   }
                 />
                 <Button
@@ -83,10 +101,7 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
                 </Button>
               </div>
             </div>
-            <DataTable
-              columns={columns}
-              data={combineOrderData.combinedOrderDetails}
-            />
+            <DataTable columns={columns} data={productSort || []} />
           </div>
         )}
       </Modal>
