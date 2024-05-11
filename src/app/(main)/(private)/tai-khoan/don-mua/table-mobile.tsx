@@ -21,7 +21,7 @@ import {
   EditOrderQuantityRow,
   EditOrderSizeRow,
 } from "./columns";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
 import { Fragment, useMemo } from "react";
@@ -87,6 +87,7 @@ const ViewImageModal = (props: ViewImageModalProps) => {
 const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
   const { data, className } = props;
   const [editOrderValue, setEditOrderValue] = useRecoilState(editOrderState);
+  const { height, width } = useViewportSize();
 
   const dataMerge = useMemo(() => {
     const result: any[] = [];
@@ -146,154 +147,162 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                 />
               </div>
 
-              <div>
+              <div className="">
                 <strong>Chi tiết: </strong>
-                <Table
-                  striped
-                  highlightOnHover
-                  withTableBorder
-                  withColumnBorders
-                >
-                  <Table.Thead>
-                    <Table.Tr>
-                      <Table.Th>Màu</Table.Th>
-                      <Table.Th>Size</Table.Th>
-                      <Table.Th>SL đặt</Table.Th>
-                      <Table.Th>SL về</Table.Th>
-                      <Table.Th>Tiền</Table.Th>
-                      <Table.Th>Tình trạng</Table.Th>
-                      <Table.Th>Trạng thái</Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>
-                    {order.mergeOrder.map((mergeItem: OrderResponse) => {
-                      const orderId = mergeItem.id;
-                      const productId = mergeItem.productId;
-                      const canEditOrder =
-                        mergeItem.orderStatus === "NOT_PURCHASED";
-                      const canDeleteOrder =
-                        mergeItem.orderStatus === "NOT_PURCHASED";
-                      const orderDetailClone = mergeItem.orderDetails[0];
-                      const orderNote = mergeItem.note;
-                      const orderDetail: EditOrderDetail = {
-                        id: orderDetailClone.id,
-                        productId: productId,
-                        colorId: orderDetailClone.color?.id || null,
-                        sizeId: orderDetailClone.size?.id || null,
-                        quantity: orderDetailClone.quantity,
-                      };
-                      const orderNoteFile = mergeItem.orderImages;
-                      const isEditOrder =
-                        editOrderValue.orderId === mergeItem.id;
+                <Table.ScrollContainer minWidth={width - 32}>
+                  <Table
+                    striped
+                    highlightOnHover
+                    withTableBorder
+                    withColumnBorders
+                  >
+                    <Table.Thead>
+                      <Table.Tr>
+                        <Table.Th>Màu</Table.Th>
+                        <Table.Th>Size</Table.Th>
+                        <Table.Th>SL đặt</Table.Th>
+                        <Table.Th>SL về</Table.Th>
+                        <Table.Th>Tiền</Table.Th>
+                        <Table.Th>Tình trạng</Table.Th>
+                        <Table.Th>Trạng thái</Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                      {order.mergeOrder.map((mergeItem: OrderResponse) => {
+                        const orderId = mergeItem.id;
+                        const productId = mergeItem.productId;
+                        const canEditOrder =
+                          mergeItem.orderStatus === "NOT_PURCHASED";
+                        const canDeleteOrder =
+                          mergeItem.orderStatus === "NOT_PURCHASED";
+                        const orderDetailClone = mergeItem.orderDetails[0];
+                        const orderNote = mergeItem.note;
+                        const orderDetail: EditOrderDetail = {
+                          id: orderDetailClone.id,
+                          productId: productId,
+                          colorId: orderDetailClone.color?.id || null,
+                          sizeId: orderDetailClone.size?.id || null,
+                          quantity: orderDetailClone.quantity,
+                        };
+                        const orderNoteFile = mergeItem.orderImages;
+                        const isEditOrder =
+                          editOrderValue.orderId === mergeItem.id;
 
-                      return (
-                        <Fragment key={mergeItem.id}>
-                          <Table.Tr>
-                            <Table.Td>
-                              {isEditOrder ? (
-                                <EditOrderColorRow orderData={mergeItem} />
-                              ) : (
-                                <span>
-                                  {mergeItem?.orderDetails[0]?.color?.title ||
-                                    "-"}
-                                </span>
-                              )}
-                            </Table.Td>
-                            <Table.Td>
-                              {isEditOrder ? (
-                                <EditOrderSizeRow orderData={mergeItem} />
-                              ) : (
-                                <span>
-                                  {mergeItem?.orderDetails[0]?.size?.title ||
-                                    "-"}
-                                </span>
-                              )}
-                            </Table.Td>
-                            <Table.Td>
-                              {isEditOrder ? (
-                                <EditOrderQuantityRow orderData={mergeItem} />
-                              ) : (
-                                <span>
-                                  {mergeItem?.orderDetails[0]?.quantity}
-                                </span>
-                              )}
-                            </Table.Td>
-                            <Table.Td>
-                              {mergeItem?.orderDetails[0]?.receivedQuantity}
-                            </Table.Td>
-                            <Table.Td>
-                              {currency.format(
-                                mergeItem.product.price *
-                                  mergeItem.orderDetails[0].receivedQuantity
-                              )}
-                            </Table.Td>
-                            <Table.Td>
-                              <span
-                                className={`w-32 font-semibold ${
-                                  OrderStatusColor[mergeItem.orderStatus]
-                                }`}
-                              >
-                                {OrderStatusTitle[mergeItem.orderStatus]}
-                              </span>
-                            </Table.Td>
-                            <Table.Td>
-                              {OrderStateTitle[mergeItem.allocationStatus]}
-                            </Table.Td>
-                          </Table.Tr>
-                          <Table.Tr>
-                            <Table.Td colSpan={8}>
-                              <div className="flex justify-between items-end">
+                        return (
+                          <Fragment key={mergeItem.id}>
+                            <Table.Tr>
+                              <Table.Td>
                                 {isEditOrder ? (
-                                  <EditOrderNoteRow orderData={mergeItem} />
+                                  <EditOrderColorRow orderData={mergeItem} />
                                 ) : (
-                                  <div>
-                                    <div className="mt-2 flex gap-2">
-                                      <strong>Ghi chú:</strong>{" "}
-                                      <span className="text-xs">
-                                        <p>{mergeItem?.note}</p>
-                                      </span>
-                                    </div>
-                                    {mergeItem?.orderImages?.length > 0 &&
-                                      mergeItem?.orderImages.map(
-                                        (item: any) => (
-                                          <ViewImageModal
-                                            key={item.id}
-                                            orderImage={item}
-                                          />
-                                        )
-                                      )}
-                                    {mergeItem?.adminNote && (
+                                  <span>
+                                    {mergeItem?.orderDetails[0]?.color?.title ||
+                                      "-"}
+                                  </span>
+                                )}
+                              </Table.Td>
+                              <Table.Td>
+                                {isEditOrder ? (
+                                  <EditOrderSizeRow orderData={mergeItem} />
+                                ) : (
+                                  <span>
+                                    {mergeItem?.orderDetails[0]?.size?.title ||
+                                      "-"}
+                                  </span>
+                                )}
+                              </Table.Td>
+                              <Table.Td>
+                                {isEditOrder ? (
+                                  <EditOrderQuantityRow orderData={mergeItem} />
+                                ) : (
+                                  <span>
+                                    {mergeItem?.orderDetails[0]?.quantity}
+                                  </span>
+                                )}
+                              </Table.Td>
+                              <Table.Td>
+                                {mergeItem?.orderDetails[0]?.receivedQuantity}
+                              </Table.Td>
+                              <Table.Td>
+                                {currency.format(
+                                  mergeItem.product.price *
+                                    mergeItem.orderDetails[0].receivedQuantity
+                                )}
+                              </Table.Td>
+                              <Table.Td>
+                                <span
+                                  className={`w-32 font-semibold ${
+                                    OrderStatusColor[mergeItem.orderStatus]
+                                  }`}
+                                >
+                                  {OrderStatusTitle[mergeItem.orderStatus]}
+                                </span>
+                              </Table.Td>
+                              <Table.Td>
+                                {OrderStateTitle[mergeItem.allocationStatus]}
+                              </Table.Td>
+                            </Table.Tr>
+                            <Table.Tr>
+                              <Table.Td colSpan={8}>
+                                <div className="relative ">
+                                  {isEditOrder ? (
+                                    <EditOrderNoteRow orderData={mergeItem} />
+                                  ) : (
+                                    <div className="mr-16">
                                       <div className="mt-2 flex gap-2">
-                                        <strong>Admin note:</strong>{" "}
-                                        <span>
-                                          <p className="text-red-600 font-semibold">
-                                            {mergeItem?.adminNote}
-                                          </p>
+                                        <strong>Ghi chú:</strong>{" "}
+                                        <span className="text-xs">
+                                          <p>{mergeItem?.note}</p>
                                         </span>
                                       </div>
-                                    )}
-                                  </div>
-                                )}
+                                      {mergeItem?.orderImages?.length > 0 &&
+                                        mergeItem?.orderImages.map(
+                                          (item: any) => (
+                                            <ViewImageModal
+                                              key={item.id}
+                                              orderImage={item}
+                                            />
+                                          )
+                                        )}
+                                      {mergeItem?.adminNote && (
+                                        <div className="mt-2 flex gap-2">
+                                          <strong>Admin note:</strong>{" "}
+                                          <span>
+                                            <p className="text-red-600 font-semibold">
+                                              {mergeItem?.adminNote}
+                                            </p>
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
 
-                                <div className="ml-2">
-                                  <DataTableRowActions
-                                    orderId={orderId}
-                                    productId={productId}
-                                    canEditOrder={canEditOrder}
-                                    canDeleteOrder={canDeleteOrder}
-                                    editOrderNote={orderNote}
-                                    editOrderDetail={orderDetail}
-                                    orderNoteFile={orderNoteFile}
-                                  />
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      bottom: 2,
+                                      left: width - 120,
+                                    }}
+                                  >
+                                    <DataTableRowActions
+                                      orderId={orderId}
+                                      productId={productId}
+                                      canEditOrder={canEditOrder}
+                                      canDeleteOrder={canDeleteOrder}
+                                      editOrderNote={orderNote}
+                                      editOrderDetail={orderDetail}
+                                      orderNoteFile={orderNoteFile}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                            </Table.Td>
-                          </Table.Tr>
-                        </Fragment>
-                      );
-                    })}
-                  </Table.Tbody>
-                </Table>
+                              </Table.Td>
+                            </Table.Tr>
+                          </Fragment>
+                        );
+                      })}
+                    </Table.Tbody>
+                  </Table>
+                </Table.ScrollContainer>
               </div>
             </div>
           </div>
