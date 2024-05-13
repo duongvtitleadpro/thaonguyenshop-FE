@@ -282,7 +282,6 @@ export const EditOrderNoteRow = (props: EditOrderNoteRowProps) => {
   }, [editOrderValue.orderFileNote, orderData.orderImages]);
 
   const handleChangeFile = (file: File | null) => {
-    console.log("😻 ~ handleChangeFile ~ file:", file);
     if ((file?.size || 0) >= MAX_SIZE_FILE) {
       toast("Ảnh dung lượng lớn", {
         description: "Vui lòng up ảnh dung lượng nhỏ hơn 4MB",

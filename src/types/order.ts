@@ -5,6 +5,7 @@ export type Order = {
   productId: number;
   note: string;
   orderDetails: OrderDetail[];
+  imageNote?: "";
 };
 export type EditOrder = {
   orderId: number;
