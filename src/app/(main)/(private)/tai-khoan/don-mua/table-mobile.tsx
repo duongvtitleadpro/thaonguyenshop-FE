@@ -72,13 +72,7 @@ const ViewImageModal = (props: ViewImageModalProps) => {
           </Button>
         </div>
       </Modal>
-      <Image
-        src={orderImage.url}
-        alt="note-img"
-        w={150}
-        className="w-32"
-        onClick={open}
-      />
+      <Image src={orderImage.url} alt="note-img" w={50} h={50} onClick={open} />
     </div>
   );
 };
@@ -115,8 +109,8 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
             )}
           >
             <div>
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center gap-3">
+                <div className="flex-1">
                   <div>
                     <strong>Mã sản phẩm:</strong>{" "}
                     <span>{order.product.productCode}</span>
@@ -136,7 +130,8 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                   </div>
                 </div>
                 <Image
-                  w={80}
+                  w={100}
+                  h={100}
                   src={
                     order.product?.productImages?.length > 0
                       ? order.product?.productImages[0]?.imageUrl
@@ -146,7 +141,7 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                 />
               </div>
 
-              <div className="">
+              <div className="mt-6">
                 <strong>Chi tiết: </strong>
                 <Table.ScrollContainer minWidth={width - 32}>
                   <Table
@@ -243,43 +238,51 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                             </Table.Tr>
                             <Table.Tr>
                               <Table.Td colSpan={8}>
-                                <div className="relative ">
+                                <div className="relative">
                                   {isEditOrder ? (
                                     <EditOrderNoteRow orderData={mergeItem} />
                                   ) : (
-                                    <div className="mr-16">
-                                      <div className="mt-2 flex gap-2">
-                                        <strong>Ghi chú:</strong>{" "}
-                                        <span className="text-xs">
-                                          <p>{mergeItem?.note}</p>
-                                        </span>
-                                      </div>
-                                      {mergeItem?.orderImages?.length > 0 &&
-                                        mergeItem?.orderImages.map(
-                                          (item: any) => (
-                                            <ViewImageModal
-                                              key={item.id}
-                                              orderImage={item}
-                                            />
-                                          )
-                                        )}
-                                      {mergeItem?.adminNote && (
-                                        <div className="mt-2 flex gap-2">
-                                          <strong>Admin note:</strong>{" "}
-                                          <span>
-                                            <p className="text-red-600 font-semibold">
-                                              {mergeItem?.adminNote}
-                                            </p>
+                                    <div className="mr-16 gap-2">
+                                      <div className="mt-2 flex-1">
+                                        <div className="mt-2 flex gap-2 text-xs">
+                                          <strong className="w-16">
+                                            Ghi chú:
+                                          </strong>
+                                          <span className="flex-1">
+                                            <p>{mergeItem?.note}</p>
                                           </span>
                                         </div>
-                                      )}
+                                        <div>
+                                          {mergeItem?.orderImages?.length > 0 &&
+                                            mergeItem?.orderImages.map(
+                                              (item: any) => (
+                                                <ViewImageModal
+                                                  key={item.id}
+                                                  orderImage={item}
+                                                />
+                                              )
+                                            )}
+                                        </div>
+                                        {mergeItem?.adminNote && (
+                                          <div className="mt-2 flex gap-2 text-xs">
+                                            <strong className="w-16">
+                                              Admin note:
+                                            </strong>{" "}
+                                            <span className="flex-1">
+                                              <p className="text-red-600 font-semibold">
+                                                {mergeItem?.adminNote}
+                                              </p>
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   )}
 
                                   <div
                                     style={{
                                       position: "absolute",
-                                      bottom: 2,
+                                      bottom: 0,
                                       left: width - 120,
                                     }}
                                   >
