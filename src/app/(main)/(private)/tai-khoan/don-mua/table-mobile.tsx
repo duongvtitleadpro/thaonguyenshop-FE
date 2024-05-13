@@ -3,6 +3,7 @@
 import DataTableRowActions from "./row-action";
 import { placeholderImage } from "@/constant/common";
 import {
+  OrderStateColor,
   OrderStateTitle,
   OrderStatusColor,
   OrderStatusTitle,
@@ -233,7 +234,13 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                                 </span>
                               </Table.Td>
                               <Table.Td>
-                                {OrderStateTitle[mergeItem.allocationStatus]}
+                                <span
+                                  className={`font-semibold ${
+                                    OrderStateColor[mergeItem.allocationStatus]
+                                  }`}
+                                >
+                                  {OrderStateTitle[mergeItem.allocationStatus]}
+                                </span>
                               </Table.Td>
                             </Table.Tr>
                             <Table.Tr>

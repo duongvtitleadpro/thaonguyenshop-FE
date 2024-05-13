@@ -2,6 +2,7 @@
 
 import DataTableColumnHeader from "@components/table/data-table-column-header";
 import {
+  OrderStateColor,
   OrderStateTitle,
   OrderStatusColor,
   OrderStatusTitle,
@@ -607,7 +608,7 @@ export const columns: any = [
     ),
     Cell: ({ row }: any) => (
       <div
-        className={`w-32 font-semibold ${
+        className={`w-24 font-semibold ${
           OrderStatusColor[
             row.original.orderStatus as keyof typeof OrderStatusColor
           ]
@@ -629,7 +630,13 @@ export const columns: any = [
       <DataTableColumnHeader column={column} title="Trạng thái đơn hàng" />
     ),
     Cell: ({ row }: any) => (
-      <div className="w-16">
+      <div
+        className={`w-24 font-semibold ${
+          OrderStateColor[
+            row.original.allocationStatus as keyof typeof OrderStateColor
+          ]
+        }`}
+      >
         {
           OrderStateTitle[
             row.original.allocationStatus as keyof typeof OrderStateTitle

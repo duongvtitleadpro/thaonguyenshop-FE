@@ -12,6 +12,11 @@ export enum OrderStatusColor {
   CUSTOMER_CANCELLED = "text-orange-500",
 }
 
+export enum OrderStateColor {
+  SENT = "text-blue-500",
+  ALLOCATED = "text-orange-500",
+}
+
 export enum OrderStateTitle {
   SENT = "Hàng đã gửi",
   ALLOCATED = "Hàng đã về",
