@@ -555,7 +555,11 @@ const DetailProductPage = ({
                             onChange={handleChangeFile}
                             accept="image/png,image/jpeg"
                           >
-                            {(props) => <Button {...props}>Tải ảnh</Button>}
+                            {(props) => (
+                              <Button {...props} bg="blue">
+                                Tải ảnh
+                              </Button>
+                            )}
                           </FileButton>
                         </div>
                       )}
