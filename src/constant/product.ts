@@ -13,8 +13,8 @@ export enum OrderStatusColor {
 }
 
 export enum OrderStateColor {
-  SENT = "text-blue-500",
-  ALLOCATED = "text-orange-500",
+  SENT = "text-orange-500",
+  ALLOCATED = "text-blue-500",
 }
 
 export enum OrderStateTitle {
