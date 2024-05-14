@@ -1,14 +1,14 @@
 import { Response } from "@/types/common";
 import {
+  EditOrderBody,
+  IDownloadFileExport,
   Order,
-  OrderParam,
-  OrderResponse,
   OrderCombineParam,
   OrderCombineResponse,
-  ResponseWithTotal,
-  EditOrder,
-  SummaryOrderStatus,
+  OrderParam,
+  OrderResponse,
   PurchasedOrder,
+  SummaryOrderStatus,
 } from "@/types/order";
 import { objectToQueryStringByComma } from "@/utils";
 import axiosInstance from "@utils/axios";
@@ -18,7 +18,9 @@ export const addOrder = async (order: Order): Promise<OrderResponse[]> => {
   return data;
 };
 
-export const editOrder = async (order: EditOrder): Promise<OrderResponse> => {
+export const editOrder = async (
+  order: EditOrderBody
+): Promise<OrderResponse> => {
   const { data } = await axiosInstance.put(`/order/customer`, order);
   return data;
 };
@@ -57,4 +59,12 @@ export const cancelOrder = async (id: number) => {
 export const getSummaryOrderStatus = async (): Promise<SummaryOrderStatus> => {
   const { data } = await axiosInstance.get(`/order/summary-order-status`);
   return data;
+};
+
+export const exportOrder = async (
+  params: IDownloadFileExport
+): Promise<any> => {
+  return axiosInstance.get(`/order/export/${params.id}`, {
+    responseType: "blob",
+  });
 };

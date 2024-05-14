@@ -5,6 +5,7 @@ export type Order = {
   productId: number;
   note: string;
   orderDetails: OrderDetail[];
+  imageNote?: "";
 };
 export type EditOrder = {
   orderId: number;
@@ -33,7 +34,14 @@ export type OrderResponse = {
   allocationStatus: AllocationStatus;
   allocatedDate: string;
   orderDetails: OrderDetailRespose[];
+  orderImages: OrderImage[];
   user: User;
+};
+
+export type OrderImage = {
+  id: number;
+  orderId: number;
+  url: string;
 };
 
 export type OrderParam = {
@@ -49,15 +57,15 @@ export type OrderParam = {
 };
 
 export type OrderDetailRespose = {
-  id?: number;
+  id: number;
   size: {
     title: string;
     id: number;
-  };
+  } | null;
   color: {
     title: string;
     id: number;
-  };
+  } | null;
   quantity: number;
   receivedQuantity: number;
 };
@@ -123,4 +131,23 @@ export type SummaryOrderStatus = {
   totalOrderAllocated: number;
   totalAllocated: number;
   totalSent: number;
+};
+
+export interface IDownloadFileExport {
+  id: number;
+}
+export type EditOrderDetail = {
+  id: number;
+  productId: number;
+  colorId: number | null;
+  sizeId: number | null;
+  quantity: number;
+};
+
+export type EditOrderBody = {
+  orderId: number;
+  note: string;
+  orderDetails: EditOrderDetail[];
+  orderImages: string[];
+  orderFileNote?: File | null;
 };

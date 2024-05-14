@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { SimpleGrid } from "@mantine/core";
+import { Button, SimpleGrid } from "@mantine/core";
 
 import { FilterProduct, ProductCard } from "@/components/product-category";
 import { QueryKey } from "@/constant/query-key";
@@ -19,6 +19,7 @@ export default function ProductPage() {
   const [productParam, setProductParam] = useRecoilState(filterProductState);
   const searchParams = useSearchParams();
   const isRedirectToProduct = useRef(false);
+  const pageRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const filterProduct = sessionStorage.getItem(ATOM_KEY.FILTER_PRODUCT);
     if (filterProduct) {
@@ -31,9 +32,7 @@ export default function ProductPage() {
         keyword,
       }));
     }
-  }, []);
 
-  useEffect(() => {
     return () => {
       if (isRedirectToProduct.current) {
         return;
@@ -43,17 +42,37 @@ export default function ProductPage() {
     };
   }, []);
 
-  const { data: productListData } = useQuery({
+  // useEffect(() => {
+  //   if (pageRef.current) {
+  //     window.scrollTo({
+  //       top: 0,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [pageRef]);
+
+  const { data: productListData, isFetched } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_LIST, productParam],
     queryFn: () => getProductList(productParam),
   });
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+    });
+  };
 
   const handleChangePage = (page: number) => {
     setProductParam((prev) => ({
       ...prev,
       page: page,
     }));
+    scrollToTop();
   };
+
+  useEffect(() => {
+    setTimeout(() => scrollToTop(), 0);
+  }, []);
 
   return (
     <div className="flex relative">
@@ -61,6 +80,7 @@ export default function ProductPage() {
       <div className="flex-1 p-4">
         {productListData && (
           <>
+            <span ref={pageRef}></span>
             <div className="max-w-[1300px] mx-auto">
               <SimpleGrid
                 cols={{ base: 2, xs: 2, sm: 3, md: 4, lg: 5 }}

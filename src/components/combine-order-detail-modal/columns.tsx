@@ -38,9 +38,9 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
         (detail) => detail.color?.title || "-"
       );
       return (
-        <div role="group" className="flex flex-col">
+        <div className="flex flex-col">
           {colorList.map((item, index) => (
-            <TableCell key={index}>{item}</TableCell>
+            <div key={index}>{item}</div>
           ))}
         </div>
       );
@@ -58,9 +58,9 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
         (detail) => detail.size?.title || "-"
       );
       return (
-        <div role="group" className="flex flex-col">
+        <div className="flex flex-col">
           {sizeList.map((item, index) => (
-            <TableCell key={index}>{item}</TableCell>
+            <div key={index}>{item}</div>
           ))}
         </div>
       );
@@ -79,9 +79,9 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
         (detail) => detail.quantity
       );
       return (
-        <div role="group" className="flex flex-col">
+        <div className="flex flex-col">
           {quantityList.map((item, index) => (
-            <TableCell key={index}>{item}</TableCell>
+            <div key={index}>{item}</div>
           ))}
         </div>
       );
@@ -99,9 +99,9 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
         (detail) => detail.receivedQuantity
       );
       return (
-        <div role="group" className="flex flex-col">
+        <div className="flex flex-col">
           {receivedQuantityList.map((item, index) => (
-            <TableCell key={index}>{item}</TableCell>
+            <div key={index}>{item}</div>
           ))}
         </div>
       );
@@ -132,11 +132,11 @@ export const columns: ColumnDef<CombinedOrderDetail>[] = [
         (detail) => detail.quantity
       );
       return (
-        <div role="group" className="flex flex-col">
+        <div className="flex flex-col">
           {quantityList.map((item, index) => (
-            <TableCell key={index}>
+            <div key={index}>
               {currency.format(row.original?.order?.product?.price * item)}
-            </TableCell>
+            </div>
           ))}
         </div>
       );

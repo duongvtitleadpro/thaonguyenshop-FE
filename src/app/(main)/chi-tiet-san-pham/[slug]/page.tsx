@@ -5,6 +5,10 @@ import {
   UnstyledButton,
   Textarea,
   Indicator,
+  FileButton,
+  ActionIcon,
+  Button,
+  Image,
 } from "@mantine/core";
 import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
@@ -25,10 +29,14 @@ import { usePathname, useRouter } from "next/navigation";
 import LoginModal from "@/components/login-modal";
 import { format } from "date-fns";
 import { Inter } from "next/font/google";
+import { Icons } from "@/components/icons";
+import { X } from "lucide-react";
+import { uploadFileRequest } from "@/api/file";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const OPTIONS: EmblaOptionsType = {};
+const MAX_SIZE_FILE = 4194304;
 
 const DetailProductPage = ({
   params,
@@ -47,8 +55,10 @@ const DetailProductPage = ({
   const [auth, setAuth] = useRecoilState(authState);
   const [color, setColor] = useState<number | null>(null);
   const [cart, setCart] = useState<OrderDetail[]>([]);
+  console.log("😻 ~ cart:", cart);
   const [note, setNote] = useState("");
   const [order, setOrder] = useState<OrderResponse | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const isEditOrder = useMemo(() => searchParams?.order, [searchParams?.order]);
 
@@ -81,7 +91,6 @@ const DetailProductPage = ({
 
     return listColorData.map((item) => item.color);
   }, [productDetailData, order, isEditOrder]);
-  console.log("😻 ~ listColor ~ listColor:", listColor);
 
   const listSizeByColor = useMemo(() => {
     if (!productDetailData) return [];
@@ -109,7 +118,10 @@ const DetailProductPage = ({
         : listSize.size
       : [];
   }, [productDetailData, color, isEditOrder, order?.orderDetails]);
-  console.log("😻 ~ listSizeByColor ~ listSizeByColor:", listSizeByColor);
+
+  const totalOrderQuantity = useMemo(() => {
+    return cart.reduce((acc, cur) => acc + cur.quantity, 0);
+  }, [cart]);
 
   const totalItemInCart = useMemo(() => {
     const total: any = {};
@@ -194,11 +206,11 @@ const DetailProductPage = ({
                 format(new Date(), "dd/MM/yyyy HH:mm")
               )
             : note + lastEditText + format(new Date(), "dd/MM/yyyy HH:mm");
-        const order = await editOrder({
-          orderId: Number(searchParams?.order),
-          note: noteEdit,
-          orderDetails: cart,
-        });
+        // const order = await editOrder({
+        //   orderId: Number(searchParams?.order),
+        //   note: noteEdit,
+        //   orderDetails: cart,
+        // });
         toast("Sửa đơn hàng thành công", {
           description: (
             <div className="w-full">
@@ -216,11 +228,22 @@ const DetailProductPage = ({
         });
         router.push(pathname);
       } else {
-        const order = await addOrder({
+        let imageNote = "";
+        if (cart.length === 1 && file) {
+          const formData = new FormData();
+          formData.append("fileType", "ORDER_IMAGE");
+          formData.append("file", file);
+          imageNote = await uploadFileRequest(formData);
+        }
+        const body = {
           productId: productDetailData.id,
           note,
           orderDetails: cart,
-        });
+        };
+        if (imageNote) {
+          Object.assign(body, { imageNote: imageNote });
+        }
+        const order = await addOrder(body);
         toast("Đơn hàng tạo thành công", {
           description: (
             <div className="w-full">
@@ -239,6 +262,7 @@ const DetailProductPage = ({
 
       setCart([]);
       setNote("");
+      setFile(null);
     } catch (error) {
       toast("Đã có lỗi xảy ra", {
         description: "Vui lòng thử lại sau",
@@ -246,7 +270,13 @@ const DetailProductPage = ({
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+      });
+    }, 0);
+  }, []);
   useEffect(() => {
     if (!isEditOrder) return;
     const orderId = searchParams.order;
@@ -254,7 +284,6 @@ const DetailProductPage = ({
       try {
         const order = await getOrderDetail(orderId);
         const lastEditText = "\nLần sửa gần nhất: ";
-        console.log("😻 ~ fetchOrder ~ lastEditText:", lastEditText);
         const indexOfNoteEditTime = order?.note?.indexOf(lastEditText);
         const oldNote =
           indexOfNoteEditTime !== -1 && indexOfNoteEditTime !== undefined
@@ -282,6 +311,27 @@ const DetailProductPage = ({
     };
     fetchOrder();
   }, [searchParams?.order]);
+
+  const handleChangeFile = (file: File | null) => {
+    if ((file?.size || 0) >= MAX_SIZE_FILE) {
+      toast("Ảnh dung lượng lớn", {
+        description: "Vui lòng up ảnh dung lượng nhỏ hơn 4MB",
+      });
+      return;
+    }
+    setFile(file);
+  };
+
+  const loadedImageFileNote = useMemo(() => {
+    if (file) {
+      return URL.createObjectURL(file);
+    }
+    return "";
+  }, [file]);
+
+  const handleDeleteFile = () => {
+    setFile(null);
+  };
 
   return (
     <div className="p-4">
@@ -481,6 +531,38 @@ const DetailProductPage = ({
                         minRows={2}
                         maxRows={4}
                       />
+                      <p className="mt-2 text-sm text-red-600 font-semibold">
+                        *Ảnh up lên chỉ áp dụng cho những đơn hàng đặt tách lẻ,
+                        không đặt gộp đơn
+                      </p>
+                      {cart.length === 1 && (
+                        <div className="flex gap-3 items-center mt-4">
+                          {file && (
+                            <div className="w-[150px] relative">
+                              <Image
+                                src={loadedImageFileNote}
+                                alt="note-image"
+                                w={150}
+                              />
+
+                              <X
+                                className="hover:cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-5 h-5 text-red-700"
+                                onClick={handleDeleteFile}
+                              />
+                            </div>
+                          )}
+                          <FileButton
+                            onChange={handleChangeFile}
+                            accept="image/png,image/jpeg"
+                          >
+                            {(props) => (
+                              <Button {...props} bg="blue">
+                                Tải ảnh
+                              </Button>
+                            )}
+                          </FileButton>
+                        </div>
+                      )}
                       <button
                         disabled={cart.length === 0 || isBoughtStatus}
                         className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -496,7 +578,10 @@ const DetailProductPage = ({
                   )}
                 </div>
                 {auth.isAuthenticated && (
-                  <div>
+                  <div className="flex justify-between">
+                    <p className="text-2xl  py-4">
+                      Tổng số lượng : {totalOrderQuantity}
+                    </p>
                     <p className="text-2xl tracking-tight text-gray-900 py-4 text-right">
                       Tổng tiền:{" "}
                       {currency.format(
