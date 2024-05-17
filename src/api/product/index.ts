@@ -40,3 +40,14 @@ export const getStockProductImage = async (
   const { data } = await axiosInstance.get(`/stock-product-image?${search}`);
   return data;
 };
+
+export const getWatchedProductRequest = async (param: {
+  page: number;
+  limit: number;
+}): Promise<Response<Product>> => {
+  const search = objectToQueryString(param);
+  const { data } = await axiosInstance.get(
+    `/product/watched-products?${search}`
+  );
+  return data;
+};

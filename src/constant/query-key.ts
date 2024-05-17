@@ -11,4 +11,5 @@ export enum QueryKey {
   GET_PAYMENT_LIST = "get-payment-list",
   GET_SUMMARY_ORDER_STATUS = "get-summary-order-status",
   GET_STOCK_PRODUCT_IMAGE = "get-stock-product-image",
+  GET_WATCHED_PRODUCT = "get-watched-product",
 }
