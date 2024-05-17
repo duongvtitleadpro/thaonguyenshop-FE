@@ -51,3 +51,15 @@ export const getWatchedProductRequest = async (param: {
   );
   return data;
 };
+
+export const getSuggestProductRequest = async (param: {
+  page: number;
+  limit: number;
+  productId: number;
+}): Promise<Response<Product>> => {
+  const search = objectToQueryString(param);
+  const { data } = await axiosInstance.get(
+    `/product/suggest-products?${search}`
+  );
+  return data;
+};

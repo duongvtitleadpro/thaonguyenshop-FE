@@ -14,7 +14,11 @@ import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
-import { getProductDetail, getWatchedProductRequest } from "@/api/product";
+import {
+  getProductDetail,
+  getSuggestProductRequest,
+  getWatchedProductRequest,
+} from "@/api/product";
 import { currency } from "@/utils/currency";
 import { useEffect, useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
@@ -61,6 +65,11 @@ const DetailProductPage = ({
     page: 1,
     limit: 10,
   });
+  const [suggestProductParam, setSuggestProductParam] = useState({
+    page: 1,
+    limit: 10,
+    productId: Number(slug),
+  });
   const { data: productDetailData } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_DETAIL, slug],
     queryFn: () => getProductDetail(Number(slug)),
@@ -68,6 +77,10 @@ const DetailProductPage = ({
   const { data: watchedProductData } = useQuery({
     queryKey: [QueryKey.GET_WATCHED_PRODUCT, watchedProductParam],
     queryFn: () => getWatchedProductRequest(watchedProductParam),
+  });
+  const { data: suggestProductData } = useQuery({
+    queryKey: [QueryKey.GET_WATCHED_PRODUCT, suggestProductParam],
+    queryFn: () => getSuggestProductRequest(suggestProductParam),
   });
   const isEditOrder = useMemo(() => searchParams?.order, [searchParams?.order]);
 
@@ -349,6 +362,12 @@ const DetailProductPage = ({
     }));
   };
 
+  const handleChangeSuggestProductPage = (page: number) => {
+    setSuggestProductParam((prev) => ({
+      ...prev,
+      page: page,
+    }));
+  };
   return (
     <div className="p-4">
       {auth.isAuthenticated ? (
@@ -664,7 +683,7 @@ const DetailProductPage = ({
                 </Carousel>
                 <div className="flex justify-end">
                   <PaginationCustom
-                    total={2}
+                    total={watchedProductData.totalPages}
                     value={watchedProductParam.page}
                     onChange={handleChangeWatchedProductPage}
                     className="mt-4"
@@ -674,16 +693,16 @@ const DetailProductPage = ({
               </div>
             )}
 
-            {watchedProductData && (
-              <div>
-                <p className="text-xl font-semibold mb-3">Sản phẩm đã xem</p>
+            {suggestProductData && (
+              <div className="mt-8">
+                <p className="text-xl font-semibold mb-3">Sản phẩm liên quan</p>
                 <Carousel
                   slideSize={{ base: "50%", sm: "50%", md: "25%" }}
                   slideGap={{ base: "xs", sm: "md" }}
                   align="start"
                   slidesToScroll={2}
                 >
-                  {watchedProductData?.data.map((item) => (
+                  {suggestProductData?.data.map((item) => (
                     <Carousel.Slide key={item.id}>
                       <ProductCard
                         id={item.id}
@@ -703,9 +722,9 @@ const DetailProductPage = ({
                 </Carousel>
                 <div className="flex justify-end">
                   <PaginationCustom
-                    total={2}
-                    value={watchedProductParam.page}
-                    onChange={handleChangeWatchedProductPage}
+                    total={suggestProductData.totalPages}
+                    value={suggestProductParam.page}
+                    onChange={handleChangeSuggestProductPage}
                     className="mt-4"
                     color="blue"
                   />
