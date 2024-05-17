@@ -3,6 +3,7 @@ import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
+import "@mantine/carousel/styles.css";
 import Provider from "./provider";
 import { ColorSchemeScript } from "@mantine/core";
 

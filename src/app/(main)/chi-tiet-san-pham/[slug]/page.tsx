@@ -14,7 +14,11 @@ import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
-import { getProductDetail } from "@/api/product";
+import {
+  getProductDetail,
+  getSuggestProductRequest,
+  getWatchedProductRequest,
+} from "@/api/product";
 import { currency } from "@/utils/currency";
 import { useEffect, useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
@@ -32,6 +36,9 @@ import { Inter } from "next/font/google";
 import { Icons } from "@/components/icons";
 import { X } from "lucide-react";
 import { uploadFileRequest } from "@/api/file";
+import { ProductCard } from "@/components/product-category";
+import PaginationCustom from "@/components/pagination";
+import { Carousel } from "@mantine/carousel";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,18 +55,33 @@ const DetailProductPage = ({
   const { slug } = params;
   const pathname = usePathname();
   const router = useRouter();
+  const [auth, setAuth] = useRecoilState(authState);
+  const [color, setColor] = useState<number | null>(null);
+  const [cart, setCart] = useState<OrderDetail[]>([]);
+  const [note, setNote] = useState("");
+  const [order, setOrder] = useState<OrderResponse | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [watchedProductParam, setWatchedProductParam] = useState({
+    page: 1,
+    limit: 10,
+  });
+  const [suggestProductParam, setSuggestProductParam] = useState({
+    page: 1,
+    limit: 10,
+    productId: Number(slug),
+  });
   const { data: productDetailData } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_DETAIL, slug],
     queryFn: () => getProductDetail(Number(slug)),
   });
-  const [auth, setAuth] = useRecoilState(authState);
-  const [color, setColor] = useState<number | null>(null);
-  const [cart, setCart] = useState<OrderDetail[]>([]);
-  console.log("😻 ~ cart:", cart);
-  const [note, setNote] = useState("");
-  const [order, setOrder] = useState<OrderResponse | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-
+  const { data: watchedProductData } = useQuery({
+    queryKey: [QueryKey.GET_WATCHED_PRODUCT, watchedProductParam],
+    queryFn: () => getWatchedProductRequest(watchedProductParam),
+  });
+  const { data: suggestProductData } = useQuery({
+    queryKey: [QueryKey.GET_WATCHED_PRODUCT, suggestProductParam],
+    queryFn: () => getSuggestProductRequest(suggestProductParam),
+  });
   const isEditOrder = useMemo(() => searchParams?.order, [searchParams?.order]);
 
   const listColor = useMemo(() => {
@@ -333,6 +355,19 @@ const DetailProductPage = ({
     setFile(null);
   };
 
+  const handleChangeWatchedProductPage = (page: number) => {
+    setWatchedProductParam((prev) => ({
+      ...prev,
+      page: page,
+    }));
+  };
+
+  const handleChangeSuggestProductPage = (page: number) => {
+    setSuggestProductParam((prev) => ({
+      ...prev,
+      page: page,
+    }));
+  };
   return (
     <div className="p-4">
       {auth.isAuthenticated ? (
@@ -618,6 +653,85 @@ const DetailProductPage = ({
               </div>
             </SimpleGrid>
           )}
+          <div>
+            {watchedProductData && (
+              <div>
+                <p className="text-xl font-semibold mb-3">Sản phẩm đã xem</p>
+                <Carousel
+                  slideSize={{ base: "50%", sm: "50%", md: "25%" }}
+                  slideGap={{ base: "xs", sm: "md" }}
+                  align="start"
+                  slidesToScroll={2}
+                >
+                  {watchedProductData?.data.map((item) => (
+                    <Carousel.Slide key={item.id}>
+                      <ProductCard
+                        id={item.id}
+                        img={
+                          item.productImages.length > 0
+                            ? item.productImages[0].imageUrl
+                            : ""
+                        }
+                        code={item.productCode}
+                        name={item.name}
+                        price={item.price}
+                        status={item.productStatus}
+                        origin={item.origin}
+                      />
+                    </Carousel.Slide>
+                  ))}
+                </Carousel>
+                <div className="flex justify-end">
+                  <PaginationCustom
+                    total={watchedProductData.totalPages}
+                    value={watchedProductParam.page}
+                    onChange={handleChangeWatchedProductPage}
+                    className="mt-4"
+                    color="blue"
+                  />
+                </div>
+              </div>
+            )}
+
+            {suggestProductData && (
+              <div className="mt-8">
+                <p className="text-xl font-semibold mb-3">Sản phẩm liên quan</p>
+                <Carousel
+                  slideSize={{ base: "50%", sm: "50%", md: "25%" }}
+                  slideGap={{ base: "xs", sm: "md" }}
+                  align="start"
+                  slidesToScroll={2}
+                >
+                  {suggestProductData?.data.map((item) => (
+                    <Carousel.Slide key={item.id}>
+                      <ProductCard
+                        id={item.id}
+                        img={
+                          item.productImages.length > 0
+                            ? item.productImages[0].imageUrl
+                            : ""
+                        }
+                        code={item.productCode}
+                        name={item.name}
+                        price={item.price}
+                        status={item.productStatus}
+                        origin={item.origin}
+                      />
+                    </Carousel.Slide>
+                  ))}
+                </Carousel>
+                <div className="flex justify-end">
+                  <PaginationCustom
+                    total={suggestProductData.totalPages}
+                    value={suggestProductParam.page}
+                    onChange={handleChangeSuggestProductPage}
+                    className="mt-4"
+                    color="blue"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         <div className="w-full max-w-6xl mx-auto mt-12">
