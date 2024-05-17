@@ -39,6 +39,7 @@ import { uploadFileRequest } from "@/api/file";
 import { ProductCard } from "@/components/product-category";
 import PaginationCustom from "@/components/pagination";
 import { Carousel } from "@mantine/carousel";
+import { useMediaQuery } from "@mantine/hooks";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,6 +62,7 @@ const DetailProductPage = ({
   const [note, setNote] = useState("");
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const isMobile = useMediaQuery("(max-width: 640px)");
   const [watchedProductParam, setWatchedProductParam] = useState({
     page: 1,
     limit: 10,
@@ -658,10 +660,11 @@ const DetailProductPage = ({
               <div>
                 <p className="text-xl font-semibold mb-3">Sản phẩm đã xem</p>
                 <Carousel
-                  slideSize={{ base: "50%", sm: "50%", md: "25%" }}
+                  slideSize={{ base: "50%", sm: "50%", md: "12.5%" }}
                   slideGap={{ base: "xs", sm: "md" }}
                   align="start"
                   slidesToScroll={2}
+                  withControls={isMobile}
                 >
                   {watchedProductData?.data.map((item) => (
                     <Carousel.Slide key={item.id}>
@@ -677,6 +680,7 @@ const DetailProductPage = ({
                         price={item.price}
                         status={item.productStatus}
                         origin={item.origin}
+                        isCarouselCard
                       />
                     </Carousel.Slide>
                   ))}
@@ -697,10 +701,11 @@ const DetailProductPage = ({
               <div className="mt-8">
                 <p className="text-xl font-semibold mb-3">Sản phẩm liên quan</p>
                 <Carousel
-                  slideSize={{ base: "50%", sm: "50%", md: "25%" }}
+                  slideSize={{ base: "50%", sm: "50%", md: "12.5%" }}
                   slideGap={{ base: "xs", sm: "md" }}
                   align="start"
                   slidesToScroll={2}
+                  withControls={isMobile}
                 >
                   {suggestProductData?.data.map((item) => (
                     <Carousel.Slide key={item.id}>
