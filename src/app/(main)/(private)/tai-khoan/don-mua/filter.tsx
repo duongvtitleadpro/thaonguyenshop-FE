@@ -12,8 +12,9 @@ import {
 } from "@/types/order";
 import { currency } from "@/utils/currency";
 import { ActionIcon, Input, Table, Tooltip } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 import { X } from "lucide-react";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
 
 type OrderStatusType = {
@@ -37,6 +38,7 @@ const PurchaseOrderFilter = ({
   totalReceivedPrice,
 }: PurchaseOrderFilterProps) => {
   const [keyword, setKeyword] = React.useState("");
+  const [keywordDebounced] = useDebouncedValue(keyword, 500);
   const [purchaseOrderFilter, setPurchaseOrderFilter] = useRecoilState(
     purchaseOrderFilterState
   );
@@ -124,6 +126,7 @@ const PurchaseOrderFilter = ({
 
   const handleClearFilter = () => {
     setPurchaseOrderFilter(PurchaseOrderFilterDefaultValue);
+    setKeyword("");
   };
 
   const checkActiveFilterAllocationStatus = useCallback(
@@ -135,6 +138,14 @@ const PurchaseOrderFilter = ({
     (value: OrderStatus) => purchaseOrderFilter.orderStatus?.includes(value),
     [purchaseOrderFilter.orderStatus]
   );
+
+  useEffect(() => {
+    console.log("keywordDebounced", keywordDebounced);
+    setPurchaseOrderFilter((prev) => ({
+      ...prev,
+      query: keywordDebounced,
+    }));
+  }, [keywordDebounced, setPurchaseOrderFilter]);
 
   return (
     <div className="mb-3 flex gap-4 flex-col">

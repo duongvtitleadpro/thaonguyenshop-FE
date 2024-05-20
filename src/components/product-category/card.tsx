@@ -16,12 +16,22 @@ interface ProductCardProps {
   price: number;
   status: ProductStatus | null;
   origin: string;
+  isCarouselCard?: boolean;
 }
 
 const ProductCard = (props: ProductCardProps) => {
   const auth = useRecoilValue(authState);
   const router = useRouter();
-  const { id, img, name, code, price, status, origin } = props;
+  const {
+    id,
+    img,
+    name,
+    code,
+    price,
+    status,
+    origin,
+    isCarouselCard = false,
+  } = props;
   return (
     <div className="h-full transform overflow-hidden rounded-lg border bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
       <div className="h-32 md:h-56 w-full border-b bg-slate-100">
@@ -36,9 +46,15 @@ const ProductCard = (props: ProductCardProps) => {
       </div>
       <div className="p-2 md:p-4">
         {auth.isAuthenticated && (
-          <p className="mb-2 text-sm text-gray-900">{`Mã sản phẩm: ${code}`}</p>
+          <p
+            className={`mb-2 text-sm text-gray-900 `}
+          >{`Mã sản phẩm: ${code}`}</p>
         )}
-        <h2 className="mb-2 text-lg font-medium dark:text-white text-gray-900 line-clamp-3">
+        <h2
+          className={`mb-2 text-lg font-medium dark:text-white text-gray-900 line-clamp-3 ${
+            isCarouselCard ? "text-base" : ""
+          }`}
+        >
           {name}
         </h2>
         <p className="mb-2 text-sm text-gray-700">Nguồn gốc: {origin}</p>
