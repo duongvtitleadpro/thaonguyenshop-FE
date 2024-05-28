@@ -72,14 +72,10 @@ export default function ProductPage() {
       }));
 
       scrollToTop();
-      router.push(`/san-pham?&page=${page}`);
+      router.push(`/san-pham?&page=${page || 1}`);
     },
     [router, setProductParam]
   );
-
-  useEffect(() => {
-    router.push(`/san-pham?&page=${productParam.page}`);
-  }, []);
 
   useEffect(() => {
     const page = searchParams.get("page");
