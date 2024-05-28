@@ -1,19 +1,19 @@
 "use client";
+import { SimpleGrid } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { Button, SimpleGrid } from "@mantine/core";
 
+import { getProductList } from "@/api/product";
+import PaginationCustom from "@/components/pagination";
 import { FilterProduct, ProductCard } from "@/components/product-category";
 import { QueryKey } from "@/constant/query-key";
-import { getProductList } from "@/api/product";
-import { useRecoilState } from "recoil";
+import { ATOM_KEY } from "@/store/key";
 import {
   FILTER_PRODUCT_DEFAULT,
   filterProductState,
 } from "@/store/state/product-filter.atom";
-import { useEffect, useRef } from "react";
-import { ATOM_KEY } from "@/store/key";
-import { useSearchParams, usePathname } from "next/navigation";
-import PaginationCustom from "@/components/pagination";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef } from "react";
+import { useRecoilState } from "recoil";
 
 export default function ProductPage() {
   const [productParam, setProductParam] = useRecoilState(filterProductState);
@@ -62,13 +62,30 @@ export default function ProductPage() {
     });
   };
 
-  const handleChangePage = (page: number) => {
-    setProductParam((prev) => ({
-      ...prev,
-      page: page,
-    }));
-    scrollToTop();
-  };
+  const router = useRouter();
+
+  const handleChangePage = useCallback(
+    (page: number) => {
+      setProductParam((prev) => ({
+        ...prev,
+        page: page,
+      }));
+
+      scrollToTop();
+      router.push(`/san-pham?&page=${page}`);
+    },
+    [router, setProductParam]
+  );
+
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page) {
+      setProductParam((prev) => ({
+        ...prev,
+        page: Number(page),
+      }));
+    }
+  }, [searchParams, setProductParam]);
 
   useEffect(() => {
     setTimeout(() => scrollToTop(), 0);
