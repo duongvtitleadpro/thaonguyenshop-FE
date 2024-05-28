@@ -78,6 +78,10 @@ export default function ProductPage() {
   );
 
   useEffect(() => {
+    router.push(`/san-pham?&page=${productParam.page}`);
+  }, []);
+
+  useEffect(() => {
     const page = searchParams.get("page");
     if (page) {
       setProductParam((prev) => ({
