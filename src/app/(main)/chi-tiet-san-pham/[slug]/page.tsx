@@ -20,7 +20,7 @@ import {
   getWatchedProductRequest,
 } from "@/api/product";
 import { currency } from "@/utils/currency";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { cn } from "@/lib/utils";
 import { addOrder, editOrder, getOrderDetail } from "@/api/order";
@@ -40,6 +40,7 @@ import { ProductCard } from "@/components/product-category";
 import PaginationCustom from "@/components/pagination";
 import { Carousel } from "@mantine/carousel";
 import { useMediaQuery } from "@mantine/hooks";
+import { cp } from "fs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -72,7 +73,7 @@ const DetailProductPage = ({
     limit: 10,
     productId: Number(slug),
   });
-  const { data: productDetailData } = useQuery({
+  const { data: productDetailData, refetch } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_DETAIL, slug],
     queryFn: () => getProductDetail(Number(slug)),
   });
@@ -201,6 +202,29 @@ const DetailProductPage = ({
     setCart(newCart);
   };
 
+  const isReadyProduct = useMemo(
+    () => productDetailData?.warehouseStatus === "READY",
+    [productDetailData?.warehouseStatus]
+  );
+
+  const findColorDetail = useCallback(
+    (id: number) => {
+      const color = productDetailData?.details.find(
+        (detail) => detail.color.id === id
+      );
+      console.log("😻 ~ color:", color);
+      return color?.color.inventory || 0;
+    },
+    [productDetailData?.details]
+  );
+
+  const getDisableInput = useCallback(
+    (quantity: number) => {
+      return quantity < 1 && isReadyProduct;
+    },
+    [isReadyProduct]
+  );
+
   const handleBuyProduct = async () => {
     if (!auth.isAuthenticated) {
       toast("Bạn chưa đăng nhập", {
@@ -287,6 +311,7 @@ const DetailProductPage = ({
       setCart([]);
       setNote("");
       setFile(null);
+      refetch();
     } catch (error) {
       toast("Đã có lỗi xảy ra", {
         description: "Vui lòng thử lại sau",
@@ -462,7 +487,7 @@ const DetailProductPage = ({
                                     className={({ active }) =>
                                       cn(
                                         active ? "ring-2 ring-[#35a8e0]" : "",
-                                        "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1"
+                                        "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 hover:cursor-pointer"
                                       )
                                     }
                                   >
@@ -494,11 +519,16 @@ const DetailProductPage = ({
 
                       {/* Sizes */}
                       <div className="mt-10">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
                           {listSizeByColor.length > 0 && (
-                            <h3 className="text-sm font-medium text-gray-900">
-                              Size
-                            </h3>
+                            <>
+                              <h3 className="text-sm font-medium text-gray-900 w-16">
+                                Size
+                              </h3>
+                              <h3 className="text-sm font-medium text-gray-900 w-16">
+                                Sẵn kho
+                              </h3>
+                            </>
                           )}
                         </div>
                         {/* Size available */}
@@ -507,12 +537,21 @@ const DetailProductPage = ({
                             {listSizeByColor.map((size, index) => (
                               <List.Item key={index}>
                                 <div className="flex gap-3 items-center">
-                                  <span className="w-24 font-semibold">
+                                  <span className="w-16 font-semibold">
                                     {size.title}
+                                  </span>
+                                  <span className="w-16 text-red-600 font-semibold">
+                                    {size.inventory} sp
                                   </span>
                                   <InputNumber
                                     placeholder="0"
                                     min={0}
+                                    max={
+                                      isReadyProduct ? size.inventory : 9999999
+                                    }
+                                    disableNumberInput={getDisableInput(
+                                      size.inventory
+                                    )}
                                     value={
                                       cart.find(
                                         (product) =>
@@ -538,11 +577,18 @@ const DetailProductPage = ({
                             <h3 className="text-sm font-medium text-gray-900">
                               Số lượng
                             </h3>
+                            <h3 className="text-sm font-medium text-gray-900 ml-3">
+                              ({findColorDetail(color as number)} sp)
+                            </h3>
                           </div>
                           <div className="flex gap-3 items-center">
                             <InputNumber
                               placeholder="0"
                               min={0}
+                              max={findColorDetail(color as number)}
+                              disableNumberInput={getDisableInput(
+                                findColorDetail(color as number)
+                              )}
                               value={
                                 cart.find(
                                   (product) =>
