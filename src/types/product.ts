@@ -50,6 +50,7 @@ export type CategoryProduct = {
 export type ProductSize = {
   id: number;
   title: string;
+  inventory: number;
 };
 
 export type ProductColor = ProductSize;

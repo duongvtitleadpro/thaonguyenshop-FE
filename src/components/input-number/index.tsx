@@ -9,7 +9,13 @@ import {
 } from "@mantine/core";
 import { Minus, Plus } from "lucide-react";
 import { useRef } from "react";
-const InputNumber = (props: NumberInputProps) => {
+
+interface InputNumberProp extends NumberInputProps {
+  disableNumberInput?: boolean;
+}
+
+const InputNumber = (props: InputNumberProp) => {
+  const { disableNumberInput } = props;
   const handlersRef = useRef<NumberInputHandlers>(null);
   return (
     <div className="flex">
@@ -18,12 +24,14 @@ const InputNumber = (props: NumberInputProps) => {
         variant="default"
         radius={0}
         className="w-9 h-9 p-0 border-r-0 "
+        disabled={disableNumberInput}
       >
         <Minus className="w-3 h-3" />
       </Button>
       <Tooltip label={props.value}>
         <NumberInput
           w={40}
+          disabled={disableNumberInput}
           handlersRef={handlersRef}
           hideControls
           radius={0}
@@ -39,6 +47,7 @@ const InputNumber = (props: NumberInputProps) => {
         variant="default"
         radius={0}
         className="w-9 h-9 p-0 border-l-0"
+        disabled={disableNumberInput}
       >
         <Plus className="w-3 h-3" />
       </Button>
