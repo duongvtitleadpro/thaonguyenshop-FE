@@ -46,6 +46,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const OPTIONS: EmblaOptionsType = {};
 const MAX_SIZE_FILE = 4194304;
+const MAX_ORDER_QUANTITY = 9999999;
 
 const DetailProductPage = ({
   params,
@@ -525,9 +526,11 @@ const DetailProductPage = ({
                               <h3 className="text-sm font-medium text-gray-900 w-16">
                                 Size
                               </h3>
-                              <h3 className="text-sm font-medium text-gray-900 w-16">
-                                Sẵn kho
-                              </h3>
+                              {isReadyProduct && (
+                                <h3 className="text-sm font-medium text-gray-900 w-16">
+                                  Sẵn kho
+                                </h3>
+                              )}
                             </>
                           )}
                         </div>
@@ -540,14 +543,18 @@ const DetailProductPage = ({
                                   <span className="w-16 font-semibold">
                                     {size.title}
                                   </span>
-                                  <span className="w-16 text-red-600 font-semibold">
-                                    {size.inventory} sp
-                                  </span>
+                                  {isReadyProduct && (
+                                    <span className="w-16 text-red-600 font-semibold">
+                                      {size.inventory} sp
+                                    </span>
+                                  )}
                                   <InputNumber
                                     placeholder="0"
                                     min={0}
                                     max={
-                                      isReadyProduct ? size.inventory : 9999999
+                                      isReadyProduct
+                                        ? size.inventory
+                                        : MAX_ORDER_QUANTITY
                                     }
                                     disableNumberInput={getDisableInput(
                                       size.inventory
@@ -577,15 +584,21 @@ const DetailProductPage = ({
                             <h3 className="text-sm font-medium text-gray-900">
                               Số lượng
                             </h3>
-                            <h3 className="text-sm font-medium text-gray-900 ml-3">
-                              ({findColorDetail(color as number)} sp)
-                            </h3>
+                            {isReadyProduct && (
+                              <h3 className="text-sm font-medium text-red-600 ml-3">
+                                ({findColorDetail(color as number)} sp)
+                              </h3>
+                            )}
                           </div>
                           <div className="flex gap-3 items-center">
                             <InputNumber
                               placeholder="0"
                               min={0}
-                              max={findColorDetail(color as number)}
+                              max={
+                                isReadyProduct
+                                  ? findColorDetail(color as number)
+                                  : MAX_ORDER_QUANTITY
+                              }
                               disableNumberInput={getDisableInput(
                                 findColorDetail(color as number)
                               )}
