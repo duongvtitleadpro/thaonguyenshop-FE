@@ -120,6 +120,7 @@ export default function ProductPage() {
                       name={item.name}
                       price={item.price}
                       status={item.productStatus}
+                      warehouseStatus={item.warehouseStatus}
                       origin={item.origin}
                     />
                   </div>
