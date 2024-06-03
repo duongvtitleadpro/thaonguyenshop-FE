@@ -674,7 +674,6 @@ export const columns: any = [
   {
     id: "actions",
     Cell: ({ row }: any) => {
-      console.log("😻 ~ row:", row);
       const orderId = row.original.id;
       const productId = row.original.productId;
       const canEditOrder =
