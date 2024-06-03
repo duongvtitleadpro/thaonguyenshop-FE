@@ -167,9 +167,13 @@ const PurchaseOrderTableMobile = (props: PurchaseOrderTableMobileProps) => {
                         const orderId = mergeItem.id;
                         const productId = mergeItem.productId;
                         const canEditOrder =
-                          mergeItem.orderStatus === "NOT_PURCHASED";
-                        const canDeleteOrder =
-                          mergeItem.orderStatus === "NOT_PURCHASED";
+                          (mergeItem.product.warehouseStatus === "ORDER" &&
+                            mergeItem.orderStatus === "NOT_PURCHASED") ||
+                          (mergeItem.product.warehouseStatus === "READY" &&
+                            (mergeItem.orderStatus === "PURCHASED" ||
+                              mergeItem.orderStatus === "NOT_PURCHASED") &&
+                            mergeItem.allocationStatus !== "SENT");
+                        const canDeleteOrder = canEditOrder;
                         const orderDetailClone = mergeItem.orderDetails[0];
                         const orderNote = mergeItem.note;
                         const orderDetail: EditOrderDetail = {

@@ -738,6 +738,7 @@ const DetailProductPage = ({
                         name={item.name}
                         price={item.price}
                         status={item.productStatus}
+                        warehouseStatus={item.warehouseStatus}
                         origin={item.origin}
                         isCarouselCard
                       />
@@ -779,6 +780,7 @@ const DetailProductPage = ({
                         name={item.name}
                         price={item.price}
                         status={item.productStatus}
+                        warehouseStatus={item.warehouseStatus}
                         origin={item.origin}
                       />
                     </Carousel.Slide>

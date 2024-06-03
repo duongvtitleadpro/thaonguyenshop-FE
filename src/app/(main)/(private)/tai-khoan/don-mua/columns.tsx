@@ -674,10 +674,17 @@ export const columns: any = [
   {
     id: "actions",
     Cell: ({ row }: any) => {
+      console.log("😻 ~ row:", row);
       const orderId = row.original.id;
       const productId = row.original.productId;
-      const canEditOrder = row.original.orderStatus === "NOT_PURCHASED";
-      const canDeleteOrder = row.original.orderStatus === "NOT_PURCHASED";
+      const canEditOrder =
+        (row.original.product.warehouseStatus === "ORDER" &&
+          row.original.orderStatus === "NOT_PURCHASED") ||
+        (row.original.product.warehouseStatus === "READY" &&
+          (row.original.orderStatus === "PURCHASED" ||
+            row.original.orderStatus === "NOT_PURCHASED") &&
+          row.original.allocationStatus !== "SENT");
+      const canDeleteOrder = canEditOrder;
       const orderDetailClone = row.original.orderDetails[0];
       const orderNote = row.original.note;
       const orderDetail: EditOrderDetail = {

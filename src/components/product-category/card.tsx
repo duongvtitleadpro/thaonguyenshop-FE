@@ -16,7 +16,7 @@ interface ProductCardProps {
   price: number;
   status: ProductStatus | null;
   origin: string;
-  warehouseStatus: WarehouseStatus;
+  warehouseStatus?: WarehouseStatus;
   isCarouselCard?: boolean;
 }
 
