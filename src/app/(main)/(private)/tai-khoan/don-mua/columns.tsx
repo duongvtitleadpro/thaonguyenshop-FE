@@ -27,7 +27,7 @@ import {
 import { placeholderImage } from "@/constant/common";
 import { useRecoilState } from "recoil";
 import { editOrderState } from "@/store/state/edit-order.atom";
-import { uniqBy, first, max } from "lodash";
+import { uniqBy, first } from "lodash";
 import SelectCustom from "@/components/select";
 import { useMemo, useState } from "react";
 import { Icons } from "@/components/icons";
@@ -223,10 +223,10 @@ export const EditOrderSizeRow = (props: EditOrderSizeRowProps) => {
       const sizeList = uniqBy(sizeListRaw, (item: any) => item?.id);
       const currentOrderColorId = orderData.orderDetails[0].color?.id || null;
       const currentOrderSizeId = orderData.orderDetails[0].size?.id || null;
-      const currentOrderIdx = detailsListRaw.findIndex(
+      const currentOrderIdx = sizeList.findIndex(
         (item: any) =>
-          item.colorId === currentOrderColorId &&
-          item.sizeId === currentOrderSizeId
+          colorSelected?.colorId === currentOrderColorId &&
+          item?.size?.id === currentOrderSizeId
       );
       if (currentOrderIdx !== -1) {
         sizeList[currentOrderIdx].inventory +=
