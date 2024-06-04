@@ -27,7 +27,7 @@ import {
 import { placeholderImage } from "@/constant/common";
 import { useRecoilState } from "recoil";
 import { editOrderState } from "@/store/state/edit-order.atom";
-import { uniqBy, first } from "lodash";
+import { uniqBy, first, max } from "lodash";
 import SelectCustom from "@/components/select";
 import { useMemo, useState } from "react";
 import { Icons } from "@/components/icons";
@@ -77,14 +77,55 @@ export const EditOrderColorRow = (props: EditOrderColorRowProps) => {
 
   if (isEditOrder && isExistColorList) {
     const detailsListRaw = orderData?.product?.details;
+    const isReadyProduct = orderData.product.warehouseStatus === "READY";
     const isExistSizeList = detailsListRaw.every((item) => item.size);
+    let colorOptions: any = [];
 
-    const colorListRaw = detailsListRaw.map((item) => item.color);
-    const colorList = uniqBy(colorListRaw, (item) => item.id);
-    const colorOptions = colorList.map((item) => ({
-      label: item.title,
-      value: item.id.toString(),
-    }));
+    if (isReadyProduct) {
+      const colorListRaw = detailsListRaw.map((item: any) => ({
+        ...item.color,
+        inventory: item.inventory,
+      }));
+      const colorList: any = [];
+      colorListRaw.forEach((item) => {
+        const existColorIdx = colorList.findIndex(
+          (color: any) => color.value === item.id.toString()
+        );
+        if (existColorIdx !== -1) {
+          colorList[existColorIdx].inventory += item.inventory;
+        } else {
+          colorList.push({
+            label: item.title,
+            value: item.id.toString(),
+            inventory: item.inventory,
+          });
+        }
+      });
+      if (colorList.length) {
+        const currentOrderColorId = orderData.orderDetails[0].color?.id || null;
+        const currentOrderIdx = colorList.findIndex(
+          (item: any) => item.value === (currentOrderColorId || "").toString()
+        );
+        if (currentOrderIdx !== -1) {
+          colorList[currentOrderIdx].inventory +=
+            orderData.orderDetails[0].quantity;
+        }
+      }
+      colorOptions = colorList.map((item: any) => ({
+        label: `${item.label} (${item.inventory} sp)`,
+        value: item.value,
+        disabled: item.inventory === 0,
+      }));
+    } else {
+      const colorListRaw = detailsListRaw.map((item) => item.color);
+      const colorList = uniqBy(colorListRaw, (item) => {
+        return item.id;
+      });
+      colorOptions = colorList.map((item) => ({
+        label: item.title,
+        value: item.id.toString(),
+      }));
+    }
 
     const handleChangeColor = (
       selectColorId: string | null,
@@ -163,6 +204,7 @@ export const EditOrderSizeRow = (props: EditOrderSizeRowProps) => {
     const isExistColorList = orderData?.product.details?.every(
       (item) => item.color
     );
+    const isReadyProduct = orderData.product.warehouseStatus === "READY";
 
     const colorCurrentInNoLongerList =
       !!first(orderData?.orderDetails)?.color && !isExistColorList;
@@ -173,15 +215,38 @@ export const EditOrderSizeRow = (props: EditOrderSizeRowProps) => {
       : null;
 
     const detailsListRaw = orderData?.product?.details;
-    const sizeListRaw: any = detailsListRaw
-      .filter((item) => item?.color?.id === colorSelected?.colorId)
-      .map((item) => item.size);
-    const sizeList = uniqBy(sizeListRaw, (item: any) => item?.id);
-
-    const sizeOptions = sizeList.map((item) => ({
-      label: item.title,
-      value: item.id.toString(),
-    }));
+    let sizeOptions: any = [];
+    if (isReadyProduct) {
+      const sizeListRaw: any = detailsListRaw
+        .filter((item) => item?.color?.id === colorSelected?.colorId)
+        .map((item: any) => ({ ...item.size, inventory: item.inventory }));
+      const sizeList = uniqBy(sizeListRaw, (item: any) => item?.id);
+      const currentOrderColorId = orderData.orderDetails[0].color?.id || null;
+      const currentOrderSizeId = orderData.orderDetails[0].size?.id || null;
+      const currentOrderIdx = detailsListRaw.findIndex(
+        (item: any) =>
+          item.colorId === currentOrderColorId &&
+          item.sizeId === currentOrderSizeId
+      );
+      if (currentOrderIdx !== -1) {
+        sizeList[currentOrderIdx].inventory +=
+          orderData.orderDetails[0].quantity;
+      }
+      sizeOptions = sizeList.map((item) => ({
+        label: `${item.title} (${item.inventory} sp)`,
+        value: item.id.toString(),
+        disabled: item.inventory === 0,
+      }));
+    } else {
+      const sizeListRaw: any = detailsListRaw
+        .filter((item) => item?.color?.id === colorSelected?.colorId)
+        .map((item) => item.size);
+      const sizeList = uniqBy(sizeListRaw, (item: any) => item?.id);
+      sizeOptions = sizeList.map((item) => ({
+        label: item.title,
+        value: item.id.toString(),
+      }));
+    }
 
     const handleChangeSize = (
       selectSizeId: string | null,
@@ -230,36 +295,59 @@ export const EditOrderQuantityRow = (props: EditOrderQuantityRowProps) => {
   const [editOrderValue, setEditOrderValue] = useRecoilState(editOrderState);
   const isEditOrder = editOrderValue.orderId === orderData.id;
   const quantityList = orderData?.orderDetails.map((detail) => detail.quantity);
+  if (isEditOrder) {
+    let maxQuantity = Infinity;
+    const isReadyProduct = orderData.product.warehouseStatus === "READY";
+    if (isReadyProduct) {
+      const selectedVariantProduct: any = orderData.product.details.find(
+        (item: any) =>
+          item.colorId === editOrderValue.orderDetails[0].colorId &&
+          item.sizeId === editOrderValue.orderDetails[0].sizeId
+      );
+      const currentOrderColorId = orderData.orderDetails[0].color?.id || null;
+      const currentOrderSizeId = orderData.orderDetails[0].size?.id || null;
+      //check select varriant product is same old order product, we need add exist quantity into max quantity
+      const currentOrderQuantity =
+        currentOrderColorId === editOrderValue.orderDetails[0].colorId &&
+        currentOrderSizeId === editOrderValue.orderDetails[0].sizeId
+          ? orderData.orderDetails[0].quantity
+          : 0;
+      maxQuantity =
+        (selectedVariantProduct?.inventory || 0) + currentOrderQuantity;
+    }
+
+    return (
+      <div className="w-16">
+        <NumberInput
+          value={editOrderValue.orderDetails[0].quantity}
+          onChange={(event) =>
+            setEditOrderValue((prev) => ({
+              ...prev,
+              orderDetails: [
+                {
+                  ...prev.orderDetails[0],
+                  quantity: Number(event),
+                },
+              ],
+            }))
+          }
+          clampBehavior="strict"
+          max={maxQuantity}
+          allowNegative={false}
+          allowDecimal={false}
+        />
+      </div>
+    );
+  }
   return (
     <>
-      {isEditOrder ? (
-        <div className="w-16">
-          <NumberInput
-            value={editOrderValue.orderDetails[0].quantity}
-            onChange={(event) =>
-              setEditOrderValue((prev) => ({
-                ...prev,
-                orderDetails: [
-                  {
-                    ...prev.orderDetails[0],
-                    quantity: Number(event),
-                  },
-                ],
-              }))
-            }
-            allowNegative={false}
-            allowDecimal={false}
-          />
-        </div>
-      ) : (
-        <div className="flex flex-col hover:cursor-pointer">
-          {quantityList.map((item, index) => (
-            <div key={index} className="text-center  border-none">
-              {item}
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col hover:cursor-pointer">
+        {quantityList.map((item, index) => (
+          <div key={index} className="text-center  border-none">
+            {item}
+          </div>
+        ))}
+      </div>
     </>
   );
 };
