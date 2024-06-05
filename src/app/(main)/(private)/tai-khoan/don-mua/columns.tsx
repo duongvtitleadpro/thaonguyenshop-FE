@@ -152,6 +152,7 @@ export const EditOrderColorRow = (props: EditOrderColorRowProps) => {
                 ? editOrderValue.orderDetails[0].sizeId || null
                 : sizeList[0].id
               : null,
+            quantity: 0,
           },
         ],
       });
@@ -261,6 +262,7 @@ export const EditOrderSizeRow = (props: EditOrderSizeRowProps) => {
               ? editOrderValue.orderDetails[0].colorId
               : null,
             sizeId: parseInt(selectSizeId || "0"),
+            quantity: 0,
           },
         ],
       });
