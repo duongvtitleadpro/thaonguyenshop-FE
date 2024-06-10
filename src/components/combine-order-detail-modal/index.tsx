@@ -29,6 +29,7 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
   const { data: combineOrderData } = useQuery({
     queryKey: [QueryKey.GET_COMBINE_ORDER_DETAIL, id],
     queryFn: () => getCombineOrderDetail(id),
+    enabled: opened,
   });
 
   const productSort = useMemo(() => {
@@ -48,9 +49,6 @@ const CombineOrderDetailModal = (props: CombineOrderDetailModalProps) => {
     }
   }, [combineOrderData?.combinedOrderDetails]);
 
-  console.log("productSort", productSort);
-
-  console.log("combineOrderData", combineOrderData);
   const { mutate: exportOrderMutate } = useMutation({
     mutationFn: exportOrder,
     onSuccess: (data) => {
