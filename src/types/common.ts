@@ -9,6 +9,7 @@ export type Response<T> = {
   totalElement: number;
   summaryOrderFilter: ISummaryOrderFilter;
   totalPrice: number;
+  totalAmount: number;
 };
 
 export interface ISummaryOrderFilter {
