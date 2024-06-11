@@ -1,10 +1,10 @@
 "use client";
-import { Image } from "@mantine/core";
+import { Badge, Image } from "@mantine/core";
 import Link from "next/link";
 import { currency } from "@/utils/currency";
 import { useRecoilValue } from "recoil";
 import { authState } from "@/store/state/auth.atom";
-import { ProductStatus } from "@/types/product";
+import { ProductStatus, WarehouseStatus } from "@/types/product";
 import { useRouter } from "next/navigation";
 import { ProductStatusColor, ProductStatusTitle } from "@/constant/product";
 
@@ -16,6 +16,7 @@ interface ProductCardProps {
   price: number;
   status: ProductStatus | null;
   origin: string;
+  warehouseStatus?: WarehouseStatus;
   isCarouselCard?: boolean;
 }
 
@@ -30,10 +31,17 @@ const ProductCard = (props: ProductCardProps) => {
     price,
     status,
     origin,
+    warehouseStatus,
     isCarouselCard = false,
   } = props;
+  const isReadyProduct = warehouseStatus === "READY";
   return (
-    <div className="h-full transform overflow-hidden rounded-lg border bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
+    <div className="relative h-full transform overflow-hidden rounded-lg border bg-white dark:bg-slate-800 shadow-md duration-300 hover:scale-105 hover:shadow-lg">
+      {isReadyProduct && (
+        <div className="absolute top-2 right-2 text-[12px] text-white bg-red-600 px-2 py-0.5 rounded-full ">
+          Hàng có sẵn
+        </div>
+      )}
       <div className="h-32 md:h-56 w-full border-b bg-slate-100">
         <Image
           className="h-full w-full cursor-pointer"

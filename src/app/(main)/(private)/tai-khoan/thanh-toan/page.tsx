@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import DataTable from "@/components/table/data-table";
 import { columns } from "./columns";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import { paymentFilterState } from "@/store/state/payment-filter.atom";
 import { getPaymentList } from "@/api/payment";
 import { CloseButton, Input, Select } from "@mantine/core";
 import PaginationCustom from "@/components/pagination";
+import { currency } from "@/utils/currency";
 
 const PaymentPage = () => {
   const [keyword, setKeyword] = React.useState("");
@@ -44,7 +45,21 @@ const PaymentPage = () => {
     });
   };
 
-  tableRef;
+  const paymentDataFooter = useMemo(() => {
+    if (!paymentData) return [];
+    return [
+      {
+        colSpan: 3,
+        value: "Tổng",
+      },
+      {
+        colSpan: 1,
+        value: `${currency.format(paymentData.totalAmount || 0)}`,
+        className: "text-left",
+      },
+    ];
+  }, [paymentData]);
+
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo({
@@ -81,6 +96,7 @@ const PaymentPage = () => {
             ref={tableRef}
             data={paymentData?.data}
             columns={columns}
+            footer={paymentDataFooter}
           />
           <div className="flex justify-end gap-3 mt-4">
             <Select

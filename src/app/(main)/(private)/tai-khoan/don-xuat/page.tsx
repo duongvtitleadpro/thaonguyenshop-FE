@@ -9,7 +9,8 @@ import { QueryKey } from "@/constant/query-key";
 import { getCombineOrder } from "@/api/order";
 import { Select } from "@mantine/core";
 import PaginationCustom from "@/components/pagination";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { currency } from "@/utils/currency";
 
 const ExportOrderPage = () => {
   const [combineOrderFilter, setCombineOrderFilter] = useRecoilState(
@@ -46,6 +47,24 @@ const ExportOrderPage = () => {
     }, 0);
   }, []);
 
+  const combineOrderFooter = useMemo(() => {
+    if (!combineOrderData) return [];
+    return [
+      {
+        colSpan: 2,
+        value: "Tổng",
+      },
+      {
+        colSpan: 1,
+        value: `${currency.format(combineOrderData.totalPrice || 0)}`,
+        className: "text-left",
+      },
+      {
+        colSpan: 1,
+      },
+    ];
+  }, [combineOrderData]);
+
   return (
     <>
       {combineOrderData && (
@@ -54,6 +73,7 @@ const ExportOrderPage = () => {
             ref={tableRef}
             data={combineOrderData.data}
             columns={columns}
+            footer={combineOrderFooter}
           />
           <div className="flex justify-end gap-3 mt-4">
             <Select
