@@ -41,6 +41,7 @@ import PaginationCustom from "@/components/pagination";
 import { Carousel } from "@mantine/carousel";
 import { useMediaQuery } from "@mantine/hooks";
 import { cp } from "fs";
+import { first } from "lodash";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -88,10 +89,19 @@ const DetailProductPage = ({
   });
   const isEditOrder = useMemo(() => searchParams?.order, [searchParams?.order]);
 
+  const inventoryNoSizeNoColor = useMemo(
+    () => (first(productDetailData?.details) as any)?.inventory,
+    [productDetailData?.details]
+  );
+  const isNoSizeNoColorReadyProduct = useMemo(() => {
+    const inventory = (first(productDetailData?.details) as any)?.inventory;
+    return inventory || inventory === 0;
+  }, [productDetailData?.details]);
+
   const listColor = useMemo(() => {
-    if (!productDetailData) return [];
+    if (!productDetailData || isNoSizeNoColorReadyProduct) return [];
     // No color, no size
-    if (productDetailData.details.length === 0) {
+    if (productDetailData.details.length === 0 || inventoryNoSizeNoColor) {
       return [];
     }
     // No color, have size
@@ -100,6 +110,7 @@ const DetailProductPage = ({
       productDetailData.details.find(
         (detail) => Object.keys(detail.color).length === 0
       );
+
     if (listNoColorHaveSize) {
       return [];
     }
@@ -119,7 +130,7 @@ const DetailProductPage = ({
   }, [productDetailData, order, isEditOrder]);
 
   const listSizeByColor = useMemo(() => {
-    if (!productDetailData) return [];
+    if (!productDetailData || isNoSizeNoColorReadyProduct) return [];
     const listSizeNoColor = productDetailData.details.find(
       (detail) =>
         Object.keys(detail.color).length === 0 &&
@@ -211,12 +222,12 @@ const DetailProductPage = ({
   const findColorDetail = useCallback(
     (id: number) => {
       const color = productDetailData?.details.find(
-        (detail) => detail.color.id === id
+        (detail) => detail?.color?.id === id
       );
       console.log("😻 ~ color:", color);
-      return color?.color.inventory || 0;
+      return color?.color.inventory || inventoryNoSizeNoColor || 0;
     },
-    [productDetailData?.details]
+    [inventoryNoSizeNoColor, productDetailData?.details]
   );
 
   const getDisableInput = useCallback(
@@ -578,6 +589,7 @@ const DetailProductPage = ({
                       </div>
                       {/* No size */}
                       {(productDetailData.details.length === 0 ||
+                        isNoSizeNoColorReadyProduct ||
                         (color && listSizeByColor.length === 0)) && (
                         <div className="mt-10 flex gap-3">
                           <div className="flex items-center justify-between">
