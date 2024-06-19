@@ -108,7 +108,7 @@ const DetailProductPage = ({
     const listNoColorHaveSize =
       productDetailData.details.length === 1 &&
       productDetailData.details.find(
-        (detail) => Object.keys(detail.color).length === 0
+        (detail) => Object.keys(detail.color)?.length === 0
       );
 
     if (listNoColorHaveSize) {
