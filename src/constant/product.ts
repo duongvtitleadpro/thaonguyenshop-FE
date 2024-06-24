@@ -30,6 +30,8 @@ export enum ProductStatusTitle {
   IN_SHORTAGE = "Đã mua hàng",
   ENDED = "Đã mua hàng",
   YET_DELIVERED = "Đã mua hàng",
+  IN_STOCK = "Còn hàng",
+  OUT_OF_STOCK = "Hết hàng",
 }
 
 export enum ProductStatusColor {
@@ -40,4 +42,6 @@ export enum ProductStatusColor {
   IN_SHORTAGE = "text-green-500",
   ENDED = "text-green-500",
   YET_DELIVERED = "text-green-500",
+  IN_STOCK = "text-blue-500",
+  OUT_OF_STOCK = "text-red-500",
 }
