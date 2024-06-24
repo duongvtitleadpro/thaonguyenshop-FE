@@ -63,6 +63,8 @@ export type ProductStatus =
   | "IN_SHORTAGE"
   | "ENDED"
   | "YET_DELIVERED"
+  | "IN_STOCK" // còn hàng
+  | "OUT_OF_STOCK" // hết hàng
   | null;
 
 export type StockProductImageParam = {
