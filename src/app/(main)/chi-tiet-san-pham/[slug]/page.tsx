@@ -182,6 +182,13 @@ const DetailProductPage = ({
     );
   }, [productDetailData]);
 
+  const isInstockReadyProduct =
+    productDetailData?.productStatus === "IN_STOCK" &&
+    productDetailData?.warehouseStatus === "READY";
+  const isOutStockReadyProduct =
+    productDetailData?.productStatus === "OUT_OF_STOCK" &&
+    productDetailData?.warehouseStatus === "READY";
+
   const handleChangeCart = (
     value: number | string,
     sizeId: number | null,
@@ -453,6 +460,18 @@ const DetailProductPage = ({
                     </p>
                   )}
 
+                  {isInstockReadyProduct && (
+                    <p className="text-blue-600 italic font-semibold mt-4">
+                      Còn hàng
+                    </p>
+                  )}
+
+                  {isOutStockReadyProduct && (
+                    <p className="text-red-600 italic font-semibold mt-4">
+                      Hết hàng
+                    </p>
+                  )}
+
                   {auth.isAuthenticated && (
                     <div className="mt-10">
                       {/* Colors */}
@@ -643,40 +662,46 @@ const DetailProductPage = ({
                         *Ảnh up lên chỉ áp dụng cho những đơn hàng đặt tách lẻ,
                         không đặt gộp đơn
                       </p>
-                      {cart.length === 1 && (
-                        <div className="flex gap-3 items-center mt-4">
-                          {file && (
-                            <div className="w-[150px] relative">
-                              <Image
-                                src={loadedImageFileNote}
-                                alt="note-image"
-                                w={150}
-                              />
+                      {cart.length === 1 &&
+                        !isBoughtStatus &&
+                        !isOutStockReadyProduct && (
+                          <div className="flex gap-3 items-center mt-4">
+                            {file && (
+                              <div className="w-[150px] relative">
+                                <Image
+                                  src={loadedImageFileNote}
+                                  alt="note-image"
+                                  w={150}
+                                />
 
-                              <X
-                                className="hover:cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-5 h-5 text-red-700"
-                                onClick={handleDeleteFile}
-                              />
-                            </div>
-                          )}
-                          <FileButton
-                            onChange={handleChangeFile}
-                            accept="image/png,image/jpeg"
-                          >
-                            {(props) => (
-                              <Button {...props} bg="blue">
-                                Tải ảnh
-                              </Button>
+                                <X
+                                  className="hover:cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-5 h-5 text-red-700"
+                                  onClick={handleDeleteFile}
+                                />
+                              </div>
                             )}
-                          </FileButton>
-                        </div>
-                      )}
+                            <FileButton
+                              onChange={handleChangeFile}
+                              accept="image/png,image/jpeg"
+                            >
+                              {(props) => (
+                                <Button {...props} bg="blue">
+                                  Tải ảnh
+                                </Button>
+                              )}
+                            </FileButton>
+                          </div>
+                        )}
                       <button
-                        disabled={cart.length === 0 || isBoughtStatus}
+                        disabled={
+                          cart.length === 0 ||
+                          isBoughtStatus ||
+                          isOutStockReadyProduct
+                        }
                         className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={handleBuyProduct}
                       >
-                        {isBoughtStatus
+                        {isBoughtStatus || isOutStockReadyProduct
                           ? "Vui lòng liên hệ admin để đặt hàng"
                           : isEditOrder
                           ? "Sửa đơn hàng"
