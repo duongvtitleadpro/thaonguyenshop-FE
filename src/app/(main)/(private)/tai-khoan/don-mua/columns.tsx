@@ -141,21 +141,38 @@ export const EditOrderColorRow = (props: EditOrderColorRowProps) => {
       const isSelectedSizeExistInNewSizeList = sizeList.find(
         (item: any) => item.id === editOrderValue.orderDetails[0].sizeId
       );
-      setEditOrderValue({
-        ...editOrderValue,
-        orderDetails: [
-          {
-            ...editOrderValue.orderDetails[0],
-            colorId: parseInt(selectColorId || "0"),
-            sizeId: isExistSizeList
-              ? isSelectedSizeExistInNewSizeList
-                ? editOrderValue.orderDetails[0].sizeId || null
-                : sizeList[0].id
-              : null,
-            quantity: 0,
-          },
-        ],
-      });
+      if (isReadyProduct) {
+        setEditOrderValue({
+          ...editOrderValue,
+          orderDetails: [
+            {
+              ...editOrderValue.orderDetails[0],
+              colorId: parseInt(selectColorId || "0"),
+              sizeId: isExistSizeList
+                ? isSelectedSizeExistInNewSizeList
+                  ? editOrderValue.orderDetails[0].sizeId || null
+                  : sizeList[0].id
+                : null,
+              quantity: 0,
+            },
+          ],
+        });
+      } else {
+        setEditOrderValue({
+          ...editOrderValue,
+          orderDetails: [
+            {
+              ...editOrderValue.orderDetails[0],
+              colorId: parseInt(selectColorId || "0"),
+              sizeId: isExistSizeList
+                ? isSelectedSizeExistInNewSizeList
+                  ? editOrderValue.orderDetails[0].sizeId || null
+                  : sizeList[0].id
+                : null,
+            },
+          ],
+        });
+      }
     };
     return (
       <div className="w-20">
@@ -253,19 +270,34 @@ export const EditOrderSizeRow = (props: EditOrderSizeRowProps) => {
       selectSizeId: string | null,
       _option: ComboboxItem
     ) => {
-      setEditOrderValue({
-        ...editOrderValue,
-        orderDetails: [
-          {
-            ...editOrderValue.orderDetails[0],
-            colorId: !colorCurrentInNoLongerList
-              ? editOrderValue.orderDetails[0].colorId
-              : null,
-            sizeId: parseInt(selectSizeId || "0"),
-            quantity: 0,
-          },
-        ],
-      });
+      if (isReadyProduct) {
+        setEditOrderValue({
+          ...editOrderValue,
+          orderDetails: [
+            {
+              ...editOrderValue.orderDetails[0],
+              colorId: !colorCurrentInNoLongerList
+                ? editOrderValue.orderDetails[0].colorId
+                : null,
+              sizeId: parseInt(selectSizeId || "0"),
+              quantity: 0,
+            },
+          ],
+        });
+      } else {
+        setEditOrderValue({
+          ...editOrderValue,
+          orderDetails: [
+            {
+              ...editOrderValue.orderDetails[0],
+              colorId: !colorCurrentInNoLongerList
+                ? editOrderValue.orderDetails[0].colorId
+                : null,
+              sizeId: parseInt(selectSizeId || "0"),
+            },
+          ],
+        });
+      }
     };
 
     return (
