@@ -60,7 +60,7 @@ const ExportOrderPage = () => {
         className: "text-left",
       },
       {
-        colSpan: 1,
+        colSpan: 2,
       },
     ];
   }, [combineOrderData]);

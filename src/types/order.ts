@@ -105,6 +105,7 @@ export type OrderCombineResponse = {
   createdAt: string;
   totalPrice: number;
   userId: number;
+  notes: string;
   combinedOrderDetails: CombinedOrderDetail[];
 };
 

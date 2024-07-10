@@ -42,6 +42,15 @@ export const columns: ColumnDef<OrderCombineResponse>[] = [
     },
   },
   {
+    accessorKey: "note",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Nội dung" />
+    ),
+    cell: ({ row }) => {
+      return <div>{row.original?.notes}</div>;
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions id={row.original.id} />,
   },
