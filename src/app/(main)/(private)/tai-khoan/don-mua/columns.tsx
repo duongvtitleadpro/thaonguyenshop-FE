@@ -37,6 +37,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import { format } from "date-fns";
 
 type EditOrderColorRowProps = {
   orderData: OrderResponse;
@@ -769,20 +770,20 @@ export const columns: any = [
     enableHiding: false,
   },
 
-  // {
-  //   accessor: "orderDate",
-  //   Header: ({ column }: any) => (
-  //     <DataTableColumnHeader column={column} title="Ngày đặt hàng" />
-  //   ),
-  //   Cell: ({ row }: any) => (
-  //     <div>{`${format(
-  //       new Date(row.original.orderDate),
-  //       "MM/dd/yyyy HH:mm:ss"
-  //     )}`}</div>
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+  {
+    accessor: "orderDate",
+    Header: ({ column }: any) => (
+      <DataTableColumnHeader column={column} title="Ngày đặt hàng" />
+    ),
+    Cell: ({ row }: any) => (
+      <div>{`${format(
+        new Date(row.original.orderDate),
+        "MM/dd/yyyy HH:mm"
+      )}`}</div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
 
   {
     accessor: "note",
