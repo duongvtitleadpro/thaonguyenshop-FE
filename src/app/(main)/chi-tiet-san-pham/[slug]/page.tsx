@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import EmblaCarousel from "@/components/embla-carousel/embla-carousel";
 import { EmblaOptionsType } from "embla-carousel";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/query-key";
 import {
   getProductDetail,
@@ -87,6 +87,10 @@ const DetailProductPage = ({
     queryKey: [QueryKey.GET_WATCHED_PRODUCT, suggestProductParam],
     queryFn: () => getSuggestProductRequest(suggestProductParam),
   });
+
+  const buyOrderMutation = useMutation({
+    mutationFn: addOrder,
+  })
   const isEditOrder = useMemo(() => searchParams?.order, [searchParams?.order]);
 
   const inventoryNoSizeNoColor = useMemo(
@@ -310,7 +314,7 @@ const DetailProductPage = ({
         if (imageNote) {
           Object.assign(body, { imageNote: imageNote });
         }
-        const order = await addOrder(body);
+        const order = await buyOrderMutation.mutateAsync(body);
         toast("Đơn hàng tạo thành công", {
           description: (
             <div className="w-full">
@@ -696,7 +700,8 @@ const DetailProductPage = ({
                         disabled={
                           cart.length === 0 ||
                           isBoughtStatus ||
-                          isOutStockReadyProduct
+                          isOutStockReadyProduct || 
+                          buyOrderMutation.isPending 
                         }
                         className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-[#35a8e0] px-8 py-3 text-base font-medium text-white hover:bg-[#35a8e0] disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={handleBuyProduct}
