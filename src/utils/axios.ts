@@ -13,13 +13,21 @@ const axiosInstance = axios.create({
 axiosRetry(axiosInstance, {
   retries: 3,
   retryDelay: (...arg) => axiosRetry.exponentialDelay(...arg, 2000),
-  retryCondition(error) {
+  retryCondition(error: any) {
     switch (error?.response?.status) {
       //retry only if status is 500 or 501
       case 404:
       case 500:
       case 501:
         return true;
+      case 406:
+        if (error?.response?.data.message === "password_change") {
+          const accessToken = getToken("accessToken");
+          if (accessToken) {
+            window.location.replace("/");
+            localStorage.clear();
+          }
+        }
       default:
         return false;
     }
