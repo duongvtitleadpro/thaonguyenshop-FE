@@ -14,8 +14,12 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
+import { getUserProfile } from "@/api/auth";
+import useAuthen from "@/hooks/useAuthen";
 
 export default function ProductPage() {
+  useAuthen();
+
   const [productParam, setProductParam] = useRecoilState(filterProductState);
   const searchParams = useSearchParams();
   const isRedirectToProduct = useRef(false);
@@ -41,15 +45,6 @@ export default function ProductPage() {
       sessionStorage.removeItem(ATOM_KEY.FILTER_PRODUCT);
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (pageRef.current) {
-  //     window.scrollTo({
-  //       top: 0,
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // }, [pageRef]);
 
   const { data: productListData, isFetched } = useQuery({
     queryKey: [QueryKey.GET_PRODUCT_LIST, productParam],
